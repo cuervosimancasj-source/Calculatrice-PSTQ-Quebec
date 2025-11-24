@@ -235,3 +235,16 @@ if total_score > 580:
     st.success("✅ Buen perfil para aplicar. / Bon profil.")
 else:
     st.info("💡 Necesitas subir puntos (Francés o VJO). / Besoin de plus de points.")
+   
+     
+        
+
+
+
+    
+       
+        
+
+
+
+
