@@ -4,11 +4,12 @@ import pandas as pd
 # --- Configuración / Configuration ---
 st.set_page_config(page_title="Calculadora PSTQ Pro / Arrima", page_icon="⚜️")
 
-# --- 1. Diccionario de Traducciones ---
+# --- 1. Diccionario de Traducciones (ES / FR / EN) ---
 translations = {
     "Español": {
         "sidebar_title": "Configuración",
-        "lang_select": "Idioma / Langue",
+        "lang_select": "Idioma",
+        "bmc_text": "☕ Apóyanos",
         "main_title": "⚜️ Calculadora Arrima (Quebec) - Pro",
         "intro": "Esta herramienta estima tu puntaje de clasificación (Ranking) para recibir una invitación del gobierno de Quebec.",
         "disclaimer_text": "⚠️ NO OFICIAL: Herramienta de estimación personal. No somos abogados ni gobierno.",
@@ -40,6 +41,7 @@ translations = {
         "opt_stay": ["No", "Sí, estudios (diploma)", "Sí, trabajo (>6 meses)"],
         "q_fam": "¿Tienes familia directa en Quebec? (Informativo)",
         "note_fam": "Nota: En el sistema Arrima actual, la familia a veces no suma puntos al ranking numérico, pero es vital para el CSQ.",
+        "opt_yes_no": ["No", "Sí"],
         "q_children": "¿Número de hijos menores de 18? (Informativo)",
         
         "s_job": "7. Oferta de Empleo Validada (VJO)",
@@ -47,11 +49,17 @@ translations = {
         "opt_vjo": ["No", "Sí, en Montreal", "Sí, FUERA de Montreal"],
         
         "result_title": "🏆 Estimación Total",
-        "chart_title": "Desglose de Puntos"
+        "chart_title": "Desglose de Puntos",
+        "res_good": "✅ Buen perfil para aplicar.",
+        "res_low": "💡 Necesitas subir puntos (Francés o VJO).",
+        
+        # Etiquetas cortas para el gráfico
+        "chart_labels": ["Edad", "Edu", "Idiomas", "Exp", "Quebec", "VJO", "Pareja"]
     },
     "Français": {
         "sidebar_title": "Configuration",
-        "lang_select": "Langue / Language",
+        "lang_select": "Langue",
+        "bmc_text": "☕ Soutenez-nous",
         "main_title": "⚜️ Calculateur Arrima (Québec) - Pro",
         "intro": "Cet outil estime votre score de classement pour recevoir une invitation du gouvernement du Québec.",
         "disclaimer_text": "⚠️ NON OFFICIEL : Outil d'estimation personnelle. Nous ne sommes ni avocats ni gouvernement.",
@@ -82,6 +90,7 @@ translations = {
         "opt_stay": ["Non", "Oui, études (diplôme)", "Oui, travail (>6 mois)"],
         "q_fam": "Avez-vous de la famille directe au Québec ? (Informatif)",
         "note_fam": "Note : Dans le système Arrima, la famille ne donne pas toujours de points au classement, mais est cruciale pour le CSQ.",
+        "opt_yes_no": ["Non", "Oui"],
         "q_children": "Nombre d'enfants de moins de 18 ans ? (Informatif)",
         
         "s_job": "7. Offre d'emploi validée (VJO)",
@@ -89,27 +98,92 @@ translations = {
         "opt_vjo": ["Non", "Oui, à Montréal", "Oui, HORS Montréal"],
         
         "result_title": "🏆 Estimation Totale",
-        "chart_title": "Répartition des Points"
+        "chart_title": "Répartition des Points",
+        "res_good": "✅ Bon profil pour postuler.",
+        "res_low": "💡 Besoin de plus de points (Français ou VJO).",
+        
+        "chart_labels": ["Âge", "Édu", "Langues", "Exp", "Québec", "VJO", "Conjoint"]
+    },
+    "English": {
+        "sidebar_title": "Configuration",
+        "lang_select": "Language",
+        "bmc_text": "☕ Support us",
+        "main_title": "⚜️ Arrima Calculator (Quebec) - Pro",
+        "intro": "This tool estimates your ranking score to receive an invitation from the Quebec government.",
+        "disclaimer_text": "⚠️ UNOFFICIAL: Personal estimation tool. We are not lawyers or government officials.",
+        
+        "s_status": "1. Civil Status",
+        "q_status": "What is your status?",
+        "opt_status": ["Single", "With Spouse (Married/Common-law)"],
+        
+        "s_age": "2. Age",
+        "q_age_principal": "Principal Applicant Age",
+        "q_age_spouse": "Spouse/Partner Age",
+        
+        "s_edu": "3. Education",
+        "q_edu_principal": "Education Level (Principal)",
+        "q_edu_spouse": "Education Level (Spouse)",
+        "opt_edu": ["High School", "Technical (1-2 years)", "Technical (3 years)", "University (Undergrad)", "Master's", "PhD"],
+        
+        "s_lang": "4. Languages (French & English)",
+        "q_fr_principal": "Your French Level (TEF/TCF)",
+        "q_fr_spouse": "Spouse's French Level",
+        "q_en_principal": "Your English Level (IELTS)",
+        
+        "s_exp": "5. Work Experience",
+        "q_exp": "Experience in the last 5 years",
+        
+        "s_quebec": "6. Stay & Family in Quebec",
+        "q_stay": "Have you previously studied or worked in Quebec?",
+        "opt_stay": ["No", "Yes, studies (diploma)", "Yes, work (>6 months)"],
+        "q_fam": "Do you have direct family in Quebec? (Informative)",
+        "note_fam": "Note: In the current Arrima system, family might not add ranking points directly, but is vital for the CSQ.",
+        "opt_yes_no": ["No", "Yes"],
+        "q_children": "Number of children under 18? (Informative)",
+        
+        "s_job": "7. Validated Job Offer (VJO)",
+        "q_vjo": "Do you have a validated job offer?",
+        "opt_vjo": ["No", "Yes, in Montreal", "Yes, OUTSIDE Montreal"],
+        
+        "result_title": "🏆 Total Estimate",
+        "chart_title": "Score Breakdown",
+        "res_good": "✅ Good profile to apply.",
+        "res_low": "💡 You need more points (French or VJO).",
+        
+        "chart_labels": ["Age", "Edu", "Languages", "Exp", "Quebec", "VJO", "Spouse"]
     }
 }
 
-# --- 2. Configuración Inicial ---
+# --- 2. CONFIGURACIÓN Y SIDEBAR ---
 st.sidebar.header("Configuration")
-lang_choice = st.sidebar.selectbox("Language", ["Español", "Français"])
+lang_choice = st.sidebar.selectbox("Language / Idioma", ["Español", "Français", "English"])
 t = translations[lang_choice]
+
+# Botón Buy Me a Coffee (Opcional)
+st.sidebar.markdown("---")
+st.sidebar.write(f"**{t['bmc_text']}**")
+# CAMBIA 'TU_USUARIO' por tu usuario real
+bmc_username = "TU_USUARIO" 
+st.sidebar.markdown(f"""
+<a href="https://www.buymeacoffee.com/{bmc_username}" target="_blank">
+    <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 50px !important;width: 180px !important;" >
+</a>
+""", unsafe_allow_html=True)
+
+# --- 3. INTERFAZ PRINCIPAL ---
 
 st.warning(t['disclaimer_text'])
 st.title(t['main_title'])
 st.write(t['intro'])
 
-# Variables de puntaje
+# Variables de puntaje iniciales
 score_age = 0
 score_edu = 0
 score_lang = 0
 score_exp = 0
-score_stay = 0 # Estancia previa
+score_stay = 0 
 score_vjo = 0
-score_spouse = 0 # Puntos que aporta la pareja
+score_spouse = 0 
 
 # --- SECCIÓN 1: ESTADO CIVIL ---
 st.header(t['s_status'])
@@ -122,9 +196,6 @@ col1, col2 = st.columns(2)
 
 with col1:
     age_princ = st.number_input(t['q_age_principal'], 18, 65, 30)
-    
-    # Lógica Edad Principal (Varía si es Soltero o Pareja)
-    # En Arrima: Soltero Max 130, Pareja Max 110 (aprox)
     max_pts_age = 110 if is_couple else 130
     
     if 18 <= age_princ <= 30: score_age = max_pts_age
@@ -136,7 +207,7 @@ with col1:
 with col2:
     if is_couple:
         age_spouse = st.number_input(t['q_age_spouse'], 18, 65, 30)
-        # Edad Conjoint (Max ~20 aprox en Arrima actual)
+        # Edad Conjoint (Max ~20 aprox)
         if 18 <= age_spouse <= 30: score_spouse += 20
         elif age_spouse < 40: score_spouse += 10
         else: score_spouse += 0
@@ -149,14 +220,11 @@ with col3:
     edu_princ = st.selectbox(t['q_edu_principal'], t['opt_edu'])
     idx_edu = t['opt_edu'].index(edu_princ)
     
-    # Puntos Base Edu
-    pts_base_edu = [10, 30, 50, 60, 75, 90] # Sec, Tec1, Tec2, Univ, Maes, Doc
+    pts_base_edu = [10, 30, 50, 60, 75, 90] 
     raw_edu = pts_base_edu[idx_edu]
     
-    # Ajuste por pareja: Si tienes pareja, tus puntos valen un poco menos
-    # Soltero Max 90 / Pareja Max 80 (aprox)
     if is_couple:
-        score_edu = int(raw_edu * 0.9) # Reducción simple
+        score_edu = int(raw_edu * 0.9)
     else:
         score_edu = raw_edu
 
@@ -164,7 +232,6 @@ with col4:
     if is_couple:
         edu_spouse = st.selectbox(t['q_edu_spouse'], t['opt_edu'])
         idx_edu_sp = t['opt_edu'].index(edu_spouse)
-        # Puntos Conjoint Edu (Max ~10-20)
         score_spouse += [2, 5, 10, 12, 15, 20][idx_edu_sp]
 
 # --- SECCIÓN 4: IDIOMAS ---
@@ -173,12 +240,12 @@ fr_princ = st.select_slider(t['q_fr_principal'], ["A1", "A2", "B1", "B2", "C1", 
 en_princ = st.select_slider(t['q_en_principal'], ["A1", "A2", "B1", "B2", "C1", "C2"])
 
 # Francés Principal
-if fr_princ in ["C1", "C2"]: score_lang += 140 # Aprox
+if fr_princ in ["C1", "C2"]: score_lang += 140 
 elif fr_princ == "B2": score_lang += 100
 elif fr_princ == "B1": score_lang += 40
 
 # Inglés Principal
-if en_princ in ["C1", "C2"]: score_lang += 60 # Aprox
+if en_princ in ["C1", "C2"]: score_lang += 60
 elif en_princ in ["B1", "B2"]: score_lang += 40
 
 if is_couple:
@@ -197,26 +264,19 @@ elif years == 1: score_exp = 40
 
 # --- SECCIÓN 6: QUEBEC & FAMILIA ---
 st.header(t['s_quebec'])
-
-# Estancia
 stay_sel = st.radio(t['q_stay'], t['opt_stay'])
-if t['opt_stay'].index(stay_sel) == 2: # Trabajo
-    score_stay += 80 
-elif t['opt_stay'].index(stay_sel) == 1: # Estudio
-    score_stay += 60
+if t['opt_stay'].index(stay_sel) == 2: score_stay += 80 
+elif t['opt_stay'].index(stay_sel) == 1: score_stay += 60
 
-# Familia (Informativo en Arrima, pero lo preguntamos)
-fam = st.radio(t['q_fam'], ["No", "Si / Oui"])
+fam_q = st.radio(t['q_fam'], t['opt_yes_no'])
 children = st.number_input(t['q_children'], 0, 10, 0)
 st.caption(f"ℹ️ {t['note_fam']}")
 
 # --- SECCIÓN 7: VJO ---
 st.header(t['s_job'])
 vjo_sel = st.radio(t['q_vjo'], t['opt_vjo'])
-if t['opt_vjo'].index(vjo_sel) == 2: # Fuera MTL
-    score_vjo = 380
-elif t['opt_vjo'].index(vjo_sel) == 1: # En MTL
-    score_vjo = 180
+if t['opt_vjo'].index(vjo_sel) == 2: score_vjo = 380
+elif t['opt_vjo'].index(vjo_sel) == 1: score_vjo = 180
 
 # --- CÁLCULOS FINALES ---
 total_score = score_age + score_edu + score_lang + score_exp + score_stay + score_vjo + score_spouse
@@ -225,26 +285,16 @@ st.markdown("---")
 st.subheader(f"{t['result_title']}: {total_score} / 1320")
 
 # --- GRÁFICO ---
+# Usamos las etiquetas traducidas para el gráfico
+st.write(f"### {t['chart_title']}")
 data = {
-    'Category': ['Edad/Âge', 'Edu', 'Lang', 'Exp', 'Quebec', 'VJO', 'Pareja/Conjoint'],
+    'Category': t['chart_labels'], 
     'Points': [score_age, score_edu, score_lang, score_exp, score_stay, score_vjo, score_spouse]
 }
 st.bar_chart(pd.DataFrame(data).set_index('Category'))
 
 if total_score > 580:
-    st.success("✅ Buen perfil para aplicar. / Bon profil.")
+    st.success(t['res_good'])
+    st.balloons()
 else:
-    st.info("💡 Necesitas subir puntos (Francés o VJO). / Besoin de plus de points.")
-   
-     
-        
-
-
-
-    
-       
-        
-
-
-
-
+    st.info(t['res_low'])
