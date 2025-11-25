@@ -162,8 +162,8 @@ t = translations[lang_choice]
 # Botón Buy Me a Coffee (Opcional)
 st.sidebar.markdown("---")
 st.sidebar.write(f"**{t['bmc_text']}**")
-# CAMBIA 'TU_USUARIO' por tu usuario real
-bmc_username = "TU_USUARIO" 
+# CalculatricePSTQQuebec
+bmc_username = CalculatricePSTQQuebec
 st.sidebar.markdown(f"""
 <a href="https://www.buymeacoffee.com/{bmc_username}" target="_blank">
     <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 50px !important;width: 180px !important;" >
