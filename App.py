@@ -1,215 +1,240 @@
+
 import streamlit as st
 
 # --- CONFIGURACIÓN DE PÁGINA / CONFIGURATION DE LA PAGE ---
-st.set_page_config(page_title="Calculadora PSTQ (Arrima Score)", page_icon="⚜️", layout="wide")
-
-st.title("⚜️ Calculadora de Puntaje de CLASIFICACIÓN Arrima (PSTQ)")
-st.markdown("""
-**Esta herramienta simula el Score de Classement de Arrima.**
-El puntaje final (máx. ~1350) se usa para el ranking de invitaciones. El corte de invitación es variable y alto (ej: 600+).
-*Cet outil simule le Score de Classement Arrima (PSTQ). Le seuil d'invitation est variable.*
-""")
-
-# --- VARIABLES DE PUNTAJE Y CORTE (Máx. Total ~1350 pts) ---
-pts_total = 0
-
-# Establecemos un puntaje de referencia alto para la comparación
-PUNTAJE_REFERENCIA_ALTO = 600
-
-# --- BARRA LATERAL: ESTADO CIVIL Y MONETIZACIÓN ---
-with st.sidebar:
-    st.header("Perfil del Solicitante / Profil")
-    estado_civil = st.radio(
-        "¿Cuál es tu estado civil? / Quel est votre état civil ?",
-        ("Soltero(a) / Seul", "Casado(a) o Pareja de hecho / En couple")
-    )
-    
-    es_casado = "Casado" in estado_civil
-    
-    st.info(f"ℹ️ El puntaje de invitación **VARÍA** (generalmente **>{PUNTAJE_REFERENCIA_ALTO}**)")
-    
-    # --- MONETIZACIÓN (CORREGIDA) ---
-    st.divider()
-    st.write("☕ **Apoya el proyecto / Soutenir ce projet:**")
-    st.write("Si esta herramienta te ayudó, ¡invítame a un café!")
-    
-    # ENLACE CORREGIDO CON TU USUARIO Y COMILLAS CORRECTAS
-    st.markdown("[**☕ Invítame un café (Donar)**](https://www.buymeacoffee.com/CalculatricePSTQQuebec)", unsafe_allow_html=True)
-    
-    st.write("---")
-    st.write("¿Necesitas mejorar tu francés?")
-    st.markdown("[📚 Curso de Francés Recomendado](https://www.google.com)", unsafe_allow_html=True)
-
-
-# ==========================================
-# SECCIÓN A: CAPITAL HUMANO (Máx. 590 pts)
-# ==========================================
-st.header("A. Capital Humano (Máx. 590 pts)")
-
-# --- 1. IDIOMAS - FRANCÉS (Máx. 380 pts) ---
-st.subheader("1. Francés / Français (Máx. 380 pts)")
-st.caption("Los puntos se basan en exámenes oficiales (TEF/TCF).")
-col_f1, col_f2 = st.columns(2)
-
-with col_f1:
-    fr_oral = st.selectbox("Expresión Oral (Máx. 100 pts)", ["Sin examen", "B2 (80 pts)", "C1 (90 pts)", "C2 (100 pts)"], key='fr_oral')
-    pts_oral = 0
-    if "C2" in fr_oral: pts_oral = 100
-    elif "C1" in fr_oral: pts_oral = 90
-    elif "B2" in fr_oral: pts_oral = 80
-    
-    fr_escucha = st.selectbox("Comprensión Auditiva (Máx. 100 pts)", ["Sin examen", "B2 (80 pts)", "C1 (90 pts)", "C2 (100 pts)"], key='fr_escucha')
-    pts_escucha = 0
-    if "C2" in fr_escucha: pts_escucha = 100
-    elif "C1" in fr_escucha: pts_escucha = 90
-    elif "B2" in fr_escucha: pts_escucha = 80
-
-with col_f2:
-    fr_escrito = st.selectbox("Expresión Escrita (Máx. 90 pts)", ["Sin examen", "B2 (70 pts)", "C1 (80 pts)", "C2 (90 pts)"], key='fr_escrito')
-    pts_escrito = 0
-    if "C2" in fr_escrito: pts_escrito = 90
-    elif "C1" in fr_escrito: pts_escrito = 80
-    elif "B2" in fr_escrito: pts_escrito = 70
-
-    fr_lectura = st.selectbox("Comprensión Lectora (Máx. 90 pts)", ["Sin examen", "B2 (70 pts)", "C1 (80 pts)", "C2 (90 pts)"], key='fr_lectura')
-    pts_lectura = 0
-    if "C2" in fr_lectura: pts_lectura = 90
-    elif "C1" in fr_lectura: pts_lectura = 80
-    elif "B2" in fr_lectura: pts_lectura = 70
-
-pts_fr_total = pts_oral + pts_escucha + pts_escrito + pts_lectura
-st.success(f"Puntos Francés Total: **{pts_fr_total}**")
-pts_total += pts_fr_total
-
-# --- 2. IDIOMAS - INGLÉS (Máx. 40 pts) ---
-st.subheader("2. Inglés / English (Máx. 40 pts)")
-ing_oral = st.slider("Nivel de Inglés (CLB/IELTS equivalente)", 0, 40, 0, step=10, key='ing_oral')
-pts_ing = ing_oral
-st.success(f"Puntos Inglés: **{pts_ing}**")
-pts_total += pts_ing
-
-# --- 3. EDAD (Máx. 110 pts) ---
-st.subheader("3. Edad / Âge (Máx. 110 pts)")
-edad = st.number_input("Edad actual", 18, 60, 29, key='edad_arrima')
-
-if 25 <= edad <= 35: pts_edad = 110
-elif 20 <= edad <= 24: pts_edad = 90
-elif 36 <= edad <= 40: pts_edad = 70
-elif 41 <= edad <= 45: pts_edad = 40
-else: pts_edad = 0
-
-st.success(f"Puntos Edad: **{pts_edad}**")
-pts_total += pts_edad
-
-# --- 4. EXPERIENCIA (Máx. 80 pts) ---
-st.subheader("4. Experiencia Laboral (Máx. 80 pts)")
-st.caption("Experiencia a tiempo completo en los últimos 5 años (TEER 0, 1, 2, 3).")
-meses_exp = st.slider("Meses de experiencia", 0, 60, 24, key='exp_arrima')
-
-if meses_exp >= 48: pts_exp = 80
-elif meses_exp >= 24: pts_exp = 60
-elif meses_exp >= 12: pts_exp = 30
-else: pts_exp = 0
-
-st.success(f"Puntos Experiencia: **{pts_exp}**")
-pts_total += pts_exp
-
-# ==========================================
-# SECCIÓN B: NECESIDADES DE QUEBEC (Máx. 760 pts)
-# ==========================================
-st.header("B. Necesidades de Quebec (Máx. 760 pts)")
-
-# --- 5. ÁREA DE FORMACIÓN (Máx. 140 pts) ---
-st.subheader("5. Área de Formación (Domaine de formation) (Máx. 140 pts)")
-st.caption("Los puntos se asignan según la demanda de tu profesión en la lista del MIFI.")
-area_formacion = st.selectbox(
-    "Selecciona el Nivel de Prioridad de tu Área de Formación",
-    options=[("Sección A (Prioritaria, ej: TI/Salud)", 140), ("Sección B", 100), ("Sección C", 60), ("Sección D/Otros", 20)],
-    format_func=lambda x: x[0]
+st.set_page_config(
+    page_title="Calculadora PSTQ Quebec",
+    page_icon="⚜️",
+    layout="centered"
 )
-pts_area = area_formacion[1]
-st.success(f"Puntos Área de Formación: **{pts_area}**")
-pts_total += pts_area
 
-# --- 6. OFERTA DE EMPLEO (Máx. 180 pts) ---
-st.subheader("6. Oferta de Empleo Validada (VJO) (Máx. 180 pts)")
-oferta = st.selectbox(
-    "¿Tienes una oferta de empleo validada por el MIFI?",
-    options=[("No", 0), ("Sí, en Montreal (140 pts)", 140), ("Sí, fuera de Montreal (180 pts)", 180)], 
-    format_func=lambda x: x[0]
-)
-pts_oferta = oferta[1]
-st.success(f"Puntos Oferta de Empleo: **{pts_oferta}**")
-pts_total += pts_oferta
+# --- GESTIÓN DEL IDIOMA / GESTION DE LA LANGUE ---
+if 'language' not in st.session_state:
+    st.session_state.language = 'es'
 
-# --- 7. HIJOS (ENFANTS) (Máx. 80 pts) ---
-st.subheader("7. Hijos / Enfants (Máx. 80 pts)")
-st.caption("40 puntos por cada hijo dependiente menor de 22 años.")
-num_hijos = st.number_input("Número de hijos menores de 22 años", 0, 5, 0, key='num_hijos_arrima')
-pts_hijos = num_hijos * 40 # 40 pts por hijo
-if pts_hijos > 80: pts_hijos = 80 # Máximo 80 pts (dos hijos)
-st.success(f"Puntos por Hijos: **{pts_hijos}**")
-pts_total += pts_hijos
-
-
-# ==========================================
-# SECCIÓN C: CÓNYUGE (CONJOINT) - SOLO SI APLICA
-# ==========================================
-if es_casado:
-    st.header("C. Factores del Cónyuge / Facteurs du Conjoint (Máx. 180 pts)")
-    st.info("La pareja aporta puntos, principalmente por el francés.")
-    
-    # Francés Cónyuge (Máx 180 pts)
-    fr_c_oral = st.slider("Francés Oral Cónyuge (Máx. 100 pts)", 0, 100, 0, step=20, key='fr_c_oral')
-    fr_c_escrito = st.slider("Francés Escrito Cónyuge (Máx. 80 pts)", 0, 80, 0, step=20, key='fr_c_escrito')
-    
-    pts_fr_c_total = fr_c_oral + fr_c_escrito
-    
-    # Otros factores (Edad, Formación, etc., son menos en el Arrima Score)
-    pts_conyuge_total = pts_fr_c_total
-    
-    st.success(f"Puntos aportados por Cónyuge: **{pts_conyuge_total}**")
-    pts_total += pts_conyuge_total
-
-# --- FACTOR ADICIONAL: EXPERIENCIA EN QUEBEC (Máx. 180 pts) ---
-st.header("D. Experiencia en Quebec (Máx. 180 pts)")
-exp_qc = st.selectbox(
-    "Experiencia o Estudios en Québec",
-    options=[("Ninguna", 0), ("Trabajo (12+ meses, TEER 0/1/2/3)", 180), ("Estudios (18+ meses)", 180), ("Trabajo o Estudios (6-11 meses)", 50)],
-    format_func=lambda x: x[0]
-)
-pts_exp_qc = exp_qc[1]
-st.success(f"Puntos Experiencia/Estudios QC: **{pts_exp_qc}**")
-pts_total += pts_exp_qc
-
-
-# ==========================================
-# RESULTADOS FINALES
-# ==========================================
-st.divider()
-st.subheader("📊 RESULTADO FINAL (RÉSULTAT FINAL)")
-
-col_res1, col_res2 = st.columns(2)
-
-with col_res1:
-    st.metric(label="Tu Puntaje de CLASIFICACIÓN Total", value=f"{pts_total} pts")
-    st.metric(label="Puntaje Máximo Posible", value=f"~1350 pts")
-
-with col_res2:
-    st.write("#### Análisis de Ranking:")
-    
-    st.markdown(f"**Puntaje de Referencia para Invitación (Ejemplo): {PUNTAJE_REFERENCIA_ALTO} pts**")
-    
-    if pts_total >= PUNTAJE_REFERENCIA_ALTO:
-        st.success("✅ **PERFIL MUY COMPETITIVO:** Tu puntaje es alto y tienes buenas probabilidades.")
-        st.balloons()
+def toggle_language():
+    if st.session_state.language == 'es':
+        st.session_state.language = 'fr'
     else:
-        st.error(f"⚠️ **PERFIL NO GARANTIZADO:** Tu puntaje (Arrima) necesita mejorar para ser invitado.")
-        st.markdown(f"**Mejora:** Necesitas enfocarte en el **Francés (Máx. 380 pts)** o conseguir una **Oferta de Empleo (Máx. 180 pts)**.")
+        st.session_state.language = 'es'
 
-# Disclaimer final
-st.caption("""
----
-**Nota Legal:** Esta es una SIMULACIÓN del puntaje de CLASIFICACIÓN Arrima (PSTQ). El puntaje real de corte para las invitaciones es variable y fijado por el MIFI.
-*Avertissement : Ceci est une simulation du score de classement Arrima (PSTQ). Le seuil d'invitation est variable.*
-""")
+# --- TEXTOS Y TRADUCCIONES / TEXTES ET TRADUCTIONS ---
+translations = {
+    'es': {
+        'title': "Calculadora de Puntos PSTQ (Quebec)",
+        'lang_btn': "Passer au Français 🇫🇷",
+        'disclaimer_title': "⚠️ AVISO LEGAL IMPORTANTE",
+        'disclaimer_text': """
+            No somos abogados, consultores de inmigración ni asesores. 
+            Esta herramienta no pertenece al gobierno de Quebec (MIFI) ni al gobierno federal de Canadá.
+            El propósito de esta calculadora es meramente informativo y educativo para estimar un puntaje.
+            Para asesoría legal, contacte a un consultor regulado o visite el sitio oficial de Arrima.
+        """,
+        'sidebar_title': "Opciones y Apoyo",
+        'coffee_text': "¿Te sirvió esta herramienta? ¡Invítame a un café!",
+        'coffee_btn': "☕ Buy Me a Coffee",
+        'course_text': "¿Necesitas mejorar tu puntaje de idioma?",
+        'course_btn': "📚 Ver Cursos de Francés",
+        # Secciones del formulario
+        'sec_human_cap': "Capital Humano",
+        'label_age': "¿Cuál es tu edad?",
+        'label_edu': "Nivel de escolaridad más alto",
+        'opt_phd': "Doctorado",
+        'opt_master': "Maestría",
+        'opt_bachelor': "Licenciatura / Grado (3+ años)",
+        'opt_diploma': "Diploma Técnico / College",
+        'opt_hs': "Secundaria",
+        'label_area': "Área de formación (Campo de estudio)",
+        'opt_area_a': "Sección A (Alta demanda)",
+        'opt_area_b': "Sección B",
+        'opt_area_c': "Sección C",
+        'opt_area_d': "Sección D / General",
+        'label_exp': "Meses de experiencia laboral (últimos 5 años)",
+        'label_fr': "Nivel de Francés (Comprensión y Expresión)",
+        'label_en': "Nivel de Inglés",
+        'sec_quebec': "Oferta y Mercado de Quebec",
+        'label_vjo': "¿Tienes una Oferta de Empleo Validada (VJO)?",
+        'opt_no_vjo': "No",
+        'opt_vjo_mtl': "Sí, dentro de Montreal",
+        'opt_vjo_out': "Sí, fuera de Montreal",
+        'label_quebec_deg': "¿Tienes un diploma obtenido en Quebec?",
+        'label_spose': "¿Vienes con pareja?",
+        'btn_calc': "Calcular Puntaje",
+        'result_title': "Tu Puntaje Estimado",
+        'result_msg': "puntos de un máximo posible de 1350."
+    },
+    'fr': {
+        'title': "Calculateur de Points PSTQ (Québec)",
+        'lang_btn': "Cambiar a Español 🇪🇸",
+        'disclaimer_title': "⚠️ AVIS DE NON-RESPONSABILITÉ",
+        'disclaimer_text': """
+            Nous ne sommes pas avocats, consultants en immigration ou conseillers.
+            Cet outil n'appartient ni au gouvernement du Québec (MIFI) ni au gouvernement fédéral du Canada.
+            Le but de ce calculateur est purement informatif et éducatif pour estimer un score.
+            Pour un avis juridique, contactez un consultant réglementé ou visitez le site officiel d'Arrima.
+        """,
+        'sidebar_title': "Options et Soutien",
+        'coffee_text': "Cet outil vous a aidé ? Offrez-moi un café !",
+        'coffee_btn': "☕ Buy Me a Coffee",
+        'course_text': "Besoin d'améliorer votre score linguistique ?",
+        'course_btn': "📚 Voir les Cours de Français",
+        # Sections du formulaire
+        'sec_human_cap': "Capital Humain",
+        'label_age': "Quel est votre âge ?",
+        'label_edu': "Niveau de scolarité le plus élevé",
+        'opt_phd': "Doctorat",
+        'opt_master': "Maîtrise",
+        'opt_bachelor': "Baccalauréat / Licence (3+ ans)",
+        'opt_diploma': "Diplôme Technique / Collégial",
+        'opt_hs': "Secondaire",
+        'label_area': "Domaine de formation",
+        'opt_area_a': "Section A (Forte demande)",
+        'opt_area_b': "Section B",
+        'opt_area_c': "Section C",
+        'opt_area_d': "Section D / Général",
+        'label_exp': "Mois d'expérience de travail (5 dernières années)",
+        'label_fr': "Niveau de Français (Compréhension et Expression)",
+        'label_en': "Niveau d'Anglais",
+        'sec_quebec': "Offre et Marché du Québec",
+        'label_vjo': "Avez-vous une Offre d'Emploi Validée (OEV) ?",
+        'opt_no_vjo': "Non",
+        'opt_vjo_mtl': "Oui, à l'intérieur de Montréal",
+        'opt_vjo_out': "Oui, à l'extérieur de Montréal",
+        'label_quebec_deg': "Avez-vous un diplôme obtenu au Québec ?",
+        'label_spose': "Venez-vous avec un conjoint ?",
+        'btn_calc': "Calculer le Score",
+        'result_title': "Votre Score Estimé",
+        'result_msg': "points sur un maximum possible de 1350."
+    }
+}
+
+# Seleccionar idioma actual / Sélectionner la langue actuelle
+t = translations[st.session_state.language]
+
+# --- BARRA LATERAL (SIDEBAR) ---
+with st.sidebar:
+    # Botón de idioma / Bouton de langue
+    st.button(t['lang_btn'], on_click=toggle_language)
+    
+    st.markdown("---")
+    st.header(t['sidebar_title'])
+    
+    # Disclaimer en la barra lateral o principal
+    st.warning(f"**{t['disclaimer_title']}**\n{t['disclaimer_text']}")
+    
+    st.markdown("---")
+    
+    # Monetización / Monétisation
+    st.write(t['coffee_text'])
+    # REEMPLAZA 'tu_link_aqui' con tu enlace real de Buy Me a Coffee
+    st.link_button(t['coffee_btn'], "https://www.buymeacoffee.com/tu_usuario")
+    
+    st.write(t['course_text'])
+    # REEMPLAZA con tu enlace de afiliados o curso
+    st.link_button(t['course_btn'], "https://www.ejemplo-cursos-frances.com")
+
+# --- INTERFAZ PRINCIPAL / INTERFACE PRINCIPALE ---
+
+st.title(f"⚜️ {t['title']}")
+
+# Formulario / Formulaire
+with st.form("calculator_form"):
+    
+    st.subheader(t['sec_human_cap'])
+    
+    # Edad / Âge
+    age = st.number_input(t['label_age'], min_value=18, max_value=65, value=30)
+    
+    # Educación / Éducation
+    education = st.selectbox(t['label_edu'], [
+        t['opt_phd'], t['opt_master'], t['opt_bachelor'], t['opt_diploma'], t['opt_hs']
+    ])
+    
+    # Área de formación / Domaine de formation
+    area_training = st.selectbox(t['label_area'], [
+        t['opt_area_a'], t['opt_area_b'], t['opt_area_c'], t['opt_area_d']
+    ])
+    
+    # Experiencia / Expérience
+    experience_months = st.slider(t['label_exp'], 0, 60, 24)
+    
+    # Idiomas / Langues
+    col1, col2 = st.columns(2)
+    with col1:
+        french_level = st.select_slider(t['label_fr'], options=["0", "A1", "A2", "B1", "B2", "C1", "C2"], value="B2")
+    with col2:
+        english_level = st.select_slider(t['label_en'], options=["0", "A1", "A2", "B1", "B2", "C1", "C2"], value="0")
+
+    st.subheader(t['sec_quebec'])
+    
+    # Oferta Validada / Offre Validée
+    vjo = st.radio(t['label_vjo'], [t['opt_no_vjo'], t['opt_vjo_mtl'], t['opt_vjo_out']])
+    
+    # Otros factores / Autres facteurs
+    quebec_degree = st.checkbox(t['label_quebec_deg'])
+    spouse = st.checkbox(t['label_spose'])
+
+    submitted = st.form_submit_button(t['btn_calc'])
+
+# --- LÓGICA DE CÁLCULO / LOGIQUE DE CALCUL ---
+# NOTA: Estos valores son APROXIMADOS para llegar a la base de 1350.
+# Debes verificar la "Grille de sélection" oficial más reciente para ajustar los números exactos.
+
+def calculate_score():
+    score = 0
+    
+    # 1. Edad (Max ~130)
+    if 18 <= age <= 30: score += 130
+    elif age <= 45: score += (130 - (age - 30) * 5)
+    
+    # 2. Educación (Max ~90)
+    if education == t['opt_phd']: score += 90
+    elif education == t['opt_master']: score += 75
+    elif education == t['opt_bachelor']: score += 60
+    elif education == t['opt_diploma']: score += 45
+    
+    # 3. Área de Formación (Max ~60)
+    if area_training == t['opt_area_a']: score += 60
+    elif area_training == t['opt_area_b']: score += 40
+    elif area_training == t['opt_area_c']: score += 20
+    
+    # 4. Experiencia (Max ~80)
+    # Aprox 1.3 puntos por mes hasta llegar al tope
+    score += min(80, int(experience_months * 1.5))
+    
+    # 5. Idiomas (Max Fr ~145 + En ~25 = 170 aprox)
+    # Francés (Ponderación alta)
+    fr_scores = {"0":0, "A1":0, "A2":20, "B1":40, "B2":80, "C1":120, "C2":145}
+    score += fr_scores.get(french_level, 0)
+    
+    # Inglés
+    en_scores = {"0":0, "A1":0, "A2":0, "B1":0, "B2":10, "C1":15, "C2":25}
+    score += en_scores.get(english_level, 0)
+    
+    # 6. Oferta Validada (VJO) - Factor Crítico (Max ~380 - 180 dependiendo la zona)
+    # Ajuste para acercarse a la escala de 1350 puntos.
+    if vjo == t['opt_vjo_out']:
+        score += 380 # Fuera de Montreal da muchos puntos
+    elif vjo == t['opt_vjo_mtl']:
+        score += 180 # Dentro de Montreal
+        
+    # 7. Factores Quebec / Pareja
+    if quebec_degree: score += 50
+    if spouse: score += 40 # Simplificado
+    
+    return score
+
+# --- RESULTADOS / RÉSULTATS ---
+if submitted:
+    final_score = calculate_score()
+    
+    st.markdown("---")
+    st.metric(label=t['result_title'], value=f"{final_score} / 1350")
+    st.info(f"{final_score} {t['result_msg']}")
+    
+    # Lógica visual simple / Logique visuelle simple
+    if final_score >= 600:
+        st.balloons()
+        st.success("¡Tienes un perfil competitivo! / Vous avez un profil compétitif !")
+    else:
+        st.warning("Podrías necesitar mejorar el idioma o conseguir una oferta. / Vous pourriez avoir besoin d'améliorer la langue ou d'obtenir une offre.")
