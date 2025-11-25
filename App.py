@@ -1,16 +1,22 @@
 import streamlit as st
 
 # --- CONFIGURACIÓN DE PÁGINA / CONFIGURATION DE LA PAGE ---
-st.set_page_config(page_title="Calculadora Completa PSTQ Québec", page_icon="⚜️", layout="wide")
+st.set_page_config(page_title="Calculadora PSTQ (Arrima Score)", page_icon="⚜️", layout="wide")
 
-st.title("⚜️ Calculadora Avanzada de Puntos Québec (PSTQ)")
+st.title("⚜️ Calculadora de Puntaje de CLASIFICACIÓN Arrima (PSTQ)")
 st.markdown("""
-**Esta herramienta simula la 'Grille de sélection' oficial.**
-Calcula el puntaje para el solicitante principal y, si aplica, para su cónyuge.
-*Cet outil simule la Grille de sélection officielle.*
+**Esta herramienta simula el Score de Classement de Arrima.**
+El puntaje final (máx. ~1350) se usa para el ranking de invitaciones. El corte de invitación es variable y alto (ej: 600+).
+*Cet outil simule le Score de Classement Arrima (PSTQ). Le seuil d'invitation est variable.*
 """)
 
-# --- BARRA LATERAL: ESTADO CIVIL / BARRE LATÉRALE : ÉTAT CIVIL ---
+# --- VARIABLES DE PUNTAJE Y CORTE (Máx. Total ~1350 pts) ---
+pts_total = 0
+
+# Establecemos un puntaje de referencia alto para la comparación
+PUNTAJE_REFERENCIA_ALTO = 600
+
+# --- BARRA LATERAL: ESTADO CIVIL Y MONETIZACIÓN ---
 with st.sidebar:
     st.header("Perfil del Solicitante / Profil")
     estado_civil = st.radio(
@@ -20,241 +26,162 @@ with st.sidebar:
     
     es_casado = "Casado" in estado_civil
     
-    st.info("ℹ️ El puntaje de corte cambia si estás solo o en pareja.")
+    st.info(f"ℹ️ El puntaje de invitación **VARÍA** (generalmente **>{PUNTAJE_REFERENCIA_ALTO}**)")
     
     # --- MONETIZACIÓN (CORREGIDA) ---
     st.divider()
     st.write("☕ **Apoya el proyecto / Soutenir ce projet:**")
     st.write("Si esta herramienta te ayudó, ¡invítame a un café!")
     
-    # ENLACE CORREGIDO CON LAS COMILLAS
+    # ENLACE CORREGIDO CON TU USUARIO Y COMILLAS CORRECTAS
     st.markdown("[**☕ Invítame un café (Donar)**](https://www.buymeacoffee.com/CalculatricePSTQQuebec)", unsafe_allow_html=True)
     
     st.write("---")
     st.write("¿Necesitas mejorar tu francés?")
-    # Aquí pondrías tu enlace de afiliado a un curso
-    st.markdown("[📚 Curso recomendado de Francés](https://www.google.com)", unsafe_allow_html=True)
+    st.markdown("[📚 Curso de Francés Recomendado](https://www.google.com)", unsafe_allow_html=True)
 
-
-# --- VARIABLES DE PUNTAJE ---
-pts_total = 0
-# Valores históricos de corte para el CSQ, aunque Arrima usa ranking
-pts_corte_seleccion = 50 if not es_casado else 59
 
 # ==========================================
-# SECCIÓN 1: FORMACIÓN (FORMATION)
+# SECCIÓN A: CAPITAL HUMANO (Máx. 590 pts)
 # ==========================================
-st.header("1. Formación / Formation")
-col1, col2 = st.columns(2)
+st.header("A. Capital Humano (Máx. 590 pts)")
 
-with col1:
-    nivel_estudios = st.selectbox(
-        "Nivel de escolaridad / Niveau de scolarité",
-        options=[
-            ("Doctorado", 14),
-            ("Maestría / Maîtrise", 12),
-            ("Licenciatura (3+ años) / 1er cycle 3+ ans", 10),
-            ("Licenciatura (2 años) / 1er cycle 2 ans", 6),
-            ("Técnico (DEC) / Collégial technique 3 ans", 8),
-            ("Técnico (AEC) / Collégial technique 2 ans", 6),
-            ("Secundaria profesional (DEP) / Secondaire pro", 6),
-            ("Secundaria general / Secondaire général", 2)
-        ],
-        format_func=lambda x: x[0]
-    )
-    pts_formacion = nivel_estudios[1]
+# --- 1. IDIOMAS - FRANCÉS (Máx. 380 pts) ---
+st.subheader("1. Francés / Français (Máx. 380 pts)")
+st.caption("Los puntos se basan en exámenes oficiales (TEF/TCF).")
+col_f1, col_f2 = st.columns(2)
 
-with col2:
-    st.markdown("**Área de Formación (Domaine de formation)**")
-    st.markdown("""
-    *Nota: Depende de tu carrera y demanda (Sección A, B, C...).*
-    """)
-    area_formacion = st.selectbox(
-        "Puntos por Área de Formación",
-        options=[("Sección A (Prioritario)", 12), ("Sección B", 9), ("Sección C", 6), ("Sección D", 2), ("Sección E/F/G", 0)],
-        format_func=lambda x: x[0]
-    )
-    pts_area = area_formacion[1]
+with col_f1:
+    fr_oral = st.selectbox("Expresión Oral (Máx. 100 pts)", ["Sin examen", "B2 (80 pts)", "C1 (90 pts)", "C2 (100 pts)"], key='fr_oral')
+    pts_oral = 0
+    if "C2" in fr_oral: pts_oral = 100
+    elif "C1" in fr_oral: pts_oral = 90
+    elif "B2" in fr_oral: pts_oral = 80
+    
+    fr_escucha = st.selectbox("Comprensión Auditiva (Máx. 100 pts)", ["Sin examen", "B2 (80 pts)", "C1 (90 pts)", "C2 (100 pts)"], key='fr_escucha')
+    pts_escucha = 0
+    if "C2" in fr_escucha: pts_escucha = 100
+    elif "C1" in fr_escucha: pts_escucha = 90
+    elif "B2" in fr_escucha: pts_escucha = 80
 
-st.success(f"Puntos Formación: **{pts_formacion + pts_area}**")
-pts_total += pts_formacion + pts_area
+with col_f2:
+    fr_escrito = st.selectbox("Expresión Escrita (Máx. 90 pts)", ["Sin examen", "B2 (70 pts)", "C1 (80 pts)", "C2 (90 pts)"], key='fr_escrito')
+    pts_escrito = 0
+    if "C2" in fr_escrito: pts_escrito = 90
+    elif "C1" in fr_escrito: pts_escrito = 80
+    elif "B2" in fr_escrito: pts_escrito = 70
 
-# ==========================================
-# SECCIÓN 2: EXPERIENCIA (EXPÉRIENCE)
-# ==========================================
-st.header("2. Experiencia Laboral / Expérience")
-st.caption("Experiencia calificada en los últimos 5 años (TEER 0, 1, 2, 3).")
-meses_exp = st.slider("Meses de experiencia / Mois d'expérience", 0, 60, 24)
+    fr_lectura = st.selectbox("Comprensión Lectora (Máx. 90 pts)", ["Sin examen", "B2 (70 pts)", "C1 (80 pts)", "C2 (90 pts)"], key='fr_lectura')
+    pts_lectura = 0
+    if "C2" in fr_lectura: pts_lectura = 90
+    elif "C1" in fr_lectura: pts_lectura = 80
+    elif "B2" in fr_lectura: pts_lectura = 70
 
-if meses_exp >= 48: pts_exp = 8
-elif meses_exp >= 24: pts_exp = 6
-elif meses_exp >= 12: pts_exp = 4
+pts_fr_total = pts_oral + pts_escucha + pts_escrito + pts_lectura
+st.success(f"Puntos Francés Total: **{pts_fr_total}**")
+pts_total += pts_fr_total
+
+# --- 2. IDIOMAS - INGLÉS (Máx. 40 pts) ---
+st.subheader("2. Inglés / English (Máx. 40 pts)")
+ing_oral = st.slider("Nivel de Inglés (CLB/IELTS equivalente)", 0, 40, 0, step=10, key='ing_oral')
+pts_ing = ing_oral
+st.success(f"Puntos Inglés: **{pts_ing}**")
+pts_total += pts_ing
+
+# --- 3. EDAD (Máx. 110 pts) ---
+st.subheader("3. Edad / Âge (Máx. 110 pts)")
+edad = st.number_input("Edad actual", 18, 60, 29, key='edad_arrima')
+
+if 25 <= edad <= 35: pts_edad = 110
+elif 20 <= edad <= 24: pts_edad = 90
+elif 36 <= edad <= 40: pts_edad = 70
+elif 41 <= edad <= 45: pts_edad = 40
+else: pts_edad = 0
+
+st.success(f"Puntos Edad: **{pts_edad}**")
+pts_total += pts_edad
+
+# --- 4. EXPERIENCIA (Máx. 80 pts) ---
+st.subheader("4. Experiencia Laboral (Máx. 80 pts)")
+st.caption("Experiencia a tiempo completo en los últimos 5 años (TEER 0, 1, 2, 3).")
+meses_exp = st.slider("Meses de experiencia", 0, 60, 24, key='exp_arrima')
+
+if meses_exp >= 48: pts_exp = 80
+elif meses_exp >= 24: pts_exp = 60
+elif meses_exp >= 12: pts_exp = 30
 else: pts_exp = 0
 
 st.success(f"Puntos Experiencia: **{pts_exp}**")
 pts_total += pts_exp
 
 # ==========================================
-# SECCIÓN 3: EDAD (ÂGE)
+# SECCIÓN B: NECESIDADES DE QUEBEC (Máx. 760 pts)
 # ==========================================
-st.header("3. Edad / Âge")
-edad = st.number_input("Edad actual / Âge actuel", 18, 60, 29)
+st.header("B. Necesidades de Quebec (Máx. 760 pts)")
 
-if 18 <= edad <= 35: pts_edad = 16
-elif edad == 36: pts_edad = 14
-elif edad == 37: pts_edad = 12
-elif edad == 38: pts_edad = 10
-elif edad == 39: pts_edad = 8
-elif edad == 40: pts_edad = 6
-elif edad == 41: pts_edad = 4
-elif edad == 42: pts_edad = 2
-else: pts_edad = 0
+# --- 5. ÁREA DE FORMACIÓN (Máx. 140 pts) ---
+st.subheader("5. Área de Formación (Domaine de formation) (Máx. 140 pts)")
+st.caption("Los puntos se asignan según la demanda de tu profesión en la lista del MIFI.")
+area_formacion = st.selectbox(
+    "Selecciona el Nivel de Prioridad de tu Área de Formación",
+    options=[("Sección A (Prioritaria, ej: TI/Salud)", 140), ("Sección B", 100), ("Sección C", 60), ("Sección D/Otros", 20)],
+    format_func=lambda x: x[0]
+)
+pts_area = area_formacion[1]
+st.success(f"Puntos Área de Formación: **{pts_area}**")
+pts_total += pts_area
 
-st.success(f"Puntos Edad: **{pts_edad}**")
-pts_total += pts_edad
-
-# ==========================================
-# SECCIÓN 4: IDIOMAS (LANGUES)
-# ==========================================
-st.header("4. Idiomas / Langues")
-st.caption("Francés (Máx 16) + Inglés (Máx 6)")
-
-# Francés
-col_f1, col_f2 = st.columns(2)
-with col_f1:
-    fr_oral = st.selectbox("Francés: Comprensión y Expresión Oral", ["Principiante", "B1", "B2 (Intermedio Alto)", "C1/C2 (Avanzado)"])
-    pts_fr_oral = 0
-    if "C1" in fr_oral: pts_fr_oral = 14
-    elif "B2" in fr_oral: pts_fr_oral = 10
-    elif "B1" in fr_oral: pts_fr_oral = 4
-    
-with col_f2:
-    fr_escrito = st.selectbox("Francés: Comprensión y Expresión Escrita", ["Principiante", "B1", "B2", "C1/C2"])
-    pts_fr_escrito = 0
-    if "C1" in fr_escrito: pts_fr_escrito = 2
-    elif "B2" in fr_escrito: pts_fr_escrito = 1
-
-pts_fr_total = pts_fr_oral + pts_fr_escrito
-
-# Inglés
-ing_oral = st.checkbox("¿Tienes inglés avanzado (IELTS 5.0+ / CLB 5+)?")
-pts_ing = 6 if ing_oral else 0
-
-st.success(f"Puntos Idiomas: **{pts_fr_total + pts_ing}**")
-pts_total += pts_fr_total + pts_ing
-
-# ==========================================
-# SECCIÓN 5: ESTANCIA Y FAMILIA (SÉJOUR ET FAMILLE)
-# ==========================================
-st.header("5. Estancia y Familia en Quebec / Séjour et Famille")
-col_fam1, col_fam2 = st.columns(2)
-
-with col_fam1:
-    estancia = st.selectbox(
-        "Estancias en Quebec / Séjours au Québec",
-        options=[
-            ("Sin estancia / Aucune", 0),
-            ("Estudios o Trabajo (6+ meses)", 5),
-            ("Estudios o Trabajo (3-6 meses)", 5), 
-            ("Visita turística (>2 semanas)", 1)
-        ],
-        format_func=lambda x: x[0]
-    )
-    pts_estancia = estancia[1]
-
-with col_fam2:
-    familia = st.selectbox(
-        "Familia en Quebec (Residente/Ciudadano)",
-        options=[("No", 0), ("Cónyuge, padre, hijo, hermano/a, abuelo/a", 3)],
-        format_func=lambda x: x[0]
-    )
-    pts_familia = familia[1]
-
-pts_total += pts_estancia + pts_familia
-
-# ==========================================
-# SECCIÓN 6: CÓNYUGE (CONJOINT) - SOLO SI APLICA
-# ==========================================
-if es_casado:
-    st.header("6. Factores del Cónyuge / Facteurs du Conjoint")
-    st.info("Al declarar pareja, el puntaje necesario para aprobar sube.")
-    
-    col_c1, col_c2, col_c3 = st.columns(3)
-    
-    with col_c1:
-        # Edad cónyuge
-        edad_c = st.number_input("Edad Cónyuge", 18, 65, 30)
-        if 18 <= edad_c <= 35: pts_edad_c = 3
-        elif edad_c == 36: pts_edad_c = 2
-        elif edad_c == 37: pts_edad_c = 1
-        else: pts_edad_c = 0
-        st.write(f"Pts Edad: {pts_edad_c}")
-
-    with col_c2:
-        # Educación cónyuge
-        edu_c = st.selectbox("Educación Cónyuge", ["Universitario (3+ años)", "Técnico/Otros", "Secundaria"], index=1)
-        if "Universitario" in edu_c: pts_edu_c = 3 
-        elif "Técnico" in edu_c: pts_edu_c = 2
-        else: pts_edu_c = 1
-        st.write(f"Pts Edu: {pts_edu_c}")
-        
-        # Área formación cónyuge
-        area_c = st.selectbox("Área Formación Cónyuge", ["Sección A (Prioritaria)", "Sección B", "Otras"], index=2)
-        pts_area_c = 4 if "A" in area_c else (3 if "B" in area_c else 0)
-        st.write(f"Pts Área: {pts_area_c}")
-
-    with col_c3:
-        # Francés cónyuge
-        fr_c = st.selectbox("Francés Oral Cónyuge", ["Avanzado (B2+)", "Intermedio", "Básico"])
-        if "Avanzado" in fr_c: pts_fr_c = 3 
-        else: pts_fr_c = 0
-        st.write(f"Pts Francés: {pts_fr_c}")
-
-    pts_conyuge_total = pts_edad_c + pts_edu_c + pts_area_c + pts_fr_c
-    st.success(f"Puntos aportados por Cónyuge: **{pts_conyuge_total}**")
-    pts_total += pts_conyuge_total
-
-# ==========================================
-# SECCIÓN 7: OFERTA DE EMPLEO (OFFRE D'EMPLOI)
-# ==========================================
-st.header("7. Oferta de Empleo Validada (VJO)")
+# --- 6. OFERTA DE EMPLEO (Máx. 180 pts) ---
+st.subheader("6. Oferta de Empleo Validada (VJO) (Máx. 180 pts)")
 oferta = st.selectbox(
-    "¿Tienes una oferta de empleo validada?",
-    options=[("No", 0), ("Sí, en Montreal", 8), ("Sí, fuera de Montreal", 14)], 
+    "¿Tienes una oferta de empleo validada por el MIFI?",
+    options=[("No", 0), ("Sí, en Montreal (140 pts)", 140), ("Sí, fuera de Montreal (180 pts)", 180)], 
     format_func=lambda x: x[0]
 )
 pts_oferta = oferta[1]
-st.success(f"Puntos Oferta: **{pts_oferta}**")
+st.success(f"Puntos Oferta de Empleo: **{pts_oferta}**")
 pts_total += pts_oferta
 
-# ==========================================
-# SECCIÓN 8: HIJOS (ENFANTS)
-# ==========================================
-st.header("8. Hijos / Enfants")
-tiene_hijos = st.checkbox("¿Tienes hijos?")
-pts_hijos = 0
-
-if tiene_hijos:
-    st.write("Ingresa la edad de cada hijo:")
-    num_hijos = st.number_input("Número de hijos", 1, 10, 1)
-    
-    for i in range(num_hijos):
-        edad_hijo = st.number_input(f"Edad hijo {i+1}", 0, 22, 5, key=f"hijo_{i}")
-        if edad_hijo <= 12:
-            pts_hijos += 4
-        elif 13 <= edad_hijo <= 21:
-            pts_hijos += 2
-            
+# --- 7. HIJOS (ENFANTS) (Máx. 80 pts) ---
+st.subheader("7. Hijos / Enfants (Máx. 80 pts)")
+st.caption("40 puntos por cada hijo dependiente menor de 22 años.")
+num_hijos = st.number_input("Número de hijos menores de 22 años", 0, 5, 0, key='num_hijos_arrima')
+pts_hijos = num_hijos * 40 # 40 pts por hijo
+if pts_hijos > 80: pts_hijos = 80 # Máximo 80 pts (dos hijos)
 st.success(f"Puntos por Hijos: **{pts_hijos}**")
 pts_total += pts_hijos
 
+
 # ==========================================
-# SECCIÓN 9: AUTONOMÍA FINANCIERA
+# SECCIÓN C: CÓNYUGE (CONJOINT) - SOLO SI APLICA
 # ==========================================
-st.header("9. Autonomía Financiera")
-finanzas = st.checkbox("¿Firmarás el contrato de autonomía financiera? (1 pto)")
-pts_finanzas = 1 if finanzas else 0
-pts_total += pts_finanzas
+if es_casado:
+    st.header("C. Factores del Cónyuge / Facteurs du Conjoint (Máx. 180 pts)")
+    st.info("La pareja aporta puntos, principalmente por el francés.")
+    
+    # Francés Cónyuge (Máx 180 pts)
+    fr_c_oral = st.slider("Francés Oral Cónyuge (Máx. 100 pts)", 0, 100, 0, step=20, key='fr_c_oral')
+    fr_c_escrito = st.slider("Francés Escrito Cónyuge (Máx. 80 pts)", 0, 80, 0, step=20, key='fr_c_escrito')
+    
+    pts_fr_c_total = fr_c_oral + fr_c_escrito
+    
+    # Otros factores (Edad, Formación, etc., son menos en el Arrima Score)
+    pts_conyuge_total = pts_fr_c_total
+    
+    st.success(f"Puntos aportados por Cónyuge: **{pts_conyuge_total}**")
+    pts_total += pts_conyuge_total
+
+# --- FACTOR ADICIONAL: EXPERIENCIA EN QUEBEC (Máx. 180 pts) ---
+st.header("D. Experiencia en Quebec (Máx. 180 pts)")
+exp_qc = st.selectbox(
+    "Experiencia o Estudios en Québec",
+    options=[("Ninguna", 0), ("Trabajo (12+ meses, TEER 0/1/2/3)", 180), ("Estudios (18+ meses)", 180), ("Trabajo o Estudios (6-11 meses)", 50)],
+    format_func=lambda x: x[0]
+)
+pts_exp_qc = exp_qc[1]
+st.success(f"Puntos Experiencia/Estudios QC: **{pts_exp_qc}**")
+pts_total += pts_exp_qc
+
 
 # ==========================================
 # RESULTADOS FINALES
@@ -265,26 +192,24 @@ st.subheader("📊 RESULTADO FINAL (RÉSULTAT FINAL)")
 col_res1, col_res2 = st.columns(2)
 
 with col_res1:
-    st.metric(label="Tu Puntaje Total", value=f"{pts_total} pts")
+    st.metric(label="Tu Puntaje de CLASIFICACIÓN Total", value=f"{pts_total} pts")
+    st.metric(label="Puntaje Máximo Posible", value=f"~1350 pts")
 
 with col_res2:
-    st.write("#### Análisis:")
+    st.write("#### Análisis de Ranking:")
     
-    # Corte de Selección (Total)
-    umbral = 59 if es_casado else 50
-    st.write(f"Umbral de aprobación (CSQ): **{umbral} puntos** (aprox)")
+    st.markdown(f"**Puntaje de Referencia para Invitación (Ejemplo): {PUNTAJE_REFERENCIA_ALTO} pts**")
     
-    if pts_total >= umbral:
-        st.success("✅ **ELIGIBLE:** Superas el umbral de selección preliminar.")
+    if pts_total >= PUNTAJE_REFERENCIA_ALTO:
+        st.success("✅ **PERFIL MUY COMPETITIVO:** Tu puntaje es alto y tienes buenas probabilidades.")
         st.balloons()
     else:
-        st.error(f"❌ **NO ELIGIBLE AÚN:** Te faltan {umbral - pts_total} puntos.")
-        st.markdown("**Consejo:** Mejora tu nivel de francés para subir puntos.")
+        st.error(f"⚠️ **PERFIL NO GARANTIZADO:** Tu puntaje (Arrima) necesita mejorar para ser invitado.")
+        st.markdown(f"**Mejora:** Necesitas enfocarte en el **Francés (Máx. 380 pts)** o conseguir una **Oferta de Empleo (Máx. 180 pts)**.")
 
 # Disclaimer final
 st.caption("""
 ---
-**Nota Legal:** Esta aplicación es una simulación basada en la 'Grille de sélection' del MIFI. 
-Las leyes de inmigración cambian. No utilizar para procesos legales oficiales.
-*Avertissement : Cette application est une simulation.*
+**Nota Legal:** Esta es una SIMULACIÓN del puntaje de CLASIFICACIÓN Arrima (PSTQ). El puntaje real de corte para las invitaciones es variable y fijado por el MIFI.
+*Avertissement : Ceci est une simulation du score de classement Arrima (PSTQ). Le seuil d'invitation est variable.*
 """)
