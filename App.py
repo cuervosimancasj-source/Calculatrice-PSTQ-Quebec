@@ -59,7 +59,8 @@ t = {
         'teer_label': "Sélectionnez votre niveau (Catégorie TEER)",
         'teer_guide': "**Aide:** TEER 0,1 = Université/Gestion | TEER 2 = Collégial/Technique | TEER 3 = Métiers | TEER 4,5 = Secondaire/Manuel",
         'exp_label': "Années d'expérience qualifiée",
-        'lang_info': "**Exigences :** Volet 1 = Niveau 7 | Volet 2 = Niveau 5",
+        # AQUÍ ESTÁ EL CAMBIO DE IDIOMA PAREJA
+        'lang_info': "**Exigences :** Volet 1 = Niv 7 | Volet 2 = Niv 5 | **Conjoint = Niv 4**",
         'age': "Âge", 'spouse': "Conjoint(e) ?", 'kids12': "Enfants -12", 'kids13': "Enfants +12",
         'sp_section': "Données du Conjoint (Âge/Études)",
         'sp_fr_title': "Français du Conjoint",
@@ -93,7 +94,8 @@ t = {
         'teer_label': "Selecciona tu nivel (Categoría TEER)",
         'teer_guide': "**Ayuda:** TEER 0,1 = Universidad/Gerencia | TEER 2 = College/Técnico | TEER 3 = Oficios | TEER 4,5 = Secundaria/Manual",
         'exp_label': "Años de experiencia calificada",
-        'lang_info': "**Requisitos:** Volet 1 = Nivel 7 | Volet 2 = Nivel 5",
+        # AQUÍ ESTÁ EL CAMBIO DE IDIOMA PAREJA
+        'lang_info': "**Requisitos:** Volet 1 = Niv 7 | Volet 2 = Niv 5 | **Pareja = Niv 4**",
         'age': "Edad", 'spouse': "Pareja ?", 'kids12': "Hijos -12", 'kids13': "Hijos +12",
         'sp_section': "Datos de la Pareja (Edad/Estudios)",
         'sp_fr_title': "Francés de la Pareja",
@@ -127,7 +129,8 @@ t = {
         'teer_label': "Select your level (TEER Category)",
         'teer_guide': "**Help:** TEER 0,1 = University/Mgmt | TEER 2 = College/Tech | TEER 3 = Trades | TEER 4,5 = High School/Manual",
         'exp_label': "Years of qualified experience",
-        'lang_info': "**Requirements:** Volet 1 = Level 7 | Volet 2 = Level 5",
+        # AQUÍ ESTÁ EL CAMBIO DE IDIOMA PAREJA
+        'lang_info': "**Requirements:** Volet 1 = Lvl 7 | Volet 2 = Lvl 5 | **Spouse = Lvl 4**",
         'age': "Age", 'spouse': "Spouse ?", 'kids12': "Kids -12", 'kids13': "Kids +12",
         'sp_section': "Spouse Data (Age/Education)",
         'sp_fr_title': "Spouse's French",
@@ -256,7 +259,7 @@ with main_tab_calc:
             if spouse:
                 st.divider()
                 st.markdown(f"#### ❤️ {lang['sp_fr_title']}")
-                st.info("Niveau 7 (B2) = Points Max")
+                st.info("Niveau 4 (A2) Min | Niveau 7 (B2) Max Points")
                 sp_fr = st.select_slider(lang['sp_fr_label'], options=["0", "A1", "A2", "B1", "B2", "C1", "C2"], value="0")
 
         # SUB-TAB 4: QUEBEC
