@@ -7,44 +7,72 @@ st.set_page_config(
     layout="centered"
 )
 
-# --- 2. ESTILOS CSS ---
+# --- 2. ESTILOS CSS (CORRECCIÓN MÓVIL / DARK MODE) ---
 st.markdown("""
     <style>
-        .stApp { background-color: #f0f2f6; }
-        header[data-testid="stHeader"] { background-color: #003399; }
-        h1, h2, h3, .stMarkdown h1, .stMarkdown h2, .stMarkdown h3 { color: #003399 !important; }
+        /* 1. FORZAR FONDO CLARO GLOBAL */
+        .stApp {
+            background-color: #f0f2f6;
+            color: #31333F !important; /* Texto gris oscuro forzado */
+        }
         
-        /* Botones */
+        /* 2. ENCABEZADO AZUL */
+        header[data-testid="stHeader"] {
+            background-color: #003399;
+        }
+        
+        /* 3. TÍTULOS SIEMPRE AZULES */
+        h1, h2, h3, .stMarkdown h1, .stMarkdown h2, .stMarkdown h3 {
+            color: #003399 !important;
+        }
+        
+        /* 4. ARREGLO DE INPUTS (CASILLAS) QUE SALÍAN NEGRAS */
+        /* Forzamos fondo blanco y borde gris para los inputs */
+        div[data-baseweb="input"], div[data-baseweb="select"] {
+            background-color: white !important;
+            border-color: #d1d5db !important;
+            color: black !important;
+        }
+        input {
+            color: black !important; /* Texto dentro del input negro */
+        }
+        
+        /* 5. ARREGLO DE PESTAÑAS (TABS) QUE NO SE VEÍAN */
+        /* Pestañas no seleccionadas: Texto gris oscuro */
+        button[data-baseweb="tab"] {
+            color: #31333F !important;
+            background-color: transparent !important;
+        }
+        /* Pestaña seleccionada: Fondo Azul, Texto Blanco */
+        button[data-baseweb="tab"][aria-selected="true"] {
+            background-color: #003399 !important;
+            color: white !important;
+        }
+        
+        /* 6. BOTONES */
         div.stButton > button { width: 100%; border-radius: 8px; font-weight: bold; }
         div.stButton > button[type="primary"] { background-color: #003399; color: white; border: none; }
         div.stButton > button[type="primary"]:hover { background-color: #002266; }
         
-        /* Cajas estéticas */
-        .info-box { background-color: #e8f4fd; border-left: 5px solid #003399; padding: 15px; border-radius: 5px; }
-        .help-box { background-color: #fff3cd; border-left: 5px solid #ffc107; padding: 15px; border-radius: 5px; }
-        .step-box { background-color: white; padding: 15px; border-radius: 10px; border: 1px solid #ddd; margin-bottom: 10px; }
-        
-        /* CAJA DE RESULTADO */
-        .result-box {
-            background-color: #003399;
-            color: white !important;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            margin-top: 20px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        /* 7. TARJETAS Y CAJAS */
+        [data-testid="stForm"] {
+            background-color: white; padding: 1.5rem; border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1); border-top: 5px solid #003399;
         }
-        .result-box h2 {
-            color: white !important;
-            margin: 0;
-            font-size: 2em;
-        }
+        .info-box { background-color: #e8f4fd; border-left: 5px solid #003399; padding: 15px; border-radius: 5px; color: #31333F; }
+        .help-box { background-color: #fff3cd; border-left: 5px solid #ffc107; padding: 15px; border-radius: 5px; color: #31333F; }
+        .step-box { background-color: white; padding: 15px; border-radius: 10px; border: 1px solid #ddd; margin-bottom: 10px; color: #31333F; }
         
         /* Footer */
         .footer { margin-top: 50px; padding: 20px; border-top: 1px solid #ccc; text-align: center; color: #666; font-size: 0.85em; }
         
         /* Subtítulos decorativos */
         .deco-sub { color: #666; font-style: italic; margin-bottom: 15px; display: block; }
+        
+        /* Checkbox y Radio Buttons Labels */
+        label { color: #31333F !important; }
+        div[role="radiogroup"] label { color: #31333F !important; }
+        
     </style>
 """, unsafe_allow_html=True)
 
@@ -268,7 +296,6 @@ with main_tab_calc:
                 st.success(f"✅ Code: {result['code']} | TEER: {result['teer']} | {result['volet']}")
             else:
                 st.markdown(f"<div class='help-box'>{lang['teer_guide']}</div>", unsafe_allow_html=True)
-                # ENLACE EXTERNO
                 st.markdown(f"🔗 [{lang['noc_link_text']}](https://noc.esdc.gc.ca/)")
 
         st.divider()
@@ -320,17 +347,14 @@ with main_tab_calc:
         score = 0
         score_sp = 0 
         
-        # Edad
         if 18 <= age <= 30: score += 130
         elif age <= 45: score += (130 - (age-30)*5)
-        # Edu
         if "PhD" in education: score += 90
         elif "Master" in education: score += 75
         elif "Bachelor" in education: score += 60
         elif "College" in education: score += 50
         else: score += 30
         
-        # Mapeo
         if "TEER 0, 1" in teer_selection: score += 60 
         elif "TEER 2" in teer_selection: score += 40
         elif "TEER 3" in teer_selection: score += 20
@@ -387,7 +411,7 @@ with main_tab_guide:
     """, unsafe_allow_html=True)
 
 # ==========================================
-# FOOTER
+# FOOTER (MONETIZACIÓN Y LEGAL AL FINAL)
 # ==========================================
 st.markdown("---")
 st.markdown("<div class='footer'>", unsafe_allow_html=True)
