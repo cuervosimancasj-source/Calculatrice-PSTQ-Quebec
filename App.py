@@ -7,355 +7,330 @@ st.set_page_config(
     layout="centered"
 )
 
-# --- 2. ESTILOS CSS PERSONALIZADOS (BRANDING QUEBEC) ---
-# Esto inyecta código CSS para forzar los colores de Quebec y el estilo "tarjeta"
+# --- 2. ESTILOS CSS (BRANDING QUEBEC) ---
 st.markdown("""
     <style>
-        /* Color de fondo general más gris para contraste */
-        .stApp {
-            background-color: #f0f2f6;
-        }
-        
-        /* Encabezado superior (donde va el menú hamburguesa) en Azul Quebec */
-        header[data-testid="stHeader"] {
-            background-color: #003399;
-        }
-
-        /* Títulos principales en Azul Quebec */
-        h1, h2, h3, .stMarkdown h1, .stMarkdown h2, .stMarkdown h3 {
-            color: #003399 !important;
-        }
-
-        /* Estilo para los botones principales (Primary) */
+        .stApp { background-color: #f0f2f6; }
+        header[data-testid="stHeader"] { background-color: #003399; }
+        h1, h2, h3, .stMarkdown h1, .stMarkdown h2, .stMarkdown h3 { color: #003399 !important; }
         div.stButton > button[type="primary"] {
-            background-color: #003399;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 0.5rem 1rem;
-            font-weight: bold;
+            background-color: #003399; color: white; border-radius: 8px; font-weight: bold;
         }
-        div.stButton > button[type="primary"]:hover {
-            background-color: #002266; /* Un azul más oscuro al pasar el mouse */
-            border: none;
-            color: white;
-        }
-        
-        /* Estilo para los botones secundarios (como Buy me a Coffee en el sidebar) */
-        div.stButton > button[type="secondary"] {
-             border: 2px solid #003399;
-             color: #003399;
-             border-radius: 8px;
-             font-weight: 600;
-        }
-
-        /* Hacer que el formulario parezca una "tarjeta" blanca */
+        div.stButton > button[type="primary"]:hover { background-color: #002266; }
         [data-testid="stForm"] {
-            background-color: white;
-            padding: 2rem;
-            border-radius: 15px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            border-top: 5px solid #003399; /* Línea azul arriba */
+            background-color: white; padding: 2rem; border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1); border-top: 5px solid #003399;
         }
-
-        /* Pestañas (Tabs) activas */
-        button[data-baseweb="tab"][aria-selected="true"] {
-            background-color: #003399 !important;
-            color: white !important;
+        .info-box {
+            background-color: #e8f4fd; border-left: 5px solid #003399; padding: 15px; margin-bottom: 15px;
         }
-        
-        /* Sidebar un poco más limpia */
-        [data-testid="stSidebar"] {
-             background-color: #ffffff;
-             border-right: 1px solid #e0e0e0;
-        }
-
     </style>
 """, unsafe_allow_html=True)
 
-# --- 3. GESTIÓN DE IDIOMA (ES -> FR -> EN) ---
+# --- 3. GESTIÓN DE IDIOMA (Default: FRANCÉS) ---
 if 'language' not in st.session_state:
-    st.session_state.language = 'fr' # Empezamos en Francés por defecto
+    st.session_state.language = 'fr'
 
 def cycle_language():
-    if st.session_state.language == 'es':
-        st.session_state.language = 'fr'
-    elif st.session_state.language == 'fr':
+    if st.session_state.language == 'fr':
+        st.session_state.language = 'es'
+    elif st.session_state.language == 'es':
         st.session_state.language = 'en'
     else:
-        st.session_state.language = 'es'
+        st.session_state.language = 'fr'
 
-# --- 4. DICCIONARIO DE TRADUCCIÓN (3 IDIOMAS) ---
+# --- 4. TRADUCCIONES Y TEXTOS ---
 t = {
-    'es': {
-        'btn_lang': "Idioma / Language: Español 🇪🇸",
-        'brand': "Calculatrice PSTQ Québec ⚜️",
-        'subtitle': "Herramienta de estimación para la Residencia Permanente (Sistema Arrima Actual).",
-        'disclaimer_title': "⚠️ AVISO LEGAL IMPORTANTE",
-        'disclaimer_text': """
-            Esta herramienta es un proyecto independiente. NO somos abogados ni consultores. 
-            NO representamos al MIFI. Los resultados son estimaciones (~1350 puntos).
-        """,
-        'sidebar_opt': "Apoya & Aprende",
-        'coffee': "☕ Invítame un Café (Apoyar)",
-        'courses': "📚 Ver Cursos de Francés",
-        'tab1': "👤 Perfil",
-        'tab2': "🎓 Educación/Trabajo",
-        'tab3': "🗣️ Idiomas",
-        'tab4': "⚜️ Quebec/VJO",
-        'age': "Edad del candidato principal",
-        'spouse': "¿Te acompaña tu pareja/cónyuge?",
-        'children_12': "Hijos (0-12 años)",
-        'children_13': "Hijos (13-21 años)",
-        'sp_age': "Edad de la pareja",
-        'sp_edu': "Nivel estudios pareja",
-        'sp_fr': "Francés pareja (Oral)",
-        'edu_level': "Nivel escolaridad más alto",
-        'area': "Área de Formación (Demanda)",
-        'exp': "Experiencia calificada (últimos 5 años)",
-        'fr_oral': "Francés: Oral (Escuchar/Hablar)",
-        'fr_write': "Francés: Escrito (Leer/Escribir)",
-        'en_global': "Inglés: Nivel Global",
-        'lang_help': "El francés es el factor más importante en el nuevo sistema.",
-        'vjo': "Oferta de Empleo Validada (VJO)",
-        'opt_vjo_no': "Sin oferta",
-        'opt_vjo_mtl': "Sí, Montreal (CMM)",
-        'opt_vjo_out': "Sí, FUERA Montreal (Regiones)",
-        'q_studies': "¿Diploma de Quebec?",
-        'q_exp': "Experiencia DENTRO de Quebec",
-        'family_q': "¿Familia directa en Quebec?",
-        'calc_btn': "CALCULAR MI PUNTAJE AHORA",
-        'result_title': "Puntaje Total Estimado",
-        'advice_good': "¡Excelente perfil! Tus probabilidades son altas.",
-        'advice_avg': "Perfil sólido. Enfócate en subir el francés o conseguir VJO.",
-        'advice_low': "Necesitas subir el francés al máximo o conseguir una oferta fuera de Montreal."
-    },
     'fr': {
-        'btn_lang': "Langue / Language: Français 🇫🇷",
+        'btn_lang': "Langue: Français 🇫🇷",
         'brand': "Calculatrice PSTQ Québec ⚜️",
-        'subtitle': "Outil d'estimation pour la Résidence Permanente (Système Arrima Actuel).",
-        'disclaimer_title': "⚠️ AVIS IMPORTANT",
-        'disclaimer_text': """
-            Cet outil est un projet indépendant. Nous ne sommes PAS avocats ni consultants.
-            Nous ne représentons PAS le MIFI. Les résultats sont des estimations (~1350 points).
+        'subtitle': "Outil d'analyse pour la Résidence Permanente (TEER, Volets, Score).",
+        'disclaimer_text': "Projet indépendant. Nous ne sommes PAS le MIFI. Résultats estimés.",
+        'coffee': "☕ M'offrir un café",
+        'courses': "📚 Cours de Français",
+        'tabs': ["👤 Profil", "💼 Travail & TEER", "🗣️ Langues", "⚜️ Québec/OEV", "ℹ️ Guide DI"],
+        # Tab 2 (Travail)
+        'job_title': "Quel est votre emploi actuel ?",
+        'job_placeholder': "Ex: Ingénieur, Soudeur, Informaticien...",
+        'search_btn': "Trouver mon code CNP et Volet",
+        'teer_label': "Catégorie formation, expérience et responsabilités (TEER)",
+        'teer_help': "Sélectionnez votre catégorie selon le code trouvé ci-dessus.",
+        'exp_label': "Années d'expérience qualifiée",
+        # Tab 3 (Langues)
+        'lang_info': """
+            **⚠️ Exigences Linguistiques (Oral) :**
+            * **Volet 1 (TEER 0, 1, 2) :** Niveau 7 minimum.
+            * **Volet 2 (TEER 3, 4, 5) :** Niveau 5 minimum.
+            * **Conjoint(e) :** Niveau 4 recommandé.
         """,
-        'sidebar_opt': "Soutien & Apprentissage",
-        'coffee': "☕ M'offrir un café (Soutenir)",
-        'courses': "📚 Voir les Cours de Français",
-        'tab1': "👤 Profil",
-        'tab2': "🎓 Éducation/Travail",
-        'tab3': "🗣️ Langues",
-        'tab4': "⚜️ Québec/OEV",
-        'age': "Âge du candidat principal",
-        'spouse': "Votre conjoint(e) vous accompagne ?",
-        'children_12': "Enfants (0-12 ans)",
-        'children_13': "Enfants (13-21 ans)",
-        'sp_age': "Âge du conjoint",
-        'sp_edu': "Niveau scolaire conjoint",
-        'sp_fr': "Français conjoint (Oral)",
-        'edu_level': "Niveau de scolarité le plus élevé",
-        'area': "Domaine de Formation (Demande)",
-        'exp': "Expérience qualifiée (5 dernières années)",
-        'fr_oral': "Français : Oral (Compréhension/Expression)",
-        'fr_write': "Français : Écrit (Compréhension/Expression)",
-        'en_global': "Anglais : Niveau Global",
-        'lang_help': "Le français est le facteur le plus important dans le nouveau système.",
-        'vjo': "Offre d'Emploi Validée (OEV)",
-        'opt_vjo_no': "Sans offre",
-        'opt_vjo_mtl': "Oui, Montréal (CMM)",
-        'opt_vjo_out': "Oui, HORS Montréal (Régions)",
-        'q_studies': "Diplôme du Québec ?",
-        'q_exp': "Expérience AU Québec",
-        'family_q': "Famille directe au Québec ?",
-        'calc_btn': "CALCULER MON SCORE MAINTENANT",
-        'result_title': "Score Total Estimé",
-        'advice_good': "Excellent profil ! Vos chances sont élevées.",
-        'advice_avg': "Profil solide. Concentrez-vous sur le français ou une OEV.",
-        'advice_low': "Vous devez maximiser le français ou obtenir une offre hors Montréal."
+        # Tab 5 (Guide)
+        'guide_title': "Comment remplir la Déclaration d'Intérêt (DI)",
+        'guide_steps': """
+            1. **Créer un compte** sur le portail Arrima.
+            2. **Remplir le profil** : Informations personnelles, parcours professionnel, études.
+            3. **Code CNP** : Assurez-vous d'utiliser le code 2021 (5 chiffres).
+            4. **Soumettre** : La DI est valide 12 mois. C'est gratuit.
+        """,
+        'example_title': "Exemple de Profil Gagnant",
+        'example_text': """
+            * **Nom :** Juan (42 ans).
+            * **Emploi :** Développeur Web (TEER 1).
+            * **Langue :** Français B2 (Niveau 7) + Anglais intermédiaire.
+            * **Offre :** OEV à l'extérieur de Montréal.
+            * **Résultat :** Invitation prioritaire.
+        """,
+        # General inputs
+        'age': "Âge", 'spouse': "Conjoint(e) ?", 'kids12': "Enfants -12 ans", 'kids13': "Enfants +12 ans",
+        'edu': "Niveau d'études", 'vjo': "Offre d'emploi (OEV)", 'calc': "CALCULER",
+        'res_title': "Résultat Estimé",
+        'advice_good': "Excellent ! Vous êtes compétitif.",
+        'advice_low': "Améliorez le français ou cherchez une OEV en région."
+    },
+    'es': {
+        'btn_lang': "Idioma: Español 🇪🇸",
+        'brand': "Calculatrice PSTQ Québec ⚜️",
+        'subtitle': "Herramienta de análisis para Residencia (TEER, Volets, Puntaje).",
+        'disclaimer_text': "Proyecto independiente. NO somos el MIFI. Resultados estimados.",
+        'coffee': "☕ Invítame un café",
+        'courses': "📚 Cursos de Francés",
+        'tabs': ["👤 Perfil", "💼 Trabajo y TEER", "🗣️ Idiomas", "⚜️ Quebec/VJO", "ℹ️ Guía DI"],
+        # Tab 2
+        'job_title': "¿Cuál es tu trabajo actual?",
+        'job_placeholder': "Ej: Ingeniero, Soldador, Cocinero...",
+        'search_btn': "Buscar mi Código CNP y Volet",
+        'teer_label': "Categoría formación, experiencia y responsabilidades (TEER)",
+        'teer_help': "Selecciona tu categoría según el código encontrado arriba.",
+        'exp_label': "Años de experiencia calificada",
+        # Tab 3
+        'lang_info': """
+            **⚠️ Requisitos de Idioma (Oral):**
+            * **Volet 1 (TEER 0, 1, 2):** Nivel 7 mínimo.
+            * **Volet 2 (TEER 3, 4, 5):** Nivel 5 mínimo.
+            * **Pareja:** Nivel 4 recomendado.
+        """,
+        # Tab 5
+        'guide_title': "Cómo llenar la Declaración de Interés (DI)",
+        'guide_steps': """
+            1. **Crear cuenta** en el portal Arrima.
+            2. **Llenar perfil**: Datos personales, historial laboral, estudios.
+            3. **Código CNP**: Asegúrate de usar el código 2021 (5 dígitos).
+            4. **Enviar**: La DI es válida por 12 meses. Es gratis.
+        """,
+        'example_title': "Ejemplo de Perfil Ganador",
+        'example_text': """
+            * **Nombre:** Juan (42 años).
+            * **Trabajo:** Desarrollador Web (TEER 1).
+            * **Idioma:** Francés B2 (Nivel 7) + Inglés intermedio.
+            * **Oferta:** VJO fuera de Montreal.
+            * **Resultado:** Invitación prioritaria.
+        """,
+        # General inputs
+        'age': "Edad", 'spouse': "Pareja ?", 'kids12': "Hijos -12 años", 'kids13': "Hijos +12 años",
+        'edu': "Nivel estudios", 'vjo': "Oferta empleo (VJO)", 'calc': "CALCULAR",
+        'res_title': "Resultado Estimado",
+        'advice_good': "¡Excelente! Eres competitivo.",
+        'advice_low': "Mejora el francés o busca una VJO en regiones."
     },
     'en': {
-        'btn_lang': "Language: English 🇺🇸",
-        'brand': "Calculatrice PSTQ Québec ⚜️",
-        'subtitle': "Estimation tool for Permanent Residency (Current Arrima System).",
-        'disclaimer_title': "⚠️ IMPORTANT DISCLAIMER",
-        'disclaimer_text': """
-            This tool is an independent project. We are NOT lawyers or consultants.
-            We do NOT represent the MIFI. Results are estimates (~1350 points).
-        """,
-        'sidebar_opt': "Support & Learn",
-        'coffee': "☕ Buy Me a Coffee (Support)",
-        'courses': "📚 See French Courses",
-        'tab1': "👤 Profile",
-        'tab2': "🎓 Education/Work",
-        'tab3': "🗣️ Languages",
-        'tab4': "⚜️ Quebec/VJO",
-        'age': "Age of principal applicant",
-        'spouse': "Is your spouse accompanying you?",
-        'children_12': "Children (0-12 years)",
-        'children_13': "Children (13-21 years)",
-        'sp_age': "Spouse's Age",
-        'sp_edu': "Spouse's Education Level",
-        'sp_fr': "Spouse's French Level (Oral)",
-        'edu_level': "Highest Level of Education",
-        'area': "Area of Training (Demand)",
-        'exp': "Qualified Experience (Last 5 years)",
-        'fr_oral': "French: Oral (Listen/Speak)",
-        'fr_write': "French: Written (Read/Write)",
-        'en_global': "English: Global Level",
-        'lang_help': "French is the most important factor in the new system.",
-        'vjo': "Validated Job Offer (VJO)",
-        'opt_vjo_no': "No offer",
-        'opt_vjo_mtl': "Yes, Montreal (CMM)",
-        'opt_vjo_out': "Yes, OUTSIDE Montreal (Regions)",
-        'q_studies': "Quebec Diploma?",
-        'q_exp': "Experience INSIDE Quebec",
-        'family_q': "Direct family in Quebec?",
-        'calc_btn': "CALCULATE MY SCORE NOW",
-        'result_title': "Total Estimated Score",
-        'advice_good': "Excellent profile! Your chances are high.",
-        'advice_avg': "Solid profile. Focus on improving French or getting a VJO.",
-        'advice_low': "You need to maximize French or get an offer outside Montreal."
+         'btn_lang': "Language: English 🇺🇸",
+         'brand': "Calculatrice PSTQ Québec ⚜️",
+         'subtitle': "Analysis tool for Residency (TEER, Volets, Score).",
+         'disclaimer_text': "Independent project. NOT MIFI. Estimated results.",
+         'coffee': "☕ Buy me a coffee",
+         'courses': "📚 French Courses",
+         'tabs': ["👤 Profile", "💼 Work & TEER", "🗣️ Languages", "⚜️ Quebec/VJO", "ℹ️ DI Guide"],
+         'job_title': "What is your current job?",
+         'job_placeholder': "Ex: Engineer, Welder, IT...",
+         'search_btn': "Find my NOC Code & Volet",
+         'teer_label': "Category training, experience & responsibilities (TEER)",
+         'teer_help': "Select your category based on the code found above.",
+         'exp_label': "Years of qualified experience",
+         'lang_info': """
+            **⚠️ Language Requirements (Oral):**
+            * **Volet 1 (TEER 0, 1, 2):** Level 7 minimum.
+            * **Volet 2 (TEER 3, 4, 5):** Level 5 minimum.
+            * **Spouse:** Level 4 recommended.
+         """,
+         'guide_title': "How to fill the Declaration of Interest (DI)",
+         'guide_steps': """
+            1. **Create account** on Arrima portal.
+            2. **Fill profile**: Personal info, work history, education.
+            3. **NOC Code**: Ensure you use the 2021 code (5 digits).
+            4. **Submit**: Valid for 12 months. Free.
+         """,
+         'example_title': "Winning Profile Example",
+         'example_text': """
+            * **Name:** Juan (42 years old).
+            * **Job:** Web Developer (TEER 1).
+            * **Language:** French B2 (Level 7) + Intermediate English.
+            * **Offer:** VJO outside Montreal.
+            * **Result:** Priority invitation.
+         """,
+         'age': "Age", 'spouse': "Spouse ?", 'kids12': "Kids -12", 'kids13': "Kids +12",
+         'edu': "Education Level", 'vjo': "Job Offer (VJO)", 'calc': "CALCULATE",
+         'res_title': "Estimated Result",
+         'advice_good': "Excellent! You are competitive.",
+         'advice_low': "Improve French or find a VJO in regions."
     }
 }
 
 lang = t[st.session_state.language]
 
-# --- 5. SIDEBAR ---
+# --- 5. BASE DE DATOS SIMULADA DE TRABAJOS (DEMO) ---
+# En una app real, esto sería una base de datos externa enorme.
+jobs_db = {
+    "ingenie": {"code": "21300", "teer": "1", "volet": "Volet 1 (Haute qualification)"},
+    "engineer": {"code": "21300", "teer": "1", "volet": "Volet 1 (Haute qualification)"},
+    "informati": {"code": "21220", "teer": "1", "volet": "Volet 1"},
+    "software": {"code": "21220", "teer": "1", "volet": "Volet 1"},
+    "web": {"code": "21222", "teer": "1", "volet": "Volet 1"},
+    "administra": {"code": "13100", "teer": "3", "volet": "Volet 2 (Intermédiaire)"},
+    "enfermer": {"code": "31301", "teer": "1", "volet": "Volet 1"},
+    "infirmier": {"code": "31301", "teer": "1", "volet": "Volet 1"},
+    "nurs": {"code": "31301", "teer": "1", "volet": "Volet 1"},
+    "welder": {"code": "72106", "teer": "2", "volet": "Volet 1/2"},
+    "soud": {"code": "72106", "teer": "2", "volet": "Volet 1/2"},
+    "soldador": {"code": "72106", "teer": "2", "volet": "Volet 1/2"},
+    "cuisinier": {"code": "63200", "teer": "3", "volet": "Volet 2"},
+    "cook": {"code": "63200", "teer": "3", "volet": "Volet 2"},
+    "cocinero": {"code": "63200", "teer": "3", "volet": "Volet 2"},
+    "camion": {"code": "73300", "teer": "3", "volet": "Volet 2"},
+    "driver": {"code": "73300", "teer": "3", "volet": "Volet 2"},
+    "mecanic": {"code": "72410", "teer": "2", "volet": "Volet 2"},
+}
+
+def find_job_details(keyword):
+    keyword = keyword.lower()
+    for key, data in jobs_db.items():
+        if key in keyword:
+            return data
+    return None
+
+# --- 6. SIDEBAR ---
 with st.sidebar:
-    # Botón de idioma secundario
     st.button(lang['btn_lang'], on_click=cycle_language, type="secondary")
     st.markdown("---")
-    st.header(lang['sidebar_opt'])
-    
-    st.link_button(lang['coffee'], "https://www.buymeacoffee.com/CalculatricePSTQQuebec") 
-    st.link_button(lang['courses'], "https://www.TU_ENLACE_DE_AFILIADO.com") 
-    
-    st.markdown("---")
-    st.warning(f"**{lang['disclaimer_title']}**\n\n{lang['disclaimer_text']}")
+    st.link_button(lang['coffee'], "https://www.buymeacoffee.com/CalculatricePSTQQuebec")
+    st.link_button(lang['courses'], "https://www.TU_ENLACE_DE_AFILIADO.com")
+    st.warning(lang['disclaimer_text'])
 
-# --- 6. INTERFAZ PRINCIPAL (TABS) ---
-# Título grande estilo marca
+# --- 7. APP PRINCIPAL ---
 st.markdown(f"# {lang['brand']}")
 st.write(lang['subtitle'])
 
 with st.form("main_form"):
-    
-    # Pestañas
-    tab1, tab2, tab3, tab4 = st.tabs([lang['tab1'], lang['tab2'], lang['tab3'], lang['tab4']])
+    tab1, tab2, tab3, tab4, tab5 = st.tabs(lang['tabs'])
 
-    # --- TAB 1: PERFIL Y FAMILIA ---
+    # TAB 1: PERFIL
     with tab1:
-        col1, col2 = st.columns(2)
-        with col1:
-            age = st.number_input(lang['age'], 18, 65, 30)
-        with col2:
-            spouse = st.checkbox(lang['spouse'])
+        c1, c2 = st.columns(2)
+        with c1: age = st.number_input(lang['age'], 18, 65, 30)
+        with c2: spouse = st.checkbox(lang['spouse'])
+        c3, c4 = st.columns(2)
+        with c3: k1 = st.number_input(lang['kids12'], 0, 5, 0)
+        with c4: k2 = st.number_input(lang['kids13'], 0, 5, 0)
         
-        st.divider()
-        c_kids1, c_kids2 = st.columns(2)
-        with c_kids1:
-            kids_under_12 = st.number_input(lang['children_12'], 0, 10, 0)
-        with c_kids2:
-            kids_over_12 = st.number_input(lang['children_13'], 0, 10, 0)
-
-        # Variables de cónyuge (defaults)
-        sp_age_val, sp_edu_val, sp_fr_val = 30, "Secondary", "0"
-        
+        sp_age, sp_edu, sp_fr = 30, "Secondary", "0"
         if spouse:
-            st.info("Datos de la Pareja / Partner Details")
-            c_sp1, c_sp2, c_sp3 = st.columns(3)
-            with c_sp1: sp_age_val = st.number_input(lang['sp_age'], 18, 65, 30)
-            with c_sp2: sp_edu_val = st.selectbox(lang['sp_edu'], ["PhD", "Master", "Bachelor", "College", "Secondary"])
-            with c_sp3: sp_fr_val = st.selectbox(lang['sp_fr'], ["C1-C2", "B2", "A1-B1", "0"])
+            st.info("Info Pareja / Conjoint")
+            sp_age = st.number_input("Edad/Âge", 18, 65, 30)
+            sp_edu = st.selectbox("Edu", ["PhD", "Master", "Bachelor", "Technical", "Secondary"])
+            sp_fr = st.selectbox("Français", ["C1-C2", "B2", "A1-B1", "0"])
 
-    # --- TAB 2: EDUCACIÓN Y TRABAJO ---
+    # TAB 2: TRABAJO & TEER (MODIFICADO)
     with tab2:
-        col_edu, col_area = st.columns(2)
-        with col_edu:
-            education = st.selectbox(lang['edu_level'], ["PhD", "Master", "Bachelor (3+)", "College (3y)", "Diploma (1-2y)", "Secondary"])
-        with col_area:
-            area_training = st.selectbox(lang['area'], ["Section A (Top)", "Section B", "Section C", "General"])
+        st.markdown(f"### 🔍 {lang['job_title']}")
+        job_query = st.text_input("Buscador / Recherche", placeholder=lang['job_placeholder'])
         
-        st.divider()
-        experience = st.slider(lang['exp'], 0, 60, 36)
+        # Lógica del buscador simulado
+        if job_query:
+            result = find_job_details(job_query)
+            if result:
+                st.success(f"✅ **Code CNP:** {result['code']} | **TEER:** {result['teer']}")
+                st.info(f"📂 **{result['volet']}**")
+            else:
+                st.warning("⚠️ No encontrado en la demo. / Pas trouvé dans la démo.")
+                st.markdown("[Buscar en sitio oficial Canadá](https://noc.esdc.gc.ca/)")
 
-    # --- TAB 3: IDIOMAS ---
+        st.divider()
+        st.write(lang['teer_label'])
+        st.caption(lang['teer_help'])
+        # Reemplaza "Area of Training" visualmente, pero mantenemos lógica de puntos interna
+        teer_selection = st.selectbox("Selección / Sélection", 
+                                      ["TEER 0, 1 (Section A - High Demand)", 
+                                       "TEER 2 (Section B)", 
+                                       "TEER 3 (Section C)", 
+                                       "TEER 4, 5 (General)"])
+        
+        education = st.selectbox(lang['edu'], ["PhD", "Master", "Bachelor (3+)", "College (3y)", "Diploma (1-2y)", "Secondary"])
+        experience = st.slider(lang['exp_label'], 0, 10, 3)
+
+    # TAB 3: IDIOMAS (CON TABLA INFO)
     with tab3:
-        st.caption(lang['lang_help'])
-        c_fr1, c_fr2 = st.columns(2)
-        with c_fr1:
-            fr_oral_lvl = st.select_slider(lang['fr_oral'], options=["0", "A1", "A2", "B1", "B2", "C1", "C2"], value="B2")
-        with c_fr2:
-            fr_write_lvl = st.select_slider(lang['fr_write'], options=["0", "A1", "A2", "B1", "B2", "C1", "C2"], value="B1")
+        # Aquí insertamos la información de los Volets requerida
+        st.markdown(f"<div class='info-box'>{lang['lang_info']}</div>", unsafe_allow_html=True)
         
-        st.divider()
-        en_lvl = st.select_slider(lang['en_global'], options=["0", "Beginner", "Intermediate", "Advanced"], value="0")
+        c1, c2 = st.columns(2)
+        with c1: fr_oral = st.select_slider("Français Oral", ["0", "A1", "A2", "B1", "B2", "C1", "C2"], value="B2")
+        with c2: fr_write = st.select_slider("Français Écrit", ["0", "A1", "A2", "B1", "B2", "C1", "C2"], value="B1")
+        en_lvl = st.select_slider("English", ["0", "Beginner", "Intermediate", "Advanced"], value="0")
 
-    # --- TAB 4: QUEBEC Y OFERTA ---
+    # TAB 4: QUEBEC
     with tab4:
-        vjo_status = st.radio(lang['vjo'], [lang['opt_vjo_no'], lang['opt_vjo_mtl'], lang['opt_vjo_out']])
-        
+        vjo = st.radio(lang['vjo'], ["Non", "Montreal", "Hors Montreal"])
+        q_stud = st.checkbox("Diplôme Québec ?")
+        q_fam = st.checkbox("Famille Québec ?")
+
+    # TAB 5: GUÍA / AYUDA (NUEVO)
+    with tab5:
+        st.markdown(f"### ℹ️ {lang['guide_title']}")
+        st.markdown(lang['guide_steps'])
         st.divider()
-        cq1, cq2, cq3 = st.columns(3)
-        with cq1: q_studies = st.checkbox(lang['q_studies'])
-        with cq2: family_qc = st.checkbox(lang['family_q'])
-        with cq3: q_exp_months = st.number_input(lang['q_exp'], 0, 60, 0)
+        st.markdown(f"#### 🏆 {lang['example_title']}")
+        st.info(lang['example_text'])
 
     st.markdown("###")
-    # Botón principal (Primary) con estilo azul
-    submitted = st.form_submit_button(lang['calc_btn'], type="primary", use_container_width=True)
+    submitted = st.form_submit_button(lang['calc'], type="primary", use_container_width=True)
 
-# --- 7. LÓGICA DE CÁLCULO ---
-def calculate_score():
-    score = 0
-    # A. Capital Humano (Principal)
-    if 18 <= age <= 30: score += 130
-    elif age <= 45: score += max(0, 130 - (age - 30) * 5)
-    edu_pts = {"PhD": 90, "Master": 75, "Bachelor (3+)": 60, "College (3y)": 50, "Diploma (1-2y)": 40, "Secondary": 20}
-    score += edu_pts.get(education, 0)
-    area_pts = {"Section A (Top)": 60, "Section B": 40, "Section C": 20, "General": 0}
-    score += area_pts.get(area_training, 0)
-    score += min(80, int(experience * 1.4))
-    # Idiomas
-    fr_map = {"0":0, "A1":0, "A2":10, "B1":20, "B2":50, "C1":70, "C2":80} 
-    score += fr_map[fr_oral_lvl] * 1.2 
-    score += fr_map[fr_write_lvl] * 0.8
-    en_map = {"Advanced": 25, "Intermediate": 15, "Beginner": 5, "0": 0}
-    score += en_map[en_lvl]
-    # B. Quebec & Oferta
-    if vjo_status == lang['opt_vjo_out']: score += 380
-    elif vjo_status == lang['opt_vjo_mtl']: score += 180
-    if q_studies: score += 50
-    if family_qc: score += 30
-    score += min(100, int(q_exp_months * 2.5))
-    # C. Familia
-    if spouse:
-        if 18 <= sp_age_val <= 40: score += 20
-        score += edu_pts.get(sp_edu_val, 0) * 0.3
-        sp_fr_pts = {"C1-C2": 50, "B2": 30, "A1-B1": 0, "0": 0}
-        score += sp_fr_pts.get(sp_fr_val, 0)
-    score += (kids_under_12 * 4) + (kids_over_12 * 2)
-    return int(score)
-
-# --- 8. RESULTADOS ---
+# --- 8. LÓGICA RÁPIDA DE CÁLCULO ---
 if submitted:
-    final_score = calculate_score()
-    
+    # Lógica simplificada para mantener el código limpio en esta iteración
+    score = 0
+    # Edad
+    if 18 <= age <= 30: score += 130
+    elif age <= 45: score += (130 - (age-30)*5)
+    # Edu
+    if "PhD" in education: score += 90
+    elif "Master" in education: score += 75
+    elif "Bachelor" in education: score += 60
+    elif "College" in education: score += 50
+    else: score += 30
+    # TEER/Area (Mapeo)
+    if "Section A" in teer_selection: score += 60
+    elif "Section B" in teer_selection: score += 40
+    elif "Section C" in teer_selection: score += 20
+    # Experiencia
+    score += min(80, int(experience * 10)) # Aprox por año
+    # Idioma
+    fr_pts = {"0":0, "A1":0, "A2":10, "B1":20, "B2":50, "C1":70, "C2":80}
+    score += fr_pts[fr_oral] * 1.2 + fr_pts[fr_write] * 0.8
+    if en_lvl == "Advanced": score += 25
+    elif en_lvl == "Intermediate": score += 15
+    # VJO
+    if vjo == "Hors Montreal": score += 380
+    elif vjo == "Montreal": score += 180
+    # Otros
+    if q_stud: score += 50
+    if q_fam: score += 30
+    if spouse: score += 30 # Base pareja
+    score += (k1 * 4) + (k2 * 2)
+
     st.markdown("---")
-    # Uso HTML para dar estilo azul al resultado final también
-    st.markdown(f"<h2 style='text-align: center; color: #003399;'>{lang['result_title']}: {final_score} / 1350</h2>", unsafe_allow_html=True)
-    st.progress(min(final_score / 1350, 1.0))
+    st.markdown(f"<h2 style='text-align: center; color: #003399;'>{lang['res_title']}: {int(score)} / 1350</h2>", unsafe_allow_html=True)
+    st.progress(min(score/1350, 1.0))
     
-    col_res1, col_res2 = st.columns(2)
-    with col_res1:
-        if final_score > 600:
-            st.success(lang['advice_good'])
-            st.balloons()
-        elif final_score > 500:
-            st.warning(lang['advice_avg'])
-        else:
-            st.error(lang['advice_low'])
-    
-    with col_res2:
-        st.metric("VJO (Offre d'emploi)", 'Oui' if vjo_status != lang['opt_vjo_no'] else 'Non')
-        st.metric("Niveau Français (Oral)", fr_oral_lvl)
+    if score > 580:
+        st.success(lang['advice_good'])
+        st.balloons()
+    else:
+        st.warning(lang['advice_low'])
