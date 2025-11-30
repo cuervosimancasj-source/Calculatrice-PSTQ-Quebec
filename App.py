@@ -14,56 +14,49 @@ st.markdown("""
         header[data-testid="stHeader"] { background-color: #003399; }
         h1, h2, h3, .stMarkdown h1, .stMarkdown h2, .stMarkdown h3 { color: #003399 !important; }
         
-        /* Botones generales */
+        /* Botones */
         div.stButton > button { width: 100%; border-radius: 8px; font-weight: bold; }
         div.stButton > button[type="primary"] { background-color: #003399; color: white; border: none; }
         div.stButton > button[type="primary"]:hover { background-color: #002266; }
         
-        /* Formulario */
-        [data-testid="stForm"] {
-            background-color: white; padding: 1.5rem; border-radius: 15px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1); border-top: 5px solid #003399;
-        }
-        
-        /* Cajas info */
-        .info-box { background-color: #e8f4fd; border-left: 5px solid #003399; padding: 10px; border-radius: 5px; font-size: 0.9em; }
-        .help-box { background-color: #fff3cd; border-left: 5px solid #ffc107; padding: 10px; border-radius: 5px; font-size: 0.9em; }
+        /* Cajas estéticas */
+        .info-box { background-color: #e8f4fd; border-left: 5px solid #003399; padding: 15px; border-radius: 5px; }
+        .help-box { background-color: #fff3cd; border-left: 5px solid #ffc107; padding: 15px; border-radius: 5px; }
         .step-box { background-color: white; padding: 15px; border-radius: 10px; border: 1px solid #ddd; margin-bottom: 10px; }
         
         /* Footer */
         .footer { margin-top: 50px; padding: 20px; border-top: 1px solid #ccc; text-align: center; color: #666; font-size: 0.85em; }
-        
-        /* Ajuste móvil para pestañas */
-        button[data-baseweb="tab"] {
-            padding-left: 10px; padding-right: 10px; min-width: auto;
-        }
     </style>
 """, unsafe_allow_html=True)
 
-# --- 3. GESTIÓN DE IDIOMA ---
+# --- 3. ESTADO Y GESTIÓN ---
 if 'language' not in st.session_state:
     st.session_state.language = 'fr'
+if 'show_results' not in st.session_state:
+    st.session_state.show_results = False
 
 def cycle_language():
     if st.session_state.language == 'fr': st.session_state.language = 'es'
     elif st.session_state.language == 'es': st.session_state.language = 'en'
     else: st.session_state.language = 'fr'
 
-# --- 4. TRADUCCIONES (Nombres cortos para móvil) ---
+def trigger_calculation():
+    st.session_state.show_results = True
+
+# --- 4. TRADUCCIONES ---
 t = {
     'fr': {
         'btn_lang': "🌐 Langue: Français",
-        'brand': "Calculatrice PSTQ ⚜️",
-        'subtitle': "Analyse Résidence Permanente (Arrima).",
+        'brand': "Calculatrice PSTQ Québec ⚜️",
+        'subtitle': "Outil d'analyse pour la Résidence Permanente (TEER, Volets, Score).",
         'disclaimer_title': "⚠️ AVIS IMPORTANT",
-        'disclaimer_text': "Projet indépendant. PAS avocats/consultants. PAS Gouvernement (MIFI).",
-        'coffee': "☕ Café (Soutien)",
-        'courses': "📚 Cours Français",
+        'disclaimer_text': "Ce logiciel est un projet indépendant. Nous ne sommes PAS avocats ni consultants. Nous ne représentons PAS le MIFI.",
+        'coffee': "☕ M'offrir un café (Soutenir)",
+        'courses': "📚 Cours de Français",
         'main_tabs': ["🧮 Calculatrice", "ℹ️ Guide"],
-        # NOMBRES CORTOS AQUÍ:
         'tabs': ["👤 Profil", "💼 Travail", "🗣️ Langues", "⚜️ Québec"],
         'job_title': "Quel est votre emploi actuel ?",
-        'job_placeholder': "Ex: Ingénieur, Soudeur...",
+        'job_placeholder': "Ex: Ingénieur, Soudeur, Assembleur...",
         'teer_manual_help': "Si non trouvé, choisissez niveau :",
         'teer_label': "Catégorie TEER",
         'teer_guide': "**Aide:** TEER 0,1=Uni/Gestion | TEER 2=Tech | TEER 3=Métiers | TEER 4,5=Manuel",
@@ -95,7 +88,6 @@ t = {
         'coffee': "☕ Café (Apoyo)",
         'courses': "📚 Cursos Francés",
         'main_tabs': ["🧮 Calculadora", "ℹ️ Guía"],
-        # NOMBRES CORTOS AQUÍ:
         'tabs': ["👤 Perfil", "💼 Trabajo", "🗣️ Idiomas", "⚜️ Quebec"],
         'job_title': "¿Cuál es tu trabajo?",
         'job_placeholder': "Ej: Ingeniero, Soldador...",
@@ -130,7 +122,6 @@ t = {
         'coffee': "☕ Coffee (Support)",
         'courses': "📚 French Courses",
         'main_tabs': ["🧮 Calculator", "ℹ️ Guide"],
-        # NOMBRES CORTOS AQUÍ:
         'tabs': ["👤 Profile", "💼 Work", "🗣️ Language", "⚜️ Quebec"],
         'job_title': "Current job?",
         'job_placeholder': "Ex: Engineer, Welder...",
@@ -159,7 +150,7 @@ t = {
 }
 lang = t[st.session_state.language]
 
-# --- 5. BASE DE DATOS TRABAJOS ---
+# --- 5. DATA JOBS ---
 jobs_db = {
     "ingenie": {"code": "213xx", "teer": "1", "volet": "Volet 1"},
     "engineer": {"code": "213xx", "teer": "1", "volet": "Volet 1"},
@@ -189,9 +180,9 @@ def find_job_details(keyword):
     return None
 
 # ==========================================
-# HEADER
+# HEADER (IDIOMA ARRIBA)
 # ==========================================
-st.button(lang['btn_lang'], on_click=cycle_language) # Botón idioma full width arriba
+st.button(lang['btn_lang'], on_click=cycle_language)
 st.markdown(f"## {lang['brand']}")
 st.caption(lang['subtitle'])
 
@@ -200,105 +191,106 @@ st.caption(lang['subtitle'])
 # ==========================================
 main_tab_calc, main_tab_guide = st.tabs(lang['main_tabs'])
 
-# PESTAÑA 1: CALCULADORA
+# --- PESTAÑA CALCULADORA ---
 with main_tab_calc:
-    with st.form("main_form"):
-        tab1, tab2, tab3, tab4 = st.tabs(lang['tabs'])
+    tab1, tab2, tab3, tab4 = st.tabs(lang['tabs'])
 
-        # 1. PERFIL
-        with tab1:
-            c1, c2 = st.columns(2)
-            with c1: age = st.number_input(lang['age'], 18, 65, 30)
-            with c2: spouse = st.checkbox(lang['spouse'])
-            c3, c4 = st.columns(2)
-            with c3: k1 = st.number_input(lang['kids12'], 0, 5, 0)
-            with c4: k2 = st.number_input(lang['kids13'], 0, 5, 0)
-            
-            sp_age, sp_edu = 30, "Secondary"
-            if spouse:
-                st.divider()
-                st.markdown(f"**{lang['sp_section']}**")
-                c_sp1, c_sp2 = st.columns(2)
-                with c_sp1: sp_age = st.number_input("Age (Conj.)", 18, 65, 30)
-                with c_sp2: sp_edu = st.selectbox("Edu (Conj.)", ["PhD", "Master", "Bachelor", "Technical", "Secondary"])
-
-        # 2. TRABAJO
-        with tab2:
-            st.markdown(f"**{lang['job_title']}**")
-            job_query = st.text_input("Buscar/Recherche", placeholder=lang['job_placeholder'], label_visibility="collapsed")
-            if job_query:
-                result = find_job_details(job_query)
-                if result:
-                    st.success(f"✅ Code: {result['code']} | TEER: {result['teer']} | {result['volet']}")
-                else:
-                    st.markdown(f"<div class='help-box'>{lang['teer_guide']}</div>", unsafe_allow_html=True)
-
+    # 1. PERFIL
+    with tab1:
+        c1, c2 = st.columns(2)
+        with c1: age = st.number_input(lang['age'], 18, 65, 30)
+        with c2: spouse = st.checkbox(lang['spouse'])
+        c3, c4 = st.columns(2)
+        with c3: k1 = st.number_input(lang['kids12'], 0, 5, 0)
+        with c4: k2 = st.number_input(lang['kids13'], 0, 5, 0)
+        
+        sp_age, sp_edu = 30, "Secondary"
+        if spouse:
             st.divider()
-            st.caption(lang['teer_manual_help'])
-            teer_selection = st.selectbox(lang['teer_label'], 
-                                          [
-                                              "TEER 0, 1 (Uni/Gestion)",
-                                              "TEER 2 (Collégial/Tech)",
-                                              "TEER 3 (Métiers/Inter)",
-                                              "TEER 4, 5 (Manuel/Sec)"
-                                          ])
-            education = st.selectbox(lang['edu'], ["PhD", "Master", "Bachelor (3+)", "College (3y)", "Diploma (1-2y)", "Secondary"])
-            experience = st.slider(lang['exp_label'], 0, 10, 3)
+            st.markdown(f"**{lang['sp_section']}**")
+            c_sp1, c_sp2 = st.columns(2)
+            with c_sp1: sp_age = st.number_input("Age (Conj.)", 18, 65, 30)
+            with c_sp2: sp_edu = st.selectbox("Edu (Conj.)", ["PhD", "Master", "Bachelor", "Technical", "Secondary"])
 
-        # 3. IDIOMAS
-        with tab3:
-            st.markdown(f"<div class='info-box'>{lang['lang_info']}</div>", unsafe_allow_html=True)
-            fr_oral = st.select_slider("Français Oral", ["0", "A1", "A2", "B1", "B2", "C1", "C2"], value="B2")
-            fr_write = st.select_slider("Français Écrit", ["0", "A1", "A2", "B1", "B2", "C1", "C2"], value="B1")
-            en_lvl = st.select_slider("English", ["0", "Beginner", "Intermediate", "Advanced"], value="0")
+    # 2. TRABAJO
+    with tab2:
+        st.markdown(f"**{lang['job_title']}**")
+        job_query = st.text_input("Buscar/Recherche", placeholder=lang['job_placeholder'], label_visibility="collapsed")
+        if job_query:
+            result = find_job_details(job_query)
+            if result:
+                st.success(f"✅ Code: {result['code']} | TEER: {result['teer']} | {result['volet']}")
+            else:
+                st.markdown(f"<div class='help-box'>{lang['teer_guide']}</div>", unsafe_allow_html=True)
 
-            sp_fr = "0"
-            if spouse:
-                st.divider()
-                st.markdown(f"**{lang['sp_fr_title']}**")
-                sp_fr = st.select_slider(lang['sp_fr_label'], options=["0", "A1", "A2", "B1", "B2", "C1", "C2"], value="0")
+        st.divider()
+        st.caption(lang['teer_manual_help'])
+        teer_selection = st.selectbox(lang['teer_label'], 
+                                      [
+                                          "TEER 0, 1 (Uni/Gestion)",
+                                          "TEER 2 (Collégial/Tech)",
+                                          "TEER 3 (Métiers/Inter)",
+                                          "TEER 4, 5 (Manuel/Sec)"
+                                      ])
+        education = st.selectbox(lang['edu'], ["PhD", "Master", "Bachelor (3+)", "College (3y)", "Diploma (1-2y)", "Secondary"])
+        experience = st.slider(lang['exp_label'], 0, 10, 3)
 
-        # 4. QUEBEC (BOTÓN AQUÍ)
-        with tab4:
-            vjo = st.radio(lang['vjo'], ["Non", "Montreal", "Hors Montreal"])
-            cq1, cq2 = st.columns(2)
-            with cq1: q_stud = st.checkbox("Diplôme QC ?")
-            with cq2: q_fam = st.checkbox("Famille QC ?")
-            
-            st.markdown("###")
-            # --- BOTÓN DE CALCULAR (SOLO EN LA ÚLTIMA PESTAÑA) ---
-            submitted = st.form_submit_button(lang['calc'], type="primary", use_container_width=True)
+    # 3. IDIOMAS
+    with tab3:
+        st.markdown(f"<div class='info-box'>{lang['lang_info']}</div>", unsafe_allow_html=True)
+        fr_oral = st.select_slider("Français Oral", ["0", "A1", "A2", "B1", "B2", "C1", "C2"], value="B2")
+        fr_write = st.select_slider("Français Écrit", ["0", "A1", "A2", "B1", "B2", "C1", "C2"], value="B1")
+        en_lvl = st.select_slider("English", ["0", "Beginner", "Intermediate", "Advanced"], value="0")
 
-    # LÓGICA
-    if submitted:
+        sp_fr = "0"
+        if spouse:
+            st.divider()
+            st.markdown(f"**{lang['sp_fr_title']}**")
+            sp_fr = st.select_slider(lang['sp_fr_label'], options=["0", "A1", "A2", "B1", "B2", "C1", "C2"], value="0")
+
+    # 4. QUEBEC (BOTÓN AQUÍ)
+    with tab4:
+        vjo = st.radio(lang['vjo'], ["Non", "Montreal", "Hors Montreal"])
+        cq1, cq2 = st.columns(2)
+        with cq1: q_stud = st.checkbox("Diplôme QC ?")
+        with cq2: q_fam = st.checkbox("Famille QC ?")
+        
+        st.markdown("###")
+        # BOTÓN SIN FORMULARIO (100% visible solo en Tab 4)
+        if st.button(lang['calc'], type="primary", use_container_width=True):
+            trigger_calculation()
+
+    # LÓGICA & RESULTADOS
+    if st.session_state.show_results:
         score = 0
         score_sp = 0 
         
+        # Edad
         if 18 <= age <= 30: score += 130
         elif age <= 45: score += (130 - (age-30)*5)
-        
+        # Edu
         if "PhD" in education: score += 90
         elif "Master" in education: score += 75
         elif "Bachelor" in education: score += 60
         elif "College" in education: score += 50
         else: score += 30
-        
+        # TEER
         if "TEER 0, 1" in teer_selection: score += 60 
         elif "TEER 2" in teer_selection: score += 40
         elif "TEER 3" in teer_selection: score += 20
-        
+        # Exp
         score += min(80, int(experience * 10))
-        
+        # Idioma
         fr_pts = {"0":0, "A1":0, "A2":10, "B1":20, "B2":50, "C1":70, "C2":80}
         score += fr_pts[fr_oral] * 1.2 + fr_pts[fr_write] * 0.8
         if en_lvl == "Advanced": score += 25
         elif en_lvl == "Intermediate": score += 15
-        
+        # VJO
         if vjo == "Hors Montreal": score += 380
         elif vjo == "Montreal": score += 180
         if q_stud: score += 50
         if q_fam: score += 30
-        
+        # Spouse
         if spouse:
             if 18 <= sp_age <= 40: score_sp += 10
             if "Bachelor" in sp_edu or "Master" in sp_edu or "PhD" in sp_edu: score_sp += 10
@@ -307,24 +299,26 @@ with main_tab_calc:
             elif sp_fr == "B2": score_sp += 20
             elif sp_fr in ["A2", "B1"]: score_sp += 10
             score += score_sp
-            
+        # Kids
         score += (k1*4) + (k2*2)
 
-        st.markdown("---")
-        st.markdown(f"<h2 style='text-align: center; color: #003399;'>{lang['res_title']}: {int(score)} / 1350</h2>", unsafe_allow_html=True)
-        st.progress(min(score/1350, 1.0))
-        
-        with st.expander(lang['details']):
-            st.write(f"**Principal:** {int(score - score_sp - (k1*4 + k2*2))} pts")
-            if spouse:
-                st.write(f"**{lang['sp_points']}:** {score_sp} pts")
-            st.write(f"**Enfants:** {(k1*4 + k2*2)} pts")
-        
-        if score > 580:
-            st.success(lang['advice_good'])
-            st.balloons()
-        else:
-            st.warning(lang['advice_low'])
+        # Muestra resultados dentro de Tab 4 (al final)
+        with tab4:
+            st.markdown("---")
+            st.markdown(f"<h2 style='text-align: center; color: #003399;'>{lang['res_title']}: {int(score)} / 1350</h2>", unsafe_allow_html=True)
+            st.progress(min(score/1350, 1.0))
+            
+            with st.expander(lang['details']):
+                st.write(f"**Principal:** {int(score - score_sp - (k1*4 + k2*2))} pts")
+                if spouse:
+                    st.write(f"**{lang['sp_points']}:** {score_sp} pts")
+                st.write(f"**Enfants:** {(k1*4 + k2*2)} pts")
+            
+            if score > 580:
+                st.success(lang['advice_good'])
+                st.balloons()
+            else:
+                st.warning(lang['advice_low'])
 
 # PESTAÑA 2: GUÍA
 with main_tab_guide:
@@ -339,7 +333,7 @@ with main_tab_guide:
     """, unsafe_allow_html=True)
 
 # ==========================================
-# FOOTER (MONETIZACIÓN Y LEGAL)
+# FOOTER (MONETIZACIÓN Y LEGAL AL FINAL)
 # ==========================================
 st.markdown("---")
 st.markdown("<div class='footer'>", unsafe_allow_html=True)
