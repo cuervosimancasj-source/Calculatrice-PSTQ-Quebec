@@ -65,7 +65,7 @@ def trigger_calculation():
 # --- 4. TRADUCCIONES ---
 t = {
     'fr': {
-        'btn_lang': "🌐 Français",
+        'btn_lang': "🌐 Changer la langue",
         'brand': "Calculatrice PSTQ Québec ⚜️",
         'subtitle': "Outil d'analyse pour la Résidence Permanente (TEER, Volets, Score).",
         'disclaimer_title': "⚠️ AVIS IMPORTANT",
@@ -83,12 +83,11 @@ t = {
         'teer_manual_help': "Si non trouvé, choisissez niveau :",
         'teer_label': "Catégorie TEER (Niveau)",
         'teer_guide': "**Aide:** TEER 0,1=Uni/Gestion | TEER 2=Tech | TEER 3=Métiers | TEER 4,5=Manuel",
-        'noc_link_text': "🔎 Chercher sur le site officiel du Canada (CNP)",
         'exp_label': "Années d'expérience",
         'lang_info': "Volet 1=Niv 7 | Volet 2=Niv 5",
         'age': "Âge", 'spouse': "Conjoint(e) ?", 'kids12': "Enf -12", 'kids13': "Enf +12",
         'sp_section': "Conjoint (Âge/Études)",
-        'sp_fr_title': "Français Conjoint",
+        'sp_fr_title': "Français du Conjoint",
         'sp_fr_label': "Niveau Oral",
         'edu': "Niveau d'études", 'vjo': "Offre (OEV)", 'calc': "CALCULER SCORE",
         'res_title': "Résultat Estimé",
@@ -101,10 +100,11 @@ t = {
         'g_step2': "2. Français", 'g_desc2': "Visez B2 (7).",
         'g_step3': "3. Arrima", 'g_desc3': "Profil gratuit.",
         'g_step4': "4. CSQ", 'g_desc4': "Certificat Sélection.",
-        'g_step5': "5. Fédéral", 'g_desc5': "Résidence Permanente."
+        'g_step5': "5. Fédéral", 'g_desc5': "Résidence Permanente.",
+        'noc_link_text': "🔎 Chercher sur le site officiel du Canada (CNP)"
     },
     'es': {
-        'btn_lang': "🌐 Español",
+        'btn_lang': "🌐 Cambiar el idioma",
         'brand': "Calculatrice PSTQ ⚜️",
         'subtitle': "Análisis Residencia Permanente (Arrima).",
         'disclaimer_title': "⚠️ AVISO LEGAL",
@@ -122,7 +122,6 @@ t = {
         'teer_manual_help': "Si no aparece, elige nivel:",
         'teer_label': "Categoría TEER (Nivel)",
         'teer_guide': "**Ayuda:** TEER 0,1=Uni/Gerencia | TEER 2=Técnico | TEER 3=Oficios | TEER 4,5=Manual",
-        'noc_link_text': "🔎 Buscar en sitio oficial Canadá (NOC)",
         'exp_label': "Años de experiencia",
         'lang_info': "Volet 1=Niv 7 | Volet 2=Niv 5",
         'age': "Edad", 'spouse': "Pareja ?", 'kids12': "Hijos -12", 'kids13': "Hijos +12",
@@ -140,10 +139,11 @@ t = {
         'g_step2': "2. Francés", 'g_desc2': "Apunta a B2 (7).",
         'g_step3': "3. Arrima", 'g_desc3': "Perfil gratis.",
         'g_step4': "4. CSQ", 'g_desc4': "Certificado Selección.",
-        'g_step5': "5. Federal", 'g_desc5': "Residencia Permanente."
+        'g_step5': "5. Federal", 'g_desc5': "Residencia Permanente.",
+        'noc_link_text': "🔎 Buscar en sitio oficial Canadá (NOC)"
     },
     'en': {
-        'btn_lang': "🌐 English",
+        'btn_lang': "🌐 Change Language",
         'brand': "Calculatrice PSTQ ⚜️",
         'subtitle': "Residency Analysis Tool (Arrima).",
         'disclaimer_title': "⚠️ DISCLAIMER",
@@ -161,7 +161,6 @@ t = {
         'teer_manual_help': "If not found, select level:",
         'teer_label': "TEER Category",
         'teer_guide': "**Help:** TEER 0,1=Uni/Mgmt | TEER 2=Tech | TEER 3=Trades | TEER 4,5=Manual",
-        'noc_link_text': "🔎 Search on official Canada site (NOC)",
         'exp_label': "Years experience",
         'lang_info': "Volet 1=Lvl 7 | Volet 2=Lvl 5",
         'age': "Age", 'spouse': "Spouse ?", 'kids12': "Kids -12", 'kids13': "Kids +12",
@@ -179,7 +178,8 @@ t = {
         'g_step2': "2. French", 'g_desc2': "Aim B2 (7).",
         'g_step3': "3. Arrima", 'g_desc3': "Free profile.",
         'g_step4': "4. CSQ", 'g_desc4': "Selection Cert.",
-        'g_step5': "5. Federal", 'g_desc5': "Residency."
+        'g_step5': "5. Federal", 'g_desc5': "Residency.",
+        'noc_link_text': "🔎 Search on official Canada site (NOC)"
     }
 }
 lang = t[st.session_state.language]
@@ -267,14 +267,13 @@ with main_tab_calc:
             if result:
                 st.success(f"✅ Code: {result['code']} | TEER: {result['teer']} | {result['volet']}")
             else:
-                # AQUÍ SE MUESTRA EL ENLACE EXTERNO SI FALLA
                 st.markdown(f"<div class='help-box'>{lang['teer_guide']}</div>", unsafe_allow_html=True)
+                # ENLACE EXTERNO
                 st.markdown(f"🔗 [{lang['noc_link_text']}](https://noc.esdc.gc.ca/)")
 
         st.divider()
         st.caption(lang['teer_manual_help'])
         
-        # Opciones DETALLADAS
         teer_selection = st.selectbox(lang['teer_label'], 
                                       [
                                           "TEER 0, 1: Université / Ingénierie / Gestion (Haute Qualif.)",
@@ -321,8 +320,10 @@ with main_tab_calc:
         score = 0
         score_sp = 0 
         
+        # Edad
         if 18 <= age <= 30: score += 130
         elif age <= 45: score += (130 - (age-30)*5)
+        # Edu
         if "PhD" in education: score += 90
         elif "Master" in education: score += 75
         elif "Bachelor" in education: score += 60
@@ -386,7 +387,7 @@ with main_tab_guide:
     """, unsafe_allow_html=True)
 
 # ==========================================
-# FOOTER (MONETIZACIÓN Y LEGAL)
+# FOOTER
 # ==========================================
 st.markdown("---")
 st.markdown("<div class='footer'>", unsafe_allow_html=True)
