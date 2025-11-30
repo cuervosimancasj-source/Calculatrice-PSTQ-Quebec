@@ -52,7 +52,7 @@ t = {
         'coffee': "☕ M'offrir un café",
         'courses': "📚 Cours de Français",
         'main_tabs': ["🧮 Calculatrice", "ℹ️ Guide & Étapes"],
-        'tabs': ["👤 Profil & Conjoint", "💼 Travail & TEER", "🗣️ Langues", "⚜️ Québec/OEV"],
+        'tabs': ["👤 Profil", "💼 Travail & TEER", "🗣️ Langues", "⚜️ Québec/OEV"],
         'job_title': "Quel est votre emploi actuel ?",
         'job_placeholder': "Ex: Ingénieur, Soudeur, Assembleur...",
         'teer_manual_help': "Si vous n'avez pas trouvé votre emploi, choisissez selon votre niveau :",
@@ -61,8 +61,9 @@ t = {
         'exp_label': "Années d'expérience qualifiée",
         'lang_info': "**Exigences :** Volet 1 = Niveau 7 | Volet 2 = Niveau 5",
         'age': "Âge", 'spouse': "Conjoint(e) ?", 'kids12': "Enfants -12", 'kids13': "Enfants +12",
-        'sp_section': "Évaluation du Conjoint (Français)",
-        'sp_fr_label': "Niveau de Français (Oral) du conjoint",
+        'sp_section': "Données du Conjoint (Âge/Études)",
+        'sp_fr_title': "Français du Conjoint",
+        'sp_fr_label': "Niveau Oral du conjoint",
         'edu': "Niveau d'études", 'vjo': "Offre d'emploi (OEV)", 'calc': "CALCULER MON SCORE",
         'res_title': "Résultat Estimé",
         'advice_good': "Excellent ! Vous êtes compétitif.",
@@ -85,7 +86,7 @@ t = {
         'coffee': "☕ Invítame un café",
         'courses': "📚 Cursos de Francés",
         'main_tabs': ["🧮 Calculadora", "ℹ️ Guía y Pasos"],
-        'tabs': ["👤 Perfil y Pareja", "💼 Trabajo y TEER", "🗣️ Idiomas", "⚜️ Quebec/VJO"],
+        'tabs': ["👤 Perfil", "💼 Trabajo y TEER", "🗣️ Idiomas", "⚜️ Quebec/VJO"],
         'job_title': "¿Cuál es tu trabajo actual?",
         'job_placeholder': "Ej: Ingeniero, Soldador, Ensamblador...",
         'teer_manual_help': "Si no encontraste tu empleo, elige según tu nivel:",
@@ -94,8 +95,9 @@ t = {
         'exp_label': "Años de experiencia calificada",
         'lang_info': "**Requisitos:** Volet 1 = Nivel 7 | Volet 2 = Nivel 5",
         'age': "Edad", 'spouse': "Pareja ?", 'kids12': "Hijos -12", 'kids13': "Hijos +12",
-        'sp_section': "Evaluación de la Pareja (Francés)",
-        'sp_fr_label': "Nivel de Francés (Oral) de la pareja",
+        'sp_section': "Datos de la Pareja (Edad/Estudios)",
+        'sp_fr_title': "Francés de la Pareja",
+        'sp_fr_label': "Nivel Oral de la pareja",
         'edu': "Nivel estudios", 'vjo': "Oferta empleo (VJO)", 'calc': "CALCULAR PUNTAJE",
         'res_title': "Resultado Estimado",
         'advice_good': "¡Excelente! Eres competitivo.",
@@ -118,7 +120,7 @@ t = {
         'coffee': "☕ Buy me a coffee",
         'courses': "📚 French Courses",
         'main_tabs': ["🧮 Calculator", "ℹ️ Guide & Steps"],
-        'tabs': ["👤 Profile & Spouse", "💼 Work & TEER", "🗣️ Languages", "⚜️ Quebec/VJO"],
+        'tabs': ["👤 Profile", "💼 Work & TEER", "🗣️ Languages", "⚜️ Quebec/VJO"],
         'job_title': "What is your current job?",
         'job_placeholder': "Ex: Engineer, Welder, Assembler...",
         'teer_manual_help': "If job not found, select by level:",
@@ -127,8 +129,9 @@ t = {
         'exp_label': "Years of qualified experience",
         'lang_info': "**Requirements:** Volet 1 = Level 7 | Volet 2 = Level 5",
         'age': "Age", 'spouse': "Spouse ?", 'kids12': "Kids -12", 'kids13': "Kids +12",
-        'sp_section': "Spouse Evaluation (French)",
-        'sp_fr_label': "Spouse's French Level (Oral)",
+        'sp_section': "Spouse Data (Age/Education)",
+        'sp_fr_title': "Spouse's French",
+        'sp_fr_label': "Spouse's Oral Level",
         'edu': "Education Level", 'vjo': "Job Offer (VJO)", 'calc': "CALCULATE SCORE",
         'res_title': "Estimated Result",
         'advice_good': "Excellent! You are competitive.",
@@ -197,7 +200,7 @@ with main_tab_calc:
     with st.form("main_form"):
         tab1, tab2, tab3, tab4 = st.tabs(lang['tabs'])
 
-        # SUB-TAB 1: PERFIL & PAREJA
+        # SUB-TAB 1: PERFIL
         with tab1:
             c1, c2 = st.columns(2)
             with c1: age = st.number_input(lang['age'], 18, 65, 30)
@@ -207,18 +210,15 @@ with main_tab_calc:
             with c3: k1 = st.number_input(lang['kids12'], 0, 5, 0)
             with c4: k2 = st.number_input(lang['kids13'], 0, 5, 0)
             
-            # Variables Pareja
-            sp_age, sp_edu, sp_fr = 30, "Secondary", "0"
+            # Variables Pareja (Solo Edad y Edu aquí)
+            sp_age, sp_edu = 30, "Secondary"
             if spouse:
                 st.divider()
                 st.markdown(f"#### ❤️ {lang['sp_section']}")
-                col_sp1, col_sp2 = st.columns(2)
-                with col_sp1:
-                    sp_age = st.number_input("Age (Conjoint)", 18, 65, 30)
-                    sp_edu = st.selectbox("Education (Conjoint)", ["PhD", "Master", "Bachelor", "Technical", "Secondary"])
-                with col_sp2:
-                    st.info("Niveau 7 (B2) = Points Max")
-                    sp_fr = st.select_slider(lang['sp_fr_label'], options=["0", "A1", "A2", "B1", "B2", "C1", "C2"], value="0")
+                c_sp1, c_sp2 = st.columns(2)
+                with c_sp1: sp_age = st.number_input("Age (Spouse/Pareja)", 18, 65, 30)
+                with c_sp2: sp_edu = st.selectbox("Education (Spouse/Pareja)", ["PhD", "Master", "Bachelor", "Technical", "Secondary"])
+                # NOTA: El idioma de la pareja se movió a la Pestaña 3
 
         # SUB-TAB 2: TRABAJO
         with tab2:
@@ -243,13 +243,21 @@ with main_tab_calc:
             education = st.selectbox(lang['edu'], ["PhD", "Master", "Bachelor (3+)", "College (3y)", "Diploma (1-2y)", "Secondary"])
             experience = st.slider(lang['exp_label'], 0, 10, 3)
 
-        # SUB-TAB 3: IDIOMAS
+        # SUB-TAB 3: IDIOMAS (PRINCIPAL + PAREJA)
         with tab3:
             st.markdown(f"<div class='info-box'>{lang['lang_info']}</div>", unsafe_allow_html=True)
             c1, c2 = st.columns(2)
             with c1: fr_oral = st.select_slider("Français Oral (Principal)", ["0", "A1", "A2", "B1", "B2", "C1", "C2"], value="B2")
             with c2: fr_write = st.select_slider("Français Écrit (Principal)", ["0", "A1", "A2", "B1", "B2", "C1", "C2"], value="B1")
             en_lvl = st.select_slider("English", ["0", "Beginner", "Intermediate", "Advanced"], value="0")
+
+            # SECCIÓN FRANCÉS PAREJA (Solo si está activado en Tab 1)
+            sp_fr = "0" # Default
+            if spouse:
+                st.divider()
+                st.markdown(f"#### ❤️ {lang['sp_fr_title']}")
+                st.info("Niveau 7 (B2) = Points Max")
+                sp_fr = st.select_slider(lang['sp_fr_label'], options=["0", "A1", "A2", "B1", "B2", "C1", "C2"], value="0")
 
         # SUB-TAB 4: QUEBEC
         with tab4:
@@ -264,7 +272,7 @@ with main_tab_calc:
     # LÓGICA DE CÁLCULO
     if submitted:
         score = 0
-        score_sp = 0 # Puntos de pareja
+        score_sp = 0 
         
         # 1. Edad
         if 18 <= age <= 30: score += 130
@@ -297,12 +305,13 @@ with main_tab_calc:
         if q_stud: score += 50
         if q_fam: score += 30
         
-        # 7. PAREJA (Calculo y guardado en variable separada para mostrar)
+        # 7. PAREJA
         if spouse:
             if 18 <= sp_age <= 40: score_sp += 10
             if "Bachelor" in sp_edu or "Master" in sp_edu or "PhD" in sp_edu: score_sp += 10
             elif "College" in sp_edu: score_sp += 5
-            # Francés Pareja
+            
+            # Calculamos puntos de francés pareja
             if sp_fr in ["C1", "C2"]: score_sp += 30
             elif sp_fr == "B2": score_sp += 20
             elif sp_fr in ["A2", "B1"]: score_sp += 10
@@ -317,7 +326,6 @@ with main_tab_calc:
         st.markdown(f"<h2 style='text-align: center; color: #003399;'>{lang['res_title']}: {int(score)} / 1350</h2>", unsafe_allow_html=True)
         st.progress(min(score/1350, 1.0))
         
-        # DESGLOSE DE PUNTOS
         with st.expander(lang['details']):
             st.write(f"**Principal:** {int(score - score_sp - (k1*4 + k2*2))} pts")
             if spouse:
@@ -332,7 +340,7 @@ with main_tab_calc:
 
 
 # ==========================================
-# PESTAÑA 2: GUÍA (SOLO LECTURA)
+# PESTAÑA 2: GUÍA
 # ==========================================
 with main_tab_guide:
     st.markdown(f"### 🗺️ {lang['guide_title']}")
@@ -344,4 +352,4 @@ with main_tab_guide:
     <div class='step-box'><h4>📩 {lang['g_step4']}</h4><p>{lang['g_desc4']}</p></div>
     <div class='step-box'><h4>🍁 {lang['g_step5']}</h4><p>{lang['g_desc5']}</p></div>
     """, unsafe_allow_html=True)
-    st.info("💡 **Tip:** Mantén tu CV actualizado y en formato canadiense.")
+    st.info("💡 **Tip:** Mantén tu CV actualizado y en format canadien.")
