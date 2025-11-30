@@ -7,33 +7,44 @@ st.set_page_config(
     layout="centered"
 )
 
-# --- 2. ESTILOS CSS (DISEÑO QUEBEC) ---
+# --- 2. ESTILOS CSS ---
 st.markdown("""
     <style>
         .stApp { background-color: #f0f2f6; }
         header[data-testid="stHeader"] { background-color: #003399; }
         h1, h2, h3, .stMarkdown h1, .stMarkdown h2, .stMarkdown h3 { color: #003399 !important; }
+        
+        /* Botones generales */
+        div.stButton > button {
+            width: 100%;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+        /* Botón primario (Calcular) en Azul */
         div.stButton > button[type="primary"] {
-            background-color: #003399; color: white; border-radius: 8px; font-weight: bold; border: none;
+            background-color: #003399; color: white; border: none;
         }
         div.stButton > button[type="primary"]:hover { background-color: #002266; }
+        
+        /* Formulario estilo tarjeta */
         [data-testid="stForm"] {
             background-color: white; padding: 2rem; border-radius: 15px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1); border-top: 5px solid #003399;
         }
-        .info-box {
-            background-color: #e8f4fd; border-left: 5px solid #003399; padding: 15px; margin-bottom: 15px; border-radius: 5px;
-        }
-        .help-box {
-            background-color: #fff3cd; border-left: 5px solid #ffc107; padding: 15px; margin-top: 10px; border-radius: 5px;
-        }
-        .step-box {
-            background-color: white; padding: 15px; border-radius: 10px; border: 1px solid #ddd; margin-bottom: 10px;
-        }
-        /* Estilo para la barra lateral */
-        [data-testid="stSidebar"] {
-            background-color: #ffffff;
-            border-right: 1px solid #e0e0e0;
+        
+        /* Cajas de info */
+        .info-box { background-color: #e8f4fd; border-left: 5px solid #003399; padding: 15px; border-radius: 5px; }
+        .help-box { background-color: #fff3cd; border-left: 5px solid #ffc107; padding: 15px; border-radius: 5px; }
+        .step-box { background-color: white; padding: 15px; border-radius: 10px; border: 1px solid #ddd; margin-bottom: 10px; }
+        
+        /* Footer (Pie de página) */
+        .footer {
+            margin-top: 50px;
+            padding: 20px;
+            border-top: 1px solid #ccc;
+            text-align: center;
+            color: #666;
+            font-size: 0.9em;
         }
     </style>
 """, unsafe_allow_html=True)
@@ -50,18 +61,12 @@ def cycle_language():
 # --- 4. TRADUCCIONES ---
 t = {
     'fr': {
-        'btn_lang': "🌐 Langue: Français",
+        'btn_lang': "🌐 Changer la langue (Français)",
         'brand': "Calculatrice PSTQ Québec ⚜️",
         'subtitle': "Outil d'analyse pour la Résidence Permanente (TEER, Volets, Score).",
-        # DISCLAIMER COMPLETO:
         'disclaimer_title': "⚠️ AVIS IMPORTANT",
-        'disclaimer_text': """
-            Ce logiciel est un projet indépendant. 
-            **Nous ne sommes PAS avocats, ni consultants en immigration.**
-            **Nous ne représentons PAS le gouvernement du Québec (MIFI).**
-            Les résultats sont des estimations basées sur le système Arrima (~1350 points).
-        """,
-        'coffee': "☕ M'offrir un café",
+        'disclaimer_text': "Ce logiciel est un projet indépendant. Nous ne sommes PAS avocats ni consultants. Nous ne représentons PAS le MIFI.",
+        'coffee': "☕ M'offrir un café (Soutenir le projet)",
         'courses': "📚 Cours de Français",
         'main_tabs': ["🧮 Calculatrice", "ℹ️ Guide & Étapes"],
         'tabs': ["👤 Profil", "💼 Travail & TEER", "🗣️ Langues", "⚜️ Québec/OEV"],
@@ -82,27 +87,20 @@ t = {
         'advice_low': "Améliorez le français ou cherchez une OEV en région.",
         'details': "Voir les détails du score",
         'sp_points': "Points Conjoint (Français + Autres)",
-        # GUÍA
         'guide_title': "Votre Feuille de Route",
-        'g_step1': "1. Auto-évaluation", 'g_desc1': "Connaître vos points forts (Langue, VJO).",
-        'g_step2': "2. Français", 'g_desc2': "Visez un niveau B2 (7) ou C1.",
-        'g_step3': "3. Arrima", 'g_desc3': "Créez votre profil gratuitement.",
-        'g_step4': "4. CSQ", 'g_desc4': "Certificat de Sélection du Québec.",
-        'g_step5': "5. Fédéral", 'g_desc5': "Résidence Permanente Canada."
+        'g_step1': "1. Auto-évaluation", 'g_desc1': "Connaître vos points forts.",
+        'g_step2': "2. Français", 'g_desc2': "Visez B2 (7) ou C1.",
+        'g_step3': "3. Arrima", 'g_desc3': "Créez votre profil.",
+        'g_step4': "4. CSQ", 'g_desc4': "Certificat de Sélection.",
+        'g_step5': "5. Fédéral", 'g_desc5': "Résidence Permanente."
     },
     'es': {
-        'btn_lang': "🌐 Idioma: Español",
+        'btn_lang': "🌐 Cambiar Idioma (Español)",
         'brand': "Calculatrice PSTQ Québec ⚜️",
         'subtitle': "Herramienta de análisis para Residencia (TEER, Volets, Puntaje).",
-        # DISCLAIMER COMPLETO:
         'disclaimer_title': "⚠️ AVISO LEGAL",
-        'disclaimer_text': """
-            Este software es un proyecto independiente.
-            **NO somos abogados, ni asesores de inmigración.**
-            **NO representamos al gobierno de Quebec (MIFI).**
-            Los resultados son estimaciones basadas en el sistema Arrima (~1350 puntos).
-        """,
-        'coffee': "☕ Invítame un café",
+        'disclaimer_text': "Este software es un proyecto independiente. NO somos abogados ni asesores. NO representamos al gobierno (MIFI).",
+        'coffee': "☕ Invítame un café (Apoyar proyecto)",
         'courses': "📚 Cursos de Francés",
         'main_tabs': ["🧮 Calculadora", "ℹ️ Guía y Pasos"],
         'tabs': ["👤 Perfil", "💼 Trabajo y TEER", "🗣️ Idiomas", "⚜️ Quebec/VJO"],
@@ -112,7 +110,7 @@ t = {
         'teer_label': "Selecciona tu nivel (Categoría TEER)",
         'teer_guide': "**Ayuda:** TEER 0,1 = Universidad/Gerencia | TEER 2 = College/Técnico | TEER 3 = Oficios | TEER 4,5 = Secundaria/Manual",
         'exp_label': "Años de experiencia calificada",
-        'lang_info': "**Requisitos:** Volet 1 = Nivel 7 | Volet 2 = Nivel 5",
+        'lang_info': "**Requisitos:** Volet 1 = Niv 7 | Volet 2 = Niv 5 | **Pareja = Niv 4**",
         'age': "Edad", 'spouse': "Pareja ?", 'kids12': "Hijos -12", 'kids13': "Hijos +12",
         'sp_section': "Datos de la Pareja (Edad/Estudios)",
         'sp_fr_title': "Francés de la Pareja",
@@ -123,27 +121,20 @@ t = {
         'advice_low': "Mejora el francés o busca una VJO en regiones.",
         'details': "Ver detalles del puntaje",
         'sp_points': "Puntos Pareja (Francés + Otros)",
-        # GUÍA
         'guide_title': "Tu Hoja de Ruta",
-        'g_step1': "1. Autoevaluación", 'g_desc1': "Conoce tus fortalezas (Idioma, VJO).",
-        'g_step2': "2. Francés", 'g_desc2': "Apunta a un nivel B2 (7) o C1.",
+        'g_step1': "1. Autoevaluación", 'g_desc1': "Conoce tus fortalezas.",
+        'g_step2': "2. Francés", 'g_desc2': "Apunta a B2 (7) o C1.",
         'g_step3': "3. Arrima", 'g_desc3': "Crea tu perfil gratis.",
-        'g_step4': "4. CSQ", 'g_desc4': "Certificado de Selección de Quebec.",
-        'g_step5': "5. Federal", 'g_desc5': "Residencia Permanente Canadá."
+        'g_step4': "4. CSQ", 'g_desc4': "Certificado de Selección.",
+        'g_step5': "5. Federal", 'g_desc5': "Residencia Permanente."
     },
     'en': {
-        'btn_lang': "🌐 Language: English",
+        'btn_lang': "🌐 Change Language (English)",
         'brand': "Calculatrice PSTQ Québec ⚜️",
         'subtitle': "Analysis tool for Residency (TEER, Volets, Score).",
-        # DISCLAIMER COMPLETO:
         'disclaimer_title': "⚠️ LEGAL DISCLAIMER",
-        'disclaimer_text': """
-            This software is an independent project.
-            **We are NOT lawyers, nor immigration consultants.**
-            **We do NOT represent the Government of Quebec (MIFI).**
-            Results are estimates based on the Arrima system (~1350 points).
-        """,
-        'coffee': "☕ Buy me a coffee",
+        'disclaimer_text': "Independent project. NOT lawyers/consultants. NOT Government (MIFI).",
+        'coffee': "☕ Buy me a coffee (Support)",
         'courses': "📚 French Courses",
         'main_tabs': ["🧮 Calculator", "ℹ️ Guide & Steps"],
         'tabs': ["👤 Profile", "💼 Work & TEER", "🗣️ Languages", "⚜️ Quebec/VJO"],
@@ -153,7 +144,7 @@ t = {
         'teer_label': "Select your level (TEER Category)",
         'teer_guide': "**Help:** TEER 0,1 = University/Mgmt | TEER 2 = College/Tech | TEER 3 = Trades | TEER 4,5 = High School/Manual",
         'exp_label': "Years of qualified experience",
-        'lang_info': "**Requirements:** Volet 1 = Level 7 | Volet 2 = Level 5",
+        'lang_info': "**Requirements:** Volet 1 = Lvl 7 | Volet 2 = Lvl 5 | **Spouse = Lvl 4**",
         'age': "Age", 'spouse': "Spouse ?", 'kids12': "Kids -12", 'kids13': "Kids +12",
         'sp_section': "Spouse Data (Age/Education)",
         'sp_fr_title': "Spouse's French",
@@ -164,13 +155,12 @@ t = {
         'advice_low': "Improve French or find a VJO in regions.",
         'details': "See score details",
         'sp_points': "Spouse Points (French + Others)",
-        # GUÍA
         'guide_title': "Your Roadmap",
         'g_step1': "1. Self-Assessment", 'g_desc1': "Know your strengths.",
         'g_step2': "2. French", 'g_desc2': "Aim for B2 (7) or C1.",
         'g_step3': "3. Arrima", 'g_desc3': "Create free profile.",
         'g_step4': "4. CSQ", 'g_desc4': "Quebec Selection Certificate.",
-        'g_step5': "5. Federal", 'g_desc5': "Permanent Residency Canada."
+        'g_step5': "5. Federal", 'g_desc5': "Permanent Residency."
     }
 }
 lang = t[st.session_state.language]
@@ -204,37 +194,30 @@ def find_job_details(keyword):
         if key in keyword: return data
     return None
 
-# --- 6. BARRA LATERAL (SIDEBAR) - AQUÍ ESTÁ LO QUE FALTABA ---
-with st.sidebar:
-    # 1. Botón de Idioma
-    st.button(lang['btn_lang'], on_click=cycle_language, type="primary")
-    
-    st.divider()
-    
-    # 2. Enlaces de Monetización
-    st.link_button(lang['coffee'], "https://www.buymeacoffee.com/CalculatricePSTQQuebec")
-    st.link_button(lang['courses'], "https://www.TU_ENLACE_DE_AFILIADO.com") 
-    
-    st.divider()
-    
-    # 3. Disclaimer (Leyenda)
-    st.error(f"**{lang['disclaimer_title']}**")
-    st.caption(lang['disclaimer_text'])
+# ==========================================
+# HEADER (BOTÓN IDIOMA ARRIBA)
+# ==========================================
+col_lang, col_brand = st.columns([1, 3])
+with col_lang:
+    # Botón de idioma AQUÍ arriba
+    st.button(lang['btn_lang'], on_click=cycle_language)
+with col_brand:
+    st.markdown(f"## {lang['brand']}")
+    st.caption(lang['subtitle'])
 
-# --- 7. APP PRINCIPAL ---
-st.markdown(f"# {lang['brand']}")
-st.write(lang['subtitle'])
+st.divider()
 
+# ==========================================
+# APP PRINCIPAL (PESTAÑAS)
+# ==========================================
 main_tab_calc, main_tab_guide = st.tabs(lang['main_tabs'])
 
-# ==========================================
-# PESTAÑA 1: CALCULADORA
-# ==========================================
+# --- PESTAÑA CALCULADORA ---
 with main_tab_calc:
     with st.form("main_form"):
         tab1, tab2, tab3, tab4 = st.tabs(lang['tabs'])
 
-        # SUB-TAB 1: PERFIL
+        # 1. PERFIL
         with tab1:
             c1, c2 = st.columns(2)
             with c1: age = st.number_input(lang['age'], 18, 65, 30)
@@ -244,7 +227,6 @@ with main_tab_calc:
             with c3: k1 = st.number_input(lang['kids12'], 0, 5, 0)
             with c4: k2 = st.number_input(lang['kids13'], 0, 5, 0)
             
-            # Variables Pareja (Solo Edad y Edu aquí)
             sp_age, sp_edu = 30, "Secondary"
             if spouse:
                 st.divider()
@@ -252,9 +234,8 @@ with main_tab_calc:
                 c_sp1, c_sp2 = st.columns(2)
                 with c_sp1: sp_age = st.number_input("Age (Conjoint)", 18, 65, 30)
                 with c_sp2: sp_edu = st.selectbox("Education (Conjoint)", ["PhD", "Master", "Bachelor", "Technical", "Secondary"])
-                # NOTA: El idioma de la pareja se movió a la Pestaña 3
 
-        # SUB-TAB 2: TRABAJO
+        # 2. TRABAJO
         with tab2:
             st.markdown(f"### 🔍 {lang['job_title']}")
             job_query = st.text_input("Buscador / Recherche", placeholder=lang['job_placeholder'])
@@ -277,7 +258,7 @@ with main_tab_calc:
             education = st.selectbox(lang['edu'], ["PhD", "Master", "Bachelor (3+)", "College (3y)", "Diploma (1-2y)", "Secondary"])
             experience = st.slider(lang['exp_label'], 0, 10, 3)
 
-        # SUB-TAB 3: IDIOMAS (PRINCIPAL + PAREJA)
+        # 3. IDIOMAS
         with tab3:
             st.markdown(f"<div class='info-box'>{lang['lang_info']}</div>", unsafe_allow_html=True)
             c1, c2 = st.columns(2)
@@ -285,15 +266,14 @@ with main_tab_calc:
             with c2: fr_write = st.select_slider("Français Écrit (Principal)", ["0", "A1", "A2", "B1", "B2", "C1", "C2"], value="B1")
             en_lvl = st.select_slider("English", ["0", "Beginner", "Intermediate", "Advanced"], value="0")
 
-            # SECCIÓN FRANCÉS PAREJA (Solo si está activado en Tab 1)
-            sp_fr = "0" # Default
+            sp_fr = "0"
             if spouse:
                 st.divider()
                 st.markdown(f"#### ❤️ {lang['sp_fr_title']}")
                 st.info("Niveau 4 (A2) Min | Niveau 7 (B2) Max Points")
                 sp_fr = st.select_slider(lang['sp_fr_label'], options=["0", "A1", "A2", "B1", "B2", "C1", "C2"], value="0")
 
-        # SUB-TAB 4: QUEBEC
+        # 4. QUEBEC
         with tab4:
             vjo = st.radio(lang['vjo'], ["Non", "Montreal", "Hors Montreal"])
             cq1, cq2 = st.columns(2)
@@ -303,59 +283,47 @@ with main_tab_calc:
         st.markdown("###")
         submitted = st.form_submit_button(lang['calc'], type="primary", use_container_width=True)
 
-    # LÓGICA DE CÁLCULO
     if submitted:
         score = 0
         score_sp = 0 
         
-        # 1. Edad
+        # LÓGICA (Simplificada para no repetir)
         if 18 <= age <= 30: score += 130
         elif age <= 45: score += (130 - (age-30)*5)
         
-        # 2. Edu
         if "PhD" in education: score += 90
         elif "Master" in education: score += 75
         elif "Bachelor" in education: score += 60
         elif "College" in education: score += 50
         else: score += 30
         
-        # 3. TEER
         if "TEER 0, 1" in teer_selection: score += 60 
         elif "TEER 2" in teer_selection: score += 40
         elif "TEER 3" in teer_selection: score += 20
         
-        # 4. Exp
         score += min(80, int(experience * 10))
         
-        # 5. Idiomas
         fr_pts = {"0":0, "A1":0, "A2":10, "B1":20, "B2":50, "C1":70, "C2":80}
         score += fr_pts[fr_oral] * 1.2 + fr_pts[fr_write] * 0.8
         if en_lvl == "Advanced": score += 25
         elif en_lvl == "Intermediate": score += 15
         
-        # 6. VJO & Quebec
         if vjo == "Hors Montreal": score += 380
         elif vjo == "Montreal": score += 180
         if q_stud: score += 50
         if q_fam: score += 30
         
-        # 7. PAREJA
         if spouse:
             if 18 <= sp_age <= 40: score_sp += 10
             if "Bachelor" in sp_edu or "Master" in sp_edu or "PhD" in sp_edu: score_sp += 10
             elif "College" in sp_edu: score_sp += 5
-            
-            # Calculamos puntos de francés pareja
             if sp_fr in ["C1", "C2"]: score_sp += 30
             elif sp_fr == "B2": score_sp += 20
             elif sp_fr in ["A2", "B1"]: score_sp += 10
-            
             score += score_sp
             
-        # 8. Hijos
         score += (k1*4) + (k2*2)
 
-        # RESULTADO
         st.markdown("---")
         st.markdown(f"<h2 style='text-align: center; color: #003399;'>{lang['res_title']}: {int(score)} / 1350</h2>", unsafe_allow_html=True)
         st.progress(min(score/1350, 1.0))
@@ -372,13 +340,9 @@ with main_tab_calc:
         else:
             st.warning(lang['advice_low'])
 
-
-# ==========================================
-# PESTAÑA 2: GUÍA
-# ==========================================
+# --- PESTAÑA GUÍA ---
 with main_tab_guide:
     st.markdown(f"### 🗺️ {lang['guide_title']}")
-    st.markdown("---")
     st.markdown(f"""
     <div class='step-box'><h4>📊 {lang['g_step1']}</h4><p>{lang['g_desc1']}</p></div>
     <div class='step-box'><h4>🗣️ {lang['g_step2']}</h4><p>{lang['g_desc2']}</p></div>
@@ -386,4 +350,23 @@ with main_tab_guide:
     <div class='step-box'><h4>📩 {lang['g_step4']}</h4><p>{lang['g_desc4']}</p></div>
     <div class='step-box'><h4>🍁 {lang['g_step5']}</h4><p>{lang['g_desc5']}</p></div>
     """, unsafe_allow_html=True)
-    st.info("💡 **Tip:** Mantén tu CV actualizado y en format canadien.")
+
+# ==========================================
+# FOOTER (PIE DE PÁGINA) - MONETIZACIÓN Y LEGAL
+# ==========================================
+st.markdown("---")
+st.markdown("<div class='footer'>", unsafe_allow_html=True)
+
+# Columnas para los botones de apoyo
+fc1, fc2 = st.columns(2)
+with fc1:
+    st.link_button(lang['coffee'], "https://www.buymeacoffee.com/CalculatricePSTQQuebec")
+with fc2:
+    st.link_button(lang['courses'], "https://www.TU_ENLACE_DE_AFILIADO.com") 
+
+st.markdown("###")
+# DISCLAIMER GRANDE AL FINAL
+st.error(f"**{lang['disclaimer_title']}**")
+st.markdown(lang['disclaimer_text'])
+
+st.markdown("</div>", unsafe_allow_html=True)
