@@ -7,71 +7,86 @@ st.set_page_config(
     layout="centered"
 )
 
-# --- 2. ESTILOS CSS (CORRECCIÓN MÓVIL / DARK MODE) ---
+# --- 2. ESTILOS CSS (FORZAR MODO CLARO / LIGHT MODE) ---
 st.markdown("""
     <style>
-        /* 1. FORZAR FONDO CLARO GLOBAL */
+        /* 1. REDEFINIR VARIABLES GLOBALES PARA FORZAR TEMA CLARO */
+        :root {
+            --primary-color: #003399;
+            --background-color: #ffffff;
+            --secondary-background-color: #f0f2f6;
+            --text-color: #31333F;
+            --font: sans-serif;
+        }
+
+        /* 2. FONDO GENERAL */
         .stApp {
             background-color: #f0f2f6;
-            color: #31333F !important; /* Texto gris oscuro forzado */
         }
-        
-        /* 2. ENCABEZADO AZUL */
+        [data-testid="stAppViewContainer"] {
+            background-color: #f0f2f6;
+        }
+
+        /* 3. HEADER AZUL */
         header[data-testid="stHeader"] {
             background-color: #003399;
         }
-        
-        /* 3. TÍTULOS SIEMPRE AZULES */
-        h1, h2, h3, .stMarkdown h1, .stMarkdown h2, .stMarkdown h3 {
+        h1, h2, h3, h4, h5, .stMarkdown h1, .stMarkdown h2, .stMarkdown h3 {
             color: #003399 !important;
         }
-        
-        /* 4. ARREGLO DE INPUTS (CASILLAS) QUE SALÍAN NEGRAS */
-        /* Forzamos fondo blanco y borde gris para los inputs */
-        div[data-baseweb="input"], div[data-baseweb="select"] {
-            background-color: white !important;
-            border-color: #d1d5db !important;
-            color: black !important;
+
+        /* 4. ARREGLO CRÍTICO DE INPUTS (EDAD, TEXTO) PARA MÓVIL */
+        /* Fuerza el texto a ser gris oscuro, no blanco */
+        input, .stNumberInput input, .stTextInput input {
+            color: #31333F !important;
+            background-color: #ffffff !important;
+            caret-color: #000000; /* Cursor negro */
         }
-        input {
-            color: black !important; /* Texto dentro del input negro */
+        /* Fondo de la caja del input */
+        div[data-baseweb="input"] {
+            background-color: #ffffff !important;
+            border: 1px solid #d1d5db !important;
+        }
+        /* Fondo de los selectores (Menús) */
+        div[data-baseweb="select"] > div {
+            background-color: #ffffff !important;
+            color: #31333F !important;
         }
         
-        /* 5. ARREGLO DE PESTAÑAS (TABS) QUE NO SE VEÍAN */
-        /* Pestañas no seleccionadas: Texto gris oscuro */
+        /* 5. ARREGLO DE PESTAÑAS (TABS) */
+        /* Texto de pestañas inactivas */
         button[data-baseweb="tab"] {
             color: #31333F !important;
-            background-color: transparent !important;
         }
-        /* Pestaña seleccionada: Fondo Azul, Texto Blanco */
+        button[data-baseweb="tab"] div {
+            color: #31333F !important;
+        }
+        /* Pestaña activa (Fondo azul, texto blanco) */
         button[data-baseweb="tab"][aria-selected="true"] {
             background-color: #003399 !important;
-            color: white !important;
         }
-        
-        /* 6. BOTONES */
-        div.stButton > button { width: 100%; border-radius: 8px; font-weight: bold; }
-        div.stButton > button[type="primary"] { background-color: #003399; color: white; border: none; }
-        div.stButton > button[type="primary"]:hover { background-color: #002266; }
-        
-        /* 7. TARJETAS Y CAJAS */
+        button[data-baseweb="tab"][aria-selected="true"] div {
+            color: #ffffff !important;
+        }
+
+        /* 6. CAJAS Y BOTONES */
         [data-testid="stForm"] {
             background-color: white; padding: 1.5rem; border-radius: 15px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1); border-top: 5px solid #003399;
         }
+        div.stButton > button[type="primary"] {
+            background-color: #003399; color: white; border: none; width: 100%;
+        }
         .info-box { background-color: #e8f4fd; border-left: 5px solid #003399; padding: 15px; border-radius: 5px; color: #31333F; }
         .help-box { background-color: #fff3cd; border-left: 5px solid #ffc107; padding: 15px; border-radius: 5px; color: #31333F; }
         .step-box { background-color: white; padding: 15px; border-radius: 10px; border: 1px solid #ddd; margin-bottom: 10px; color: #31333F; }
-        
-        /* Footer */
+        .result-box { background-color: #003399; color: white !important; padding: 20px; border-radius: 10px; text-align: center; margin-top: 20px; }
+        .result-box h2 { color: white !important; }
         .footer { margin-top: 50px; padding: 20px; border-top: 1px solid #ccc; text-align: center; color: #666; font-size: 0.85em; }
-        
-        /* Subtítulos decorativos */
         .deco-sub { color: #666; font-style: italic; margin-bottom: 15px; display: block; }
         
-        /* Checkbox y Radio Buttons Labels */
-        label { color: #31333F !important; }
-        div[role="radiogroup"] label { color: #31333F !important; }
+        /* Textos generales y labels */
+        label, .stMarkdown p { color: #31333F !important; }
         
     </style>
 """, unsafe_allow_html=True)
@@ -212,7 +227,7 @@ t = {
 }
 lang = t[st.session_state.language]
 
-# --- 5. DATA JOBS (CÓDIGOS REALES 5 DÍGITOS) ---
+# --- 5. DATA JOBS ---
 jobs_db = {
     "ingenie": {"code": "21300", "teer": "1", "volet": "Volet 1"},
     "engineer": {"code": "21300", "teer": "1", "volet": "Volet 1"},
