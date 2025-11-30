@@ -51,8 +51,8 @@ t = {
         'tabs': ["👤 Profil", "💼 Travail & TEER", "🗣️ Langues", "⚜️ Québec/OEV", "ℹ️ Guide DI"],
         'job_title': "Quel est votre emploi actuel ?",
         'job_placeholder': "Ex: Ingénieur, Soudeur, Assembleur...",
-        'teer_manual_help': "Guide manuel si emploi non trouvé :",
-        'teer_guide': "**Guide Rapide:** TEER 0,1 (Uni) -> Sec A/B | TEER 2,3 (Tech) -> Sec B/C | TEER 4,5 (Sec) -> Général",
+        'teer_manual_help': "Si vous n'avez pas trouvé votre emploi, choisissez selon votre niveau :",
+        'teer_guide': "**Aide:** TEER 0,1 = Université/Gestion | TEER 2 = Collégial/Technique | TEER 3 = Métiers | TEER 4,5 = Secondaire/Manuel",
         'exp_label': "Années d'expérience qualifiée",
         'lang_info': "**Exigences :** Volet 1 = Niveau 7 | Volet 2 = Niveau 5",
         'guide_title': "Guide Déclaration d'Intérêt",
@@ -76,8 +76,8 @@ t = {
         'tabs': ["👤 Perfil", "💼 Trabajo y TEER", "🗣️ Idiomas", "⚜️ Quebec/VJO", "ℹ️ Guía DI"],
         'job_title': "¿Cuál es tu trabajo actual?",
         'job_placeholder': "Ej: Ingeniero, Soldador, Ensamblador...",
-        'teer_manual_help': "Guía manual si no encuentras tu empleo:",
-        'teer_guide': "**Guía Rápida:** TEER 0,1 (Uni) -> Sec A/B | TEER 2,3 (Tec) -> Sec B/C | TEER 4,5 (Sec) -> General",
+        'teer_manual_help': "Si no encontraste tu empleo, elige según tu nivel:",
+        'teer_guide': "**Ayuda:** TEER 0,1 = Universidad/Gerencia | TEER 2 = College/Técnico | TEER 3 = Oficios | TEER 4,5 = Secundaria/Manual",
         'exp_label': "Años de experiencia calificada",
         'lang_info': "**Requisitos:** Volet 1 = Nivel 7 | Volet 2 = Nivel 5",
         'guide_title': "Guía Declaración de Interés",
@@ -101,8 +101,8 @@ t = {
         'tabs': ["👤 Profile", "💼 Work & TEER", "🗣️ Languages", "⚜️ Quebec/VJO", "ℹ️ DI Guide"],
         'job_title': "What is your current job?",
         'job_placeholder': "Ex: Engineer, Welder, Assembler...",
-        'teer_manual_help': "Manual guide if job not found:",
-        'teer_guide': "**Quick Guide:** TEER 0,1 (Uni) -> Sec A/B | TEER 2,3 (Tech) -> Sec B/C | TEER 4,5 (HS) -> General",
+        'teer_manual_help': "If job not found, select by level:",
+        'teer_guide': "**Help:** TEER 0,1 = University/Mgmt | TEER 2 = College/Tech | TEER 3 = Trades | TEER 4,5 = High School/Manual",
         'exp_label': "Years of qualified experience",
         'lang_info': "**Requirements:** Volet 1 = Level 7 | Volet 2 = Level 5",
         'guide_title': "DI Guide",
@@ -153,7 +153,7 @@ with st.sidebar:
     st.button(lang['btn_lang'], on_click=cycle_language, type="secondary")
     st.markdown("---")
     st.link_button(lang['coffee'], "https://www.buymeacoffee.com/CalculatricePSTQQuebec")
-    st.link_button(lang['courses'], "https://www.TU_ENLACE_DE_AFILIADO.com") # CAMBIAR
+    st.link_button(lang['courses'], "https://www.TU_ENLACE_DE_AFILIADO.com") 
     st.markdown("---")
     st.warning(lang['disclaimer_text'])
 
@@ -169,14 +169,13 @@ with st.form("main_form"):
         c1, c2 = st.columns(2)
         with c1: age = st.number_input(lang['age'], 18, 65, 30)
         with c2: spouse = st.checkbox(lang['spouse'])
-        
-        # Hijos
         c3, c4 = st.columns(2)
         with c3: k1 = st.number_input(lang['kids12'], 0, 5, 0)
         with c4: k2 = st.number_input(lang['kids13'], 0, 5, 0)
         
-        # Lógica Pareja
+        # Variables Pareja
         sp_age, sp_edu, sp_fr = 30, "Secondary", "0"
+        
         if spouse:
             st.divider()
             st.markdown(f"#### ❤️ {lang['sp_section']}")
@@ -185,11 +184,10 @@ with st.form("main_form"):
                 sp_age = st.number_input("Age (Spouse/Pareja)", 18, 65, 30)
                 sp_edu = st.selectbox("Education (Spouse/Pareja)", ["PhD", "Master", "Bachelor", "Technical", "Secondary"])
             with col_sp2:
-                # Selector claro para el francés de la pareja
-                st.info("Nivel 7 (B2) da plus de points.")
+                st.info("Nivel 7 (B2) da más puntos.")
                 sp_fr = st.select_slider(lang['sp_fr_label'], options=["0", "A1", "A2", "B1", "B2", "C1", "C2"], value="0")
 
-    # TAB 2: TRABAJO
+    # TAB 2: TRABAJO (MEJORADO)
     with tab2:
         st.markdown(f"### 🔍 {lang['job_title']}")
         job_query = st.text_input("Buscador / Recherche", placeholder=lang['job_placeholder'])
@@ -202,8 +200,16 @@ with st.form("main_form"):
 
         st.divider()
         st.caption(lang['teer_manual_help'])
+        
+        # SELECTOR DE TEER ENTENDIBLE
         teer_selection = st.selectbox("Categoría / Catégorie (TEER)", 
-                                      ["TEER 0, 1 (Section A)", "TEER 2 (Section B)", "TEER 3 (Section C)", "TEER 4, 5 (Section D)"])
+                                      [
+                                          "TEER 0, 1: Dirección, Ingeniería, Universidad (Haute Qualification)",
+                                          "TEER 2: Supervisores, Técnicos, College (Technique)",
+                                          "TEER 3: Oficios, Administración, Intermedio (Intermédiaire)",
+                                          "TEER 4, 5: Operarios, Servicio, Secundaria (Manuel/Service)"
+                                      ])
+        
         education = st.selectbox(lang['edu'], ["PhD", "Master", "Bachelor (3+)", "College (3y)", "Diploma (1-2y)", "Secondary"])
         experience = st.slider(lang['exp_label'], 0, 10, 3)
 
@@ -246,10 +252,11 @@ if submitted:
     elif "College" in education: score += 50
     else: score += 30
     
-    # 3. TEER
-    if "Section A" in teer_selection: score += 60
-    elif "Section B" in teer_selection: score += 40
-    elif "Section C" in teer_selection: score += 20
+    # 3. TEER (Mapeo de opciones nuevas)
+    if "TEER 0, 1" in teer_selection: score += 60 # Alta demanda
+    elif "TEER 2" in teer_selection: score += 40
+    elif "TEER 3" in teer_selection: score += 20
+    # TEER 4, 5 da 0 en demanda pero cuenta para experiencia
     
     # 4. Exp
     score += min(80, int(experience * 10))
@@ -266,14 +273,11 @@ if submitted:
     if q_stud: score += 50
     if q_fam: score += 30
     
-    # 7. PAREJA (Cálculo detallado)
+    # 7. PAREJA
     if spouse:
-        # Edad
         if 18 <= sp_age <= 40: score += 10
-        # Educación
         if "Bachelor" in sp_edu or "Master" in sp_edu or "PhD" in sp_edu: score += 10
         elif "College" in sp_edu: score += 5
-        # Francés de pareja
         if sp_fr in ["C1", "C2"]: score += 30
         elif sp_fr == "B2": score += 20
         elif sp_fr in ["A2", "B1"]: score += 10
