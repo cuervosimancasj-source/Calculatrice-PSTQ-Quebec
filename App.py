@@ -52,6 +52,7 @@ t = {
         'job_title': "Quel est votre emploi actuel ?",
         'job_placeholder': "Ex: Ingénieur, Soudeur, Assembleur...",
         'teer_manual_help': "Si vous n'avez pas trouvé votre emploi, choisissez selon votre niveau :",
+        'teer_label': "Sélectionnez votre niveau (Catégorie TEER)",
         'teer_guide': "**Aide:** TEER 0,1 = Université/Gestion | TEER 2 = Collégial/Technique | TEER 3 = Métiers | TEER 4,5 = Secondaire/Manuel",
         'exp_label': "Années d'expérience qualifiée",
         'lang_info': "**Exigences :** Volet 1 = Niveau 7 | Volet 2 = Niveau 5",
@@ -77,6 +78,7 @@ t = {
         'job_title': "¿Cuál es tu trabajo actual?",
         'job_placeholder': "Ej: Ingeniero, Soldador, Ensamblador...",
         'teer_manual_help': "Si no encontraste tu empleo, elige según tu nivel:",
+        'teer_label': "Selecciona tu nivel (Categoría TEER)",
         'teer_guide': "**Ayuda:** TEER 0,1 = Universidad/Gerencia | TEER 2 = College/Técnico | TEER 3 = Oficios | TEER 4,5 = Secundaria/Manual",
         'exp_label': "Años de experiencia calificada",
         'lang_info': "**Requisitos:** Volet 1 = Nivel 7 | Volet 2 = Nivel 5",
@@ -102,6 +104,7 @@ t = {
         'job_title': "What is your current job?",
         'job_placeholder': "Ex: Engineer, Welder, Assembler...",
         'teer_manual_help': "If job not found, select by level:",
+        'teer_label': "Select your level (TEER Category)",
         'teer_guide': "**Help:** TEER 0,1 = University/Mgmt | TEER 2 = College/Tech | TEER 3 = Trades | TEER 4,5 = High School/Manual",
         'exp_label': "Years of qualified experience",
         'lang_info': "**Requirements:** Volet 1 = Level 7 | Volet 2 = Level 5",
@@ -169,11 +172,11 @@ with st.form("main_form"):
         c1, c2 = st.columns(2)
         with c1: age = st.number_input(lang['age'], 18, 65, 30)
         with c2: spouse = st.checkbox(lang['spouse'])
+        
         c3, c4 = st.columns(2)
         with c3: k1 = st.number_input(lang['kids12'], 0, 5, 0)
         with c4: k2 = st.number_input(lang['kids13'], 0, 5, 0)
         
-        # Variables Pareja
         sp_age, sp_edu, sp_fr = 30, "Secondary", "0"
         
         if spouse:
@@ -187,7 +190,7 @@ with st.form("main_form"):
                 st.info("Nivel 7 (B2) da más puntos.")
                 sp_fr = st.select_slider(lang['sp_fr_label'], options=["0", "A1", "A2", "B1", "B2", "C1", "C2"], value="0")
 
-    # TAB 2: TRABAJO (MEJORADO)
+    # TAB 2: TRABAJO (AQUÍ ESTÁ EL CAMBIO IMPORTANTE)
     with tab2:
         st.markdown(f"### 🔍 {lang['job_title']}")
         job_query = st.text_input("Buscador / Recherche", placeholder=lang['job_placeholder'])
@@ -201,13 +204,13 @@ with st.form("main_form"):
         st.divider()
         st.caption(lang['teer_manual_help'])
         
-        # SELECTOR DE TEER ENTENDIBLE
-        teer_selection = st.selectbox("Categoría / Catégorie (TEER)", 
+        # --- SELECTOR DE TEER CON TEXTO DESCRIPTIVO NUEVO ---
+        teer_selection = st.selectbox(lang['teer_label'], 
                                       [
-                                          "TEER 0, 1: Dirección, Ingeniería, Universidad (Haute Qualification)",
-                                          "TEER 2: Supervisores, Técnicos, College (Technique)",
-                                          "TEER 3: Oficios, Administración, Intermedio (Intermédiaire)",
-                                          "TEER 4, 5: Operarios, Servicio, Secundaria (Manuel/Service)"
+                                          "TEER 0, 1: Université / Ingénierie / Gestion (Haute Qualif.)",
+                                          "TEER 2: Collégial / Technique / Superviseurs",
+                                          "TEER 3: Métiers / Administration / Intermédiaire",
+                                          "TEER 4, 5: Manœuvre / Secondaire / Service (Manuel)"
                                       ])
         
         education = st.selectbox(lang['edu'], ["PhD", "Master", "Bachelor (3+)", "College (3y)", "Diploma (1-2y)", "Secondary"])
@@ -252,16 +255,15 @@ if submitted:
     elif "College" in education: score += 50
     else: score += 30
     
-    # 3. TEER (Mapeo de opciones nuevas)
-    if "TEER 0, 1" in teer_selection: score += 60 # Alta demanda
+    # 3. TEER (Actualizado para leer los nuevos textos)
+    if "TEER 0, 1" in teer_selection: score += 60 
     elif "TEER 2" in teer_selection: score += 40
     elif "TEER 3" in teer_selection: score += 20
-    # TEER 4, 5 da 0 en demanda pero cuenta para experiencia
     
     # 4. Exp
     score += min(80, int(experience * 10))
     
-    # 5. Idiomas (Principal)
+    # 5. Idiomas
     fr_pts = {"0":0, "A1":0, "A2":10, "B1":20, "B2":50, "C1":70, "C2":80}
     score += fr_pts[fr_oral] * 1.2 + fr_pts[fr_write] * 0.8
     if en_lvl == "Advanced": score += 25
