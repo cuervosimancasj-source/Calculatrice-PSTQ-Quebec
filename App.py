@@ -7,16 +7,21 @@ st.set_page_config(
     layout="centered"
 )
 
-# --- 2. ESTILOS CSS (CORRECCIÓN EXTREMA PARA MÓVIL) ---
+# --- 2. ESTILOS CSS (CORRECCIÓN "NUCLEAR" PARA SELECTORES) ---
 st.markdown("""
     <style>
+        /* === 0. INSTRUCCIÓN MAESTRA === */
+        :root {
+            color-scheme: light; /* Obliga al sistema a usar modo claro */
+        }
+        
         /* === 1. FONDO GLOBAL === */
         [data-testid="stAppViewContainer"] {
             background-color: #f0f2f6 !important;
         }
         
-        /* Texto base a negro */
-        .stApp, p, label, div, span, h1, h2, h3, h4, h5, h6 {
+        /* Texto base */
+        .stApp, p, label, h1, h2, h3, h4, h5, h6 {
             color: #000000 !important;
         }
         
@@ -26,58 +31,58 @@ st.markdown("""
             color: #003399 !important; 
         }
 
-        /* === 2. ARREGLO DE CAJAS DE SELECCIÓN (SELECTBOX) Y TEXTO === */
+        /* === 2. ARREGLO DE CAJAS DE SELECCIÓN (SELECTBOX) - SOLUCIÓN DEFINITIVA === */
         
-        /* El contenedor de la caja (cerrada) */
-        div[data-baseweb="select"] > div, 
-        div[data-baseweb="input"] > div {
+        /* El contenedor principal del Selectbox */
+        div[data-baseweb="select"] > div {
+            background-color: #FFFFFF !important;
+            border: 1px solid #ccc !important;
+            color: #000000 !important;
+        }
+        
+        /* ESTA ES LA REGLA NUEVA: Fuerza el color negro a CUALQUIER elemento dentro del select */
+        div[data-baseweb="select"] * {
+            color: #000000 !important;
+            -webkit-text-fill-color: #000000 !important; /* Para Safari/iPhone */
+            background-color: transparent !important; /* Para que tome el blanco del padre */
+        }
+        
+        /* Iconos del select (flechita) */
+        div[data-baseweb="select"] svg {
+            fill: #000000 !important;
+        }
+
+        /* === 3. ARREGLO DE INPUTS DE TEXTO/NÚMERO === */
+        div[data-baseweb="input"] > div, div[data-baseweb="base-input"] {
             background-color: #FFFFFF !important;
             border: 1px solid #ccc !important;
         }
-
-        /* El TEXTO dentro de la caja cerrada (Ej: "Selecciona una opción") */
-        div[data-baseweb="select"] span {
-            color: #000000 !important;
-            -webkit-text-fill-color: #000000 !important; /* Fix para iPhone */
-        }
-
-        /* El TEXTO que escribes (Inputs) */
         input {
             color: #000000 !important;
             -webkit-text-fill-color: #000000 !important;
-            background-color: transparent !important;
+            background-color: #FFFFFF !important;
         }
 
-        /* === 3. ARREGLO DEL MENÚ DESPLEGABLE (LA LISTA QUE SE ABRE) === */
-        
-        /* Fondo de la lista */
+        /* === 4. ARREGLO DEL MENÚ DESPLEGABLE (LISTA DE OPCIONES) === */
         ul[data-baseweb="menu"] {
             background-color: #FFFFFF !important;
         }
-        
-        /* Texto de las opciones en la lista */
         li[data-baseweb="menu-item"] {
+            background-color: #FFFFFF !important;
+        }
+        /* Texto dentro de las opciones */
+        li[data-baseweb="menu-item"] * {
             color: #000000 !important;
         }
-        
-        /* Texto dentro de las opciones (a veces es un div o span) */
-        li[data-baseweb="menu-item"] div, 
-        li[data-baseweb="menu-item"] span {
-            color: #000000 !important;
-        }
-
-        /* Color al pasar el mouse o seleccionar en la lista */
-        li[data-baseweb="menu-item"]:hover, 
-        li[aria-selected="true"] {
+        /* Hover / Selección */
+        li[data-baseweb="menu-item"]:hover, li[aria-selected="true"] {
             background-color: #e6f0ff !important;
-            color: #003399 !important;
         }
-        li[data-baseweb="menu-item"]:hover span, 
-        li[aria-selected="true"] span {
+        li[data-baseweb="menu-item"]:hover *, li[aria-selected="true"] * {
             color: #003399 !important;
         }
 
-        /* === 4. BOTONES === */
+        /* === 5. BOTONES === */
         div.stButton > button { width: 100%; border-radius: 8px; font-weight: bold; }
         
         /* Botones Secundarios (Blanco/Azul) */
@@ -87,21 +92,26 @@ st.markdown("""
             border: 2px solid #003399 !important;
             text-decoration: none !important;
         }
+        /* Asegurar texto visible en botones secundarios */
+        div.stButton > button[kind="secondary"] * {
+            color: #003399 !important;
+        }
+
         /* Botón Primario (Azul/Blanco) */
         div.stButton > button[kind="primary"] {
             background-color: #003399 !important;
             color: #FFFFFF !important;
             border: none !important;
         }
-        div.stButton > button[kind="primary"] p {
+        div.stButton > button[kind="primary"] * {
             color: #FFFFFF !important;
         }
 
-        /* === 5. PESTAÑAS (TABS) === */
+        /* === 6. PESTAÑAS (TABS) === */
         button[data-baseweb="tab"] {
             background-color: transparent !important;
         }
-        /* Texto de pestaña inactiva */
+        /* Texto inactivo */
         button[data-baseweb="tab"] div, button[data-baseweb="tab"] p {
             color: #000000 !important;
         }
@@ -109,13 +119,13 @@ st.markdown("""
         button[data-baseweb="tab"][aria-selected="true"] {
             background-color: #003399 !important;
         }
-        /* Texto de pestaña activa */
+        /* Texto activo */
         button[data-baseweb="tab"][aria-selected="true"] div, 
         button[data-baseweb="tab"][aria-selected="true"] p {
             color: #FFFFFF !important;
         }
 
-        /* === 6. TARJETAS === */
+        /* === 7. CAJAS === */
         [data-testid="stForm"] {
             background-color: #FFFFFF !important;
             padding: 1.5rem; 
@@ -123,17 +133,13 @@ st.markdown("""
             box-shadow: 0 4px 8px rgba(0,0,0,0.1); 
             border-top: 5px solid #003399;
         }
+        .info-box { background-color: #e8f4fd; border-left: 5px solid #003399; padding: 15px; border-radius: 5px; color: #000000 !important; }
+        .help-box { background-color: #fff3cd; border-left: 5px solid #ffc107; padding: 15px; border-radius: 5px; color: #000000 !important; }
+        .step-box { background-color: white; padding: 15px; border-radius: 10px; border: 1px solid #ddd; margin-bottom: 10px; color: #000000 !important; }
         
-        /* Cajas Informativas */
-        .info-box { background-color: #e8f4fd; border-left: 5px solid #003399; padding: 15px; border-radius: 5px; }
-        .help-box { background-color: #fff3cd; border-left: 5px solid #ffc107; padding: 15px; border-radius: 5px; }
-        .step-box { background-color: white; padding: 15px; border-radius: 10px; border: 1px solid #ddd; margin-bottom: 10px; }
-        
-        /* Resultado */
         .result-box { background-color: #003399; padding: 20px; border-radius: 10px; text-align: center; margin-top: 20px; }
         .result-box h2 { color: #FFFFFF !important; margin: 0; }
 
-        /* Footer */
         .footer { margin-top: 50px; padding: 20px; border-top: 1px solid #ccc; text-align: center; }
         .deco-sub { font-style: italic; margin-bottom: 15px; display: block; color: #666666 !important; }
 
@@ -174,13 +180,13 @@ t = {
         'job_placeholder': "Ex: Ingénieur, Soudeur, Assembleur...",
         'teer_manual_help': "Si non trouvé, choisissez niveau :",
         'teer_label': "Catégorie TEER (Niveau)",
-        'teer_guide': "**Aide:** TEER 0,1=Uni/Gestion | TEER 2=Collégial/Technique | TEER 3=Métiers | TEER 4,5=Secondaire/Manuel",
+        'teer_guide': "**Aide:** TEER 0,1=Uni/Gestion | TEER 2=Tech | TEER 3=Métiers | TEER 4,5=Secondaire/Manuel",
         'exp_label': "Années d'expérience",
         'lang_info': "Volet 1=Niv 7 | Volet 2=Niv 5",
         'age': "Âge", 'spouse': "Conjoint(e) ?", 'kids12': "Enf -12", 'kids13': "Enf +12",
         'sp_section': "Conjoint (Âge/Études)",
         'sp_fr_title': "Français du Conjoint",
-        'sp_fr_label': "Niveau Oral",
+        'sp_fr_label': "Niveau Oral du conjoint",
         'edu': "Niveau d'études", 'vjo': "Offre (OEV)", 'calc': "CALCULER SCORE",
         'res_title': "Résultat Estimé",
         'advice_good': "Excellent ! Profil compétitif.",
@@ -393,7 +399,7 @@ with main_tab_calc:
             st.markdown(f"**{lang['sp_fr_title']}**")
             sp_fr = st.select_slider(lang['sp_fr_label'], options=["0", "A1", "A2", "B1", "B2", "C1", "C2"], value="0")
 
-    # 4. QUEBEC
+    # 4. QUEBEC (BOTÓN AQUÍ)
     with tab4:
         st.markdown(f"### ⚜️ {lang['tab4_header']}")
         st.markdown(f"<span class='deco-sub'>{lang['tab4_sub']}</span>", unsafe_allow_html=True)
@@ -412,17 +418,14 @@ with main_tab_calc:
         score = 0
         score_sp = 0 
         
-        # Edad
         if 18 <= age <= 30: score += 130
         elif age <= 45: score += (130 - (age-30)*5)
-        # Edu
         if "PhD" in education: score += 90
         elif "Master" in education: score += 75
         elif "Bachelor" in education: score += 60
         elif "College" in education: score += 50
         else: score += 30
         
-        # Mapeo
         if "TEER 0, 1" in teer_selection: score += 60 
         elif "TEER 2" in teer_selection: score += 40
         elif "TEER 3" in teer_selection: score += 20
@@ -446,7 +449,6 @@ with main_tab_calc:
             score += score_sp
         score += (k1*4) + (k2*2)
 
-        # Muestra resultados
         with tab4:
             st.markdown(f"""
             <div class="result-box">
