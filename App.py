@@ -26,6 +26,9 @@ st.markdown("""
         
         /* Footer */
         .footer { margin-top: 50px; padding: 20px; border-top: 1px solid #ccc; text-align: center; color: #666; font-size: 0.85em; }
+        
+        /* Subtítulos decorativos */
+        .deco-sub { color: #666; font-style: italic; margin-bottom: 15px; display: block; }
     </style>
 """, unsafe_allow_html=True)
 
@@ -46,7 +49,7 @@ def trigger_calculation():
 # --- 4. TRADUCCIONES ---
 t = {
     'fr': {
-        'btn_lang': "🌐 Langue: Français",
+        'btn_lang': "🌐 Français",
         'brand': "Calculatrice PSTQ Québec ⚜️",
         'subtitle': "Outil d'analyse pour la Résidence Permanente (TEER, Volets, Score).",
         'disclaimer_title': "⚠️ AVIS IMPORTANT",
@@ -55,6 +58,11 @@ t = {
         'courses': "📚 Cours de Français",
         'main_tabs': ["🧮 Calculatrice", "ℹ️ Guide"],
         'tabs': ["👤 Profil", "💼 Travail", "🗣️ Langues", "⚜️ Québec"],
+        # Decoración Pestañas
+        'tab1_header': "Votre Profil & Famille", 'tab1_sub': "Le point de départ de votre projet d'immigration.",
+        'tab2_header': "Votre Expérience Québécoise", 'tab2_sub': "Votre métier est au cœur du programme PSTQ.",
+        'tab3_header': "Vos Compétences Linguistiques", 'tab3_sub': "Le français est la clé du succès au Québec.",
+        'tab4_header': "Facteurs Québec & OEV", 'tab4_sub': "Finalisez votre pointage avec les atouts locaux.",
         'job_title': "Quel est votre emploi actuel ?",
         'job_placeholder': "Ex: Ingénieur, Soudeur, Assembleur...",
         'teer_manual_help': "Si non trouvé, choisissez niveau :",
@@ -80,7 +88,7 @@ t = {
         'g_step5': "5. Fédéral", 'g_desc5': "Résidence Permanente."
     },
     'es': {
-        'btn_lang': "🌐 Idioma: Español",
+        'btn_lang': "🌐 Español",
         'brand': "Calculatrice PSTQ ⚜️",
         'subtitle': "Análisis Residencia Permanente (Arrima).",
         'disclaimer_title': "⚠️ AVISO LEGAL",
@@ -89,6 +97,11 @@ t = {
         'courses': "📚 Cursos Francés",
         'main_tabs': ["🧮 Calculadora", "ℹ️ Guía"],
         'tabs': ["👤 Perfil", "💼 Trabajo", "🗣️ Idiomas", "⚜️ Quebec"],
+        # Decoración Pestañas
+        'tab1_header': "Tu Perfil y Familia", 'tab1_sub': "El punto de partida de tu proyecto de inmigración.",
+        'tab2_header': "Tu Experiencia Quebequense", 'tab2_sub': "Tu oficio es el corazón del programa PSTQ.",
+        'tab3_header': "Tus Competencias Lingüísticas", 'tab3_sub': "El francés es la llave del éxito en Quebec.",
+        'tab4_header': "Factores Quebec y VJO", 'tab4_sub': "Finaliza tu puntaje con los activos locales.",
         'job_title': "¿Cuál es tu trabajo?",
         'job_placeholder': "Ej: Ingeniero, Soldador...",
         'teer_manual_help': "Si no aparece, elige nivel:",
@@ -114,7 +127,7 @@ t = {
         'g_step5': "5. Federal", 'g_desc5': "Residencia Permanente."
     },
     'en': {
-        'btn_lang': "🌐 Language: English",
+        'btn_lang': "🌐 English",
         'brand': "Calculatrice PSTQ ⚜️",
         'subtitle': "Residency Analysis Tool (Arrima).",
         'disclaimer_title': "⚠️ DISCLAIMER",
@@ -123,6 +136,11 @@ t = {
         'courses': "📚 French Courses",
         'main_tabs': ["🧮 Calculator", "ℹ️ Guide"],
         'tabs': ["👤 Profile", "💼 Work", "🗣️ Language", "⚜️ Quebec"],
+        # Decoración Pestañas
+        'tab1_header': "Your Profile & Family", 'tab1_sub': "The starting point of your immigration project.",
+        'tab2_header': "Your Quebec Experience", 'tab2_sub': "Your trade is at the heart of the PSTQ program.",
+        'tab3_header': "Your Language Skills", 'tab3_sub': "French is the key to success in Quebec.",
+        'tab4_header': "Quebec Factors & VJO", 'tab4_sub': "Finalize your score with local assets.",
         'job_title': "Current job?",
         'job_placeholder': "Ex: Engineer, Welder...",
         'teer_manual_help': "If not found, select level:",
@@ -180,11 +198,15 @@ def find_job_details(keyword):
     return None
 
 # ==========================================
-# HEADER (IDIOMA ARRIBA)
+# HEADER INTEGRADO
 # ==========================================
-st.button(lang['btn_lang'], on_click=cycle_language)
-st.markdown(f"## {lang['brand']}")
-st.caption(lang['subtitle'])
+col_brand, col_lang = st.columns([3, 1])
+with col_brand:
+    st.markdown(f"## {lang['brand']}")
+    st.caption(lang['subtitle'])
+with col_lang:
+    st.markdown("###") # Espaciador
+    st.button(lang['btn_lang'], on_click=cycle_language, key="top_lang_btn")
 
 # ==========================================
 # APP PRINCIPAL
@@ -195,8 +217,11 @@ main_tab_calc, main_tab_guide = st.tabs(lang['main_tabs'])
 with main_tab_calc:
     tab1, tab2, tab3, tab4 = st.tabs(lang['tabs'])
 
-    # 1. PERFIL
+    # 1. PERFIL (DECORADO)
     with tab1:
+        st.markdown(f"### 👤 {lang['tab1_header']} ⚜️")
+        st.markdown(f"<span class='deco-sub'>{lang['tab1_sub']}</span>", unsafe_allow_html=True)
+        
         c1, c2 = st.columns(2)
         with c1: age = st.number_input(lang['age'], 18, 65, 30)
         with c2: spouse = st.checkbox(lang['spouse'])
@@ -212,8 +237,11 @@ with main_tab_calc:
             with c_sp1: sp_age = st.number_input("Age (Conj.)", 18, 65, 30)
             with c_sp2: sp_edu = st.selectbox("Edu (Conj.)", ["PhD", "Master", "Bachelor", "Technical", "Secondary"])
 
-    # 2. TRABAJO
+    # 2. TRABAJO (DECORADO)
     with tab2:
+        st.markdown(f"### 💼 {lang['tab2_header']} ⚜️")
+        st.markdown(f"<span class='deco-sub'>{lang['tab2_sub']}</span>", unsafe_allow_html=True)
+
         st.markdown(f"**{lang['job_title']}**")
         job_query = st.text_input("Buscar/Recherche", placeholder=lang['job_placeholder'], label_visibility="collapsed")
         if job_query:
@@ -235,8 +263,11 @@ with main_tab_calc:
         education = st.selectbox(lang['edu'], ["PhD", "Master", "Bachelor (3+)", "College (3y)", "Diploma (1-2y)", "Secondary"])
         experience = st.slider(lang['exp_label'], 0, 10, 3)
 
-    # 3. IDIOMAS
+    # 3. IDIOMAS (DECORADO)
     with tab3:
+        st.markdown(f"### 🗣️ {lang['tab3_header']} ⚜️")
+        st.markdown(f"<span class='deco-sub'>{lang['tab3_sub']}</span>", unsafe_allow_html=True)
+
         st.markdown(f"<div class='info-box'>{lang['lang_info']}</div>", unsafe_allow_html=True)
         fr_oral = st.select_slider("Français Oral", ["0", "A1", "A2", "B1", "B2", "C1", "C2"], value="B2")
         fr_write = st.select_slider("Français Écrit", ["0", "A1", "A2", "B1", "B2", "C1", "C2"], value="B1")
@@ -250,6 +281,9 @@ with main_tab_calc:
 
     # 4. QUEBEC (BOTÓN AQUÍ)
     with tab4:
+        st.markdown(f"### ⚜️ {lang['tab4_header']}")
+        st.markdown(f"<span class='deco-sub'>{lang['tab4_sub']}</span>", unsafe_allow_html=True)
+
         vjo = st.radio(lang['vjo'], ["Non", "Montreal", "Hors Montreal"])
         cq1, cq2 = st.columns(2)
         with cq1: q_stud = st.checkbox("Diplôme QC ?")
