@@ -24,7 +24,7 @@ st.markdown("""
         .help-box { background-color: #fff3cd; border-left: 5px solid #ffc107; padding: 15px; border-radius: 5px; }
         .step-box { background-color: white; padding: 15px; border-radius: 10px; border: 1px solid #ddd; margin-bottom: 10px; }
         
-        /* CAJA DE RESULTADO (NUEVO DISEÑO AZUL) */
+        /* CAJA DE RESULTADO */
         .result-box {
             background-color: #003399;
             color: white !important;
@@ -74,7 +74,6 @@ t = {
         'courses': "📚 Cours de Français",
         'main_tabs': ["🧮 Calculatrice", "ℹ️ Guide"],
         'tabs': ["👤 Profil", "💼 Travail", "🗣️ Langues", "⚜️ Québec"],
-        # Decoración Pestañas
         'tab1_header': "Votre Profil & Famille", 'tab1_sub': "Le point de départ de votre projet d'immigration.",
         'tab2_header': "Votre Expérience Québécoise", 'tab2_sub': "Votre métier est au cœur du programme PSTQ.",
         'tab3_header': "Vos Compétences Linguistiques", 'tab3_sub': "Le français est la clé du succès au Québec.",
@@ -84,6 +83,7 @@ t = {
         'teer_manual_help': "Si non trouvé, choisissez niveau :",
         'teer_label': "Catégorie TEER (Niveau)",
         'teer_guide': "**Aide:** TEER 0,1=Uni/Gestion | TEER 2=Tech | TEER 3=Métiers | TEER 4,5=Manuel",
+        'noc_link_text': "🔎 Chercher sur le site officiel du Canada (CNP)",
         'exp_label': "Années d'expérience",
         'lang_info': "Volet 1=Niv 7 | Volet 2=Niv 5",
         'age': "Âge", 'spouse': "Conjoint(e) ?", 'kids12': "Enf -12", 'kids13': "Enf +12",
@@ -113,7 +113,6 @@ t = {
         'courses': "📚 Cursos Francés",
         'main_tabs': ["🧮 Calculadora", "ℹ️ Guía"],
         'tabs': ["👤 Perfil", "💼 Trabajo", "🗣️ Idiomas", "⚜️ Quebec"],
-        # Decoración Pestañas
         'tab1_header': "Tu Perfil y Familia", 'tab1_sub': "El punto de partida de tu proyecto de inmigración.",
         'tab2_header': "Tu Experiencia Quebequense", 'tab2_sub': "Tu oficio es el corazón del programa PSTQ.",
         'tab3_header': "Tus Competencias Lingüísticas", 'tab3_sub': "El francés es la llave del éxito en Quebec.",
@@ -123,6 +122,7 @@ t = {
         'teer_manual_help': "Si no aparece, elige nivel:",
         'teer_label': "Categoría TEER (Nivel)",
         'teer_guide': "**Ayuda:** TEER 0,1=Uni/Gerencia | TEER 2=Técnico | TEER 3=Oficios | TEER 4,5=Manual",
+        'noc_link_text': "🔎 Buscar en sitio oficial Canadá (NOC)",
         'exp_label': "Años de experiencia",
         'lang_info': "Volet 1=Niv 7 | Volet 2=Niv 5",
         'age': "Edad", 'spouse': "Pareja ?", 'kids12': "Hijos -12", 'kids13': "Hijos +12",
@@ -152,7 +152,6 @@ t = {
         'courses': "📚 French Courses",
         'main_tabs': ["🧮 Calculator", "ℹ️ Guide"],
         'tabs': ["👤 Profile", "💼 Work", "🗣️ Language", "⚜️ Quebec"],
-        # Decoración Pestañas
         'tab1_header': "Your Profile & Family", 'tab1_sub': "The starting point of your immigration project.",
         'tab2_header': "Your Quebec Experience", 'tab2_sub': "Your trade is at the heart of the PSTQ program.",
         'tab3_header': "Your Language Skills", 'tab3_sub': "French is the key to success in Quebec.",
@@ -162,6 +161,7 @@ t = {
         'teer_manual_help': "If not found, select level:",
         'teer_label': "TEER Category",
         'teer_guide': "**Help:** TEER 0,1=Uni/Mgmt | TEER 2=Tech | TEER 3=Trades | TEER 4,5=Manual",
+        'noc_link_text': "🔎 Search on official Canada site (NOC)",
         'exp_label': "Years experience",
         'lang_info': "Volet 1=Lvl 7 | Volet 2=Lvl 5",
         'age': "Age", 'spouse': "Spouse ?", 'kids12': "Kids -12", 'kids13': "Kids +12",
@@ -184,27 +184,29 @@ t = {
 }
 lang = t[st.session_state.language]
 
-# --- 5. DATA JOBS ---
+# --- 5. DATA JOBS (CÓDIGOS REALES 5 DÍGITOS) ---
 jobs_db = {
-    "ingenie": {"code": "213xx", "teer": "1", "volet": "Volet 1"},
-    "engineer": {"code": "213xx", "teer": "1", "volet": "Volet 1"},
+    "ingenie": {"code": "21300", "teer": "1", "volet": "Volet 1"},
+    "engineer": {"code": "21300", "teer": "1", "volet": "Volet 1"},
     "software": {"code": "21220", "teer": "1", "volet": "Volet 1"},
     "web": {"code": "21222", "teer": "1", "volet": "Volet 1"},
     "infirmier": {"code": "31301", "teer": "1", "volet": "Volet 1"},
     "nurse": {"code": "31301", "teer": "1", "volet": "Volet 1"},
+    "architect": {"code": "21200", "teer": "1", "volet": "Volet 1"},
     "administra": {"code": "13100", "teer": "3", "volet": "Volet 2"},
-    "technicien": {"code": "22xxx", "teer": "2", "volet": "Volet 1/2"},
+    "technicien": {"code": "22300", "teer": "2", "volet": "Volet 1/2"},
     "soud": {"code": "72106", "teer": "2", "volet": "Volet 1/2"},
     "welder": {"code": "72106", "teer": "2", "volet": "Volet 1/2"},
     "cuisinier": {"code": "63200", "teer": "3", "volet": "Volet 2"},
     "cook": {"code": "63200", "teer": "3", "volet": "Volet 2"},
     "camion": {"code": "73300", "teer": "3", "volet": "Volet 2"},
+    "mecanic": {"code": "72410", "teer": "2", "volet": "Volet 2"},
     "ensamblador": {"code": "94219", "teer": "4", "volet": "Volet 2"},
     "assembler": {"code": "94219", "teer": "4", "volet": "Volet 2"},
     "manguera": {"code": "94219", "teer": "4", "volet": "Volet 2"},
     "hose": {"code": "94219", "teer": "4", "volet": "Volet 2"},
     "hidraulica": {"code": "94219", "teer": "4", "volet": "Volet 2"},
-    "manoeuvre": {"code": "9510", "teer": "5", "volet": "Volet 2"},
+    "manoeuvre": {"code": "95109", "teer": "5", "volet": "Volet 2"},
 }
 
 def find_job_details(keyword):
@@ -214,14 +216,14 @@ def find_job_details(keyword):
     return None
 
 # ==========================================
-# HEADER INTEGRADO
+# HEADER
 # ==========================================
 col_brand, col_lang = st.columns([3, 1])
 with col_brand:
     st.markdown(f"## {lang['brand']}")
     st.caption(lang['subtitle'])
 with col_lang:
-    st.markdown("###") # Espaciador
+    st.markdown("###") 
     st.button(lang['btn_lang'], on_click=cycle_language, key="top_lang_btn")
 
 # ==========================================
@@ -233,7 +235,7 @@ main_tab_calc, main_tab_guide = st.tabs(lang['main_tabs'])
 with main_tab_calc:
     tab1, tab2, tab3, tab4 = st.tabs(lang['tabs'])
 
-    # 1. PERFIL (DECORADO)
+    # 1. PERFIL
     with tab1:
         st.markdown(f"### 👤 {lang['tab1_header']} ⚜️")
         st.markdown(f"<span class='deco-sub'>{lang['tab1_sub']}</span>", unsafe_allow_html=True)
@@ -253,7 +255,7 @@ with main_tab_calc:
             with c_sp1: sp_age = st.number_input("Age (Conj.)", 18, 65, 30)
             with c_sp2: sp_edu = st.selectbox("Edu (Conj.)", ["PhD", "Master", "Bachelor", "Technical", "Secondary"])
 
-    # 2. TRABAJO (DECORADO & TEER DETALLADO)
+    # 2. TRABAJO
     with tab2:
         st.markdown(f"### 💼 {lang['tab2_header']} ⚜️")
         st.markdown(f"<span class='deco-sub'>{lang['tab2_sub']}</span>", unsafe_allow_html=True)
@@ -265,12 +267,14 @@ with main_tab_calc:
             if result:
                 st.success(f"✅ Code: {result['code']} | TEER: {result['teer']} | {result['volet']}")
             else:
+                # AQUÍ SE MUESTRA EL ENLACE EXTERNO SI FALLA
                 st.markdown(f"<div class='help-box'>{lang['teer_guide']}</div>", unsafe_allow_html=True)
+                st.markdown(f"🔗 [{lang['noc_link_text']}](https://noc.esdc.gc.ca/)")
 
         st.divider()
         st.caption(lang['teer_manual_help'])
         
-        # --- AQUÍ ESTÁ EL CAMBIO: OPCIONES DETALLADAS ---
+        # Opciones DETALLADAS
         teer_selection = st.selectbox(lang['teer_label'], 
                                       [
                                           "TEER 0, 1: Université / Ingénierie / Gestion (Haute Qualif.)",
@@ -282,7 +286,7 @@ with main_tab_calc:
         education = st.selectbox(lang['edu'], ["PhD", "Master", "Bachelor (3+)", "College (3y)", "Diploma (1-2y)", "Secondary"])
         experience = st.slider(lang['exp_label'], 0, 10, 3)
 
-    # 3. IDIOMAS (DECORADO)
+    # 3. IDIOMAS
     with tab3:
         st.markdown(f"### 🗣️ {lang['tab3_header']} ⚜️")
         st.markdown(f"<span class='deco-sub'>{lang['tab3_sub']}</span>", unsafe_allow_html=True)
@@ -298,7 +302,7 @@ with main_tab_calc:
             st.markdown(f"**{lang['sp_fr_title']}**")
             sp_fr = st.select_slider(lang['sp_fr_label'], options=["0", "A1", "A2", "B1", "B2", "C1", "C2"], value="0")
 
-    # 4. QUEBEC (BOTÓN AQUÍ)
+    # 4. QUEBEC
     with tab4:
         st.markdown(f"### ⚜️ {lang['tab4_header']}")
         st.markdown(f"<span class='deco-sub'>{lang['tab4_sub']}</span>", unsafe_allow_html=True)
@@ -325,7 +329,7 @@ with main_tab_calc:
         elif "College" in education: score += 50
         else: score += 30
         
-        # Mapeo de los nombres largos de TEER
+        # Mapeo
         if "TEER 0, 1" in teer_selection: score += 60 
         elif "TEER 2" in teer_selection: score += 40
         elif "TEER 3" in teer_selection: score += 20
@@ -382,7 +386,7 @@ with main_tab_guide:
     """, unsafe_allow_html=True)
 
 # ==========================================
-# FOOTER (MONETIZACIÓN Y LEGAL AL FINAL)
+# FOOTER (MONETIZACIÓN Y LEGAL)
 # ==========================================
 st.markdown("---")
 st.markdown("<div class='footer'>", unsafe_allow_html=True)
