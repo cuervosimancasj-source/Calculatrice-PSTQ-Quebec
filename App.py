@@ -30,6 +30,11 @@ st.markdown("""
         .step-box {
             background-color: white; padding: 15px; border-radius: 10px; border: 1px solid #ddd; margin-bottom: 10px;
         }
+        /* Estilo para la barra lateral */
+        [data-testid="stSidebar"] {
+            background-color: #ffffff;
+            border-right: 1px solid #e0e0e0;
+        }
     </style>
 """, unsafe_allow_html=True)
 
@@ -45,10 +50,17 @@ def cycle_language():
 # --- 4. TRADUCCIONES ---
 t = {
     'fr': {
-        'btn_lang': "Langue: Français 🇫🇷",
+        'btn_lang': "🌐 Langue: Français",
         'brand': "Calculatrice PSTQ Québec ⚜️",
         'subtitle': "Outil d'analyse pour la Résidence Permanente (TEER, Volets, Score).",
-        'disclaimer_text': "Projet indépendant. Résultats estimés.",
+        # DISCLAIMER COMPLETO:
+        'disclaimer_title': "⚠️ AVIS IMPORTANT",
+        'disclaimer_text': """
+            Ce logiciel est un projet indépendant. 
+            **Nous ne sommes PAS avocats, ni consultants en immigration.**
+            **Nous ne représentons PAS le gouvernement du Québec (MIFI).**
+            Les résultats sont des estimations basées sur le système Arrima (~1350 points).
+        """,
         'coffee': "☕ M'offrir un café",
         'courses': "📚 Cours de Français",
         'main_tabs': ["🧮 Calculatrice", "ℹ️ Guide & Étapes"],
@@ -59,8 +71,7 @@ t = {
         'teer_label': "Sélectionnez votre niveau (Catégorie TEER)",
         'teer_guide': "**Aide:** TEER 0,1 = Université/Gestion | TEER 2 = Collégial/Technique | TEER 3 = Métiers | TEER 4,5 = Secondaire/Manuel",
         'exp_label': "Années d'expérience qualifiée",
-        # AQUÍ ESTÁ EL CAMBIO DE IDIOMA PAREJA
-        'lang_info': "**Exigences :** Volet 1 = Niv 7 | Volet 2 = Niv 5 | **Conjoint = Niv 4**",
+        'lang_info': "**Exigences :** Volet 1 = Niveau 7 | Volet 2 = Niveau 5",
         'age': "Âge", 'spouse': "Conjoint(e) ?", 'kids12': "Enfants -12", 'kids13': "Enfants +12",
         'sp_section': "Données du Conjoint (Âge/Études)",
         'sp_fr_title': "Français du Conjoint",
@@ -80,10 +91,17 @@ t = {
         'g_step5': "5. Fédéral", 'g_desc5': "Résidence Permanente Canada."
     },
     'es': {
-        'btn_lang': "Idioma: Español 🇪🇸",
+        'btn_lang': "🌐 Idioma: Español",
         'brand': "Calculatrice PSTQ Québec ⚜️",
         'subtitle': "Herramienta de análisis para Residencia (TEER, Volets, Puntaje).",
-        'disclaimer_text': "Proyecto independiente. Resultados estimados.",
+        # DISCLAIMER COMPLETO:
+        'disclaimer_title': "⚠️ AVISO LEGAL",
+        'disclaimer_text': """
+            Este software es un proyecto independiente.
+            **NO somos abogados, ni asesores de inmigración.**
+            **NO representamos al gobierno de Quebec (MIFI).**
+            Los resultados son estimaciones basadas en el sistema Arrima (~1350 puntos).
+        """,
         'coffee': "☕ Invítame un café",
         'courses': "📚 Cursos de Francés",
         'main_tabs': ["🧮 Calculadora", "ℹ️ Guía y Pasos"],
@@ -94,8 +112,7 @@ t = {
         'teer_label': "Selecciona tu nivel (Categoría TEER)",
         'teer_guide': "**Ayuda:** TEER 0,1 = Universidad/Gerencia | TEER 2 = College/Técnico | TEER 3 = Oficios | TEER 4,5 = Secundaria/Manual",
         'exp_label': "Años de experiencia calificada",
-        # AQUÍ ESTÁ EL CAMBIO DE IDIOMA PAREJA
-        'lang_info': "**Requisitos:** Volet 1 = Niv 7 | Volet 2 = Niv 5 | **Pareja = Niv 4**",
+        'lang_info': "**Requisitos:** Volet 1 = Nivel 7 | Volet 2 = Nivel 5",
         'age': "Edad", 'spouse': "Pareja ?", 'kids12': "Hijos -12", 'kids13': "Hijos +12",
         'sp_section': "Datos de la Pareja (Edad/Estudios)",
         'sp_fr_title': "Francés de la Pareja",
@@ -115,10 +132,17 @@ t = {
         'g_step5': "5. Federal", 'g_desc5': "Residencia Permanente Canadá."
     },
     'en': {
-        'btn_lang': "Language: English 🇺🇸",
+        'btn_lang': "🌐 Language: English",
         'brand': "Calculatrice PSTQ Québec ⚜️",
         'subtitle': "Analysis tool for Residency (TEER, Volets, Score).",
-        'disclaimer_text': "Independent project. Estimated results.",
+        # DISCLAIMER COMPLETO:
+        'disclaimer_title': "⚠️ LEGAL DISCLAIMER",
+        'disclaimer_text': """
+            This software is an independent project.
+            **We are NOT lawyers, nor immigration consultants.**
+            **We do NOT represent the Government of Quebec (MIFI).**
+            Results are estimates based on the Arrima system (~1350 points).
+        """,
         'coffee': "☕ Buy me a coffee",
         'courses': "📚 French Courses",
         'main_tabs': ["🧮 Calculator", "ℹ️ Guide & Steps"],
@@ -129,8 +153,7 @@ t = {
         'teer_label': "Select your level (TEER Category)",
         'teer_guide': "**Help:** TEER 0,1 = University/Mgmt | TEER 2 = College/Tech | TEER 3 = Trades | TEER 4,5 = High School/Manual",
         'exp_label': "Years of qualified experience",
-        # AQUÍ ESTÁ EL CAMBIO DE IDIOMA PAREJA
-        'lang_info': "**Requirements:** Volet 1 = Lvl 7 | Volet 2 = Lvl 5 | **Spouse = Lvl 4**",
+        'lang_info': "**Requirements:** Volet 1 = Level 7 | Volet 2 = Level 5",
         'age': "Age", 'spouse': "Spouse ?", 'kids12': "Kids -12", 'kids13': "Kids +12",
         'sp_section': "Spouse Data (Age/Education)",
         'sp_fr_title': "Spouse's French",
@@ -181,14 +204,22 @@ def find_job_details(keyword):
         if key in keyword: return data
     return None
 
-# --- 6. SIDEBAR ---
+# --- 6. BARRA LATERAL (SIDEBAR) - AQUÍ ESTÁ LO QUE FALTABA ---
 with st.sidebar:
-    st.button(lang['btn_lang'], on_click=cycle_language, type="secondary")
-    st.markdown("---")
+    # 1. Botón de Idioma
+    st.button(lang['btn_lang'], on_click=cycle_language, type="primary")
+    
+    st.divider()
+    
+    # 2. Enlaces de Monetización
     st.link_button(lang['coffee'], "https://www.buymeacoffee.com/CalculatricePSTQQuebec")
     st.link_button(lang['courses'], "https://www.TU_ENLACE_DE_AFILIADO.com") 
-    st.markdown("---")
-    st.warning(lang['disclaimer_text'])
+    
+    st.divider()
+    
+    # 3. Disclaimer (Leyenda)
+    st.error(f"**{lang['disclaimer_title']}**")
+    st.caption(lang['disclaimer_text'])
 
 # --- 7. APP PRINCIPAL ---
 st.markdown(f"# {lang['brand']}")
@@ -219,8 +250,8 @@ with main_tab_calc:
                 st.divider()
                 st.markdown(f"#### ❤️ {lang['sp_section']}")
                 c_sp1, c_sp2 = st.columns(2)
-                with c_sp1: sp_age = st.number_input("Age (Spouse/Pareja)", 18, 65, 30)
-                with c_sp2: sp_edu = st.selectbox("Education (Spouse/Pareja)", ["PhD", "Master", "Bachelor", "Technical", "Secondary"])
+                with c_sp1: sp_age = st.number_input("Age (Conjoint)", 18, 65, 30)
+                with c_sp2: sp_edu = st.selectbox("Education (Conjoint)", ["PhD", "Master", "Bachelor", "Technical", "Secondary"])
                 # NOTA: El idioma de la pareja se movió a la Pestaña 3
 
         # SUB-TAB 2: TRABAJO
