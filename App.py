@@ -7,75 +7,102 @@ st.set_page_config(
     layout="centered"
 )
 
-# --- 2. ESTILOS CSS (CORRECCIÓN FINAL DE COLORES) ---
+# --- 2. ESTILOS CSS (CORRECCIÓN TOTAL DE COLORES) ---
 st.markdown("""
     <style>
-        /* === 1. FORZADO GLOBAL DE MODO CLARO (PARA MÓVIL) === */
+        /* === 1. FONDO GLOBAL CLARO === */
         [data-testid="stAppViewContainer"] {
             background-color: #f0f2f6 !important;
         }
         
-        /* Texto general a casi negro, PERO excluyendo elementos específicos que arreglaremos abajo */
+        /* Texto general a negro */
         .stApp, p, label, div, span, h1, h2, h3, h4, h5, h6 {
-            color: #262730 !important;
+            color: #000000 !important;
         }
         
-        /* Encabezado */
+        /* Encabezado Azul */
         header[data-testid="stHeader"] { background-color: #003399 !important; }
         h1, h2, h3, .stMarkdown h1, .stMarkdown h2, .stMarkdown h3 { 
             color: #003399 !important; 
         }
 
-        /* === 2. ARREGLO DE INPUTS (FONDO BLANCO, LETRA NEGRA) === */
-        div[data-baseweb="input"], div[data-baseweb="base-input"], div[data-baseweb="select"] > div {
+        /* === 2. ARREGLO DE INPUTS Y SELECTBOX (CRÍTICO) === */
+        /* Caja cerrada */
+        div[data-baseweb="select"] > div, div[data-baseweb="input"] > div {
             background-color: #FFFFFF !important;
             border: 1px solid #ccc !important;
             color: #000000 !important;
         }
+        /* Texto dentro del input */
         input {
             color: #000000 !important;
             -webkit-text-fill-color: #000000 !important;
             caret-color: #000000 !important;
         }
+        
+        /* === CORRECCIÓN MENÚ DESPLEGABLE (LAS OPCIONES) === */
+        /* Fondo de la lista desplegable */
+        ul[data-baseweb="menu"] {
+            background-color: #FFFFFF !important;
+        }
+        /* Texto de las opciones de la lista */
+        li[data-baseweb="menu-item"] {
+            color: #000000 !important; 
+        }
+        /* Opción seleccionada o hover */
+        li[data-baseweb="menu-item"]:hover, li[aria-selected="true"] {
+            background-color: #e6f0ff !important; /* Azul muy clarito */
+            color: #003399 !important;
+        }
 
-        /* === 3. BOTONES === */
+        /* === 3. ARREGLO DE RADIO BUTTONS (CÍRCULOS DE SELECCIÓN) === */
+        div[role="radiogroup"] {
+            background-color: transparent !important;
+        }
+        /* Texto de las opciones del radio button */
+        div[role="radiogroup"] label {
+            color: #000000 !important;
+        }
+        /* El círculo del radio button */
+        div[data-baseweb="radio"] div {
+            background-color: #FFFFFF !important; 
+            border-color: #003399 !important;
+        }
+
+        /* === 4. BOTONES === */
         div.stButton > button { width: 100%; border-radius: 8px; font-weight: bold; }
         
-        /* Botones Secundarios (Idioma, Coffee) -> BLANCO CON AZUL */
+        /* Botones Secundarios (Blanco/Azul) */
         div.stButton > button[kind="secondary"], div.stLinkButton > a {
             background-color: #FFFFFF !important;
             color: #003399 !important;
             border: 2px solid #003399 !important;
             text-decoration: none !important;
         }
-        /* Botón Primario (Calcular) -> AZUL CON BLANCO */
+        /* Botón Primario (Azul/Blanco) */
         div.stButton > button[kind="primary"] {
             background-color: #003399 !important;
             color: #FFFFFF !important;
             border: none !important;
         }
         div.stButton > button[kind="primary"] p {
-            color: #FFFFFF !important; /* Asegurar que el texto interno sea blanco */
+            color: #FFFFFF !important;
         }
 
-        /* === 4. ARREGLO DE PESTAÑAS (TABS) === */
-        /* Pestaña Inactiva: Fondo transparente, Texto Negro */
+        /* === 5. PESTAÑAS (TABS) === */
         button[data-baseweb="tab"] {
             background-color: transparent !important;
             color: #000000 !important;
         }
-        /* Pestaña Activa: Fondo Azul, TEXTO BLANCO */
         button[data-baseweb="tab"][aria-selected="true"] {
             background-color: #003399 !important;
             color: #FFFFFF !important;
         }
-        /* Forzar texto blanco dentro de la pestaña activa (para vencer la regla global) */
-        button[data-baseweb="tab"][aria-selected="true"] > div,
         button[data-baseweb="tab"][aria-selected="true"] p {
             color: #FFFFFF !important;
         }
 
-        /* === 5. TARJETAS Y CAJAS === */
+        /* === 6. TARJETAS === */
         [data-testid="stForm"] {
             background-color: #FFFFFF !important;
             padding: 1.5rem; 
@@ -83,23 +110,19 @@ st.markdown("""
             box-shadow: 0 4px 8px rgba(0,0,0,0.1); 
             border-top: 5px solid #003399;
         }
-        .info-box { background-color: #e8f4fd; border-left: 5px solid #003399; padding: 15px; border-radius: 5px; color: #000 !important; }
-        .help-box { background-color: #fff3cd; border-left: 5px solid #ffc107; padding: 15px; border-radius: 5px; color: #000 !important; }
-        .step-box { background-color: white; padding: 15px; border-radius: 10px; border: 1px solid #ddd; margin-bottom: 10px; color: #000 !important; }
         
-        /* Caja Resultado Azul con Texto Blanco */
-        .result-box { 
-            background-color: #003399; 
-            padding: 20px; 
-            border-radius: 10px; 
-            text-align: center; 
-            margin-top: 20px; 
-        }
+        /* Cajas Informativas (Forzando texto negro) */
+        .info-box { background-color: #e8f4fd; border-left: 5px solid #003399; padding: 15px; border-radius: 5px; color: #000000 !important; }
+        .help-box { background-color: #fff3cd; border-left: 5px solid #ffc107; padding: 15px; border-radius: 5px; color: #000000 !important; }
+        .step-box { background-color: white; padding: 15px; border-radius: 10px; border: 1px solid #ddd; margin-bottom: 10px; color: #000000 !important; }
+        
+        /* Resultado */
+        .result-box { background-color: #003399; padding: 20px; border-radius: 10px; text-align: center; margin-top: 20px; }
         .result-box h2 { color: #FFFFFF !important; margin: 0; }
 
         /* Footer */
         .footer { margin-top: 50px; padding: 20px; border-top: 1px solid #ccc; text-align: center; }
-        .deco-sub { font-style: italic; margin-bottom: 15px; display: block; color: #666 !important; }
+        .deco-sub { font-style: italic; margin-bottom: 15px; display: block; color: #666666 !important; }
 
     </style>
 """, unsafe_allow_html=True)
@@ -142,7 +165,7 @@ t = {
         'exp_label': "Années d'expérience qualifiée",
         'lang_info': "Volet 1=Niv 7 | Volet 2=Niv 5",
         'age': "Âge", 'spouse': "Conjoint(e) ?", 'kids12': "Enf -12", 'kids13': "Enf +12",
-        'sp_section': "Données du Conjoint (Âge/Études)",
+        'sp_section': "Conjoint (Âge/Études)",
         'sp_fr_title': "Français du Conjoint",
         'sp_fr_label': "Niveau Oral du conjoint",
         'edu': "Niveau d'études", 'vjo': "Offre (OEV)", 'calc': "CALCULER SCORE",
@@ -150,7 +173,7 @@ t = {
         'advice_good': "Excellent ! Profil compétitif.",
         'advice_low': "Améliorez le français ou cherchez une OEV.",
         'details': "Détails",
-        'sp_points': "Points Conjoint (Français + Autres)",
+        'sp_points': "Pts Conjoint",
         'guide_title': "Feuille de Route",
         'g_step1': "1. Auto-évaluation", 'g_desc1': "Vos points forts.",
         'g_step2': "2. Français", 'g_desc2': "Visez B2 (7).",
@@ -383,7 +406,6 @@ with main_tab_calc:
         elif "College" in education: score += 50
         else: score += 30
         
-        # Mapeo
         if "TEER 0, 1" in teer_selection: score += 60 
         elif "TEER 2" in teer_selection: score += 40
         elif "TEER 3" in teer_selection: score += 20
@@ -440,7 +462,7 @@ with main_tab_guide:
     """, unsafe_allow_html=True)
 
 # ==========================================
-# FOOTER (MONETIZACIÓN Y LEGAL AL FINAL)
+# FOOTER
 # ==========================================
 st.markdown("---")
 st.markdown("<div class='footer'>", unsafe_allow_html=True)
