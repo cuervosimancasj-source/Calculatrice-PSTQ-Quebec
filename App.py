@@ -7,105 +7,91 @@ st.set_page_config(
     layout="centered"
 )
 
-# --- 2. ESTILOS CSS (ALTO CONTRASTE) ---
+# --- 2. ESTILOS CSS (BLINDADO PARA MÓVIL/INSTAGRAM/FACEBOOK) ---
 st.markdown("""
     <style>
-        /* 1. FONDO PRINCIPAL OSCURO */
-        .stApp {
-            background-color: #0E1117;
-            color: #FAFAFA;
+        /* === 1. FORZADO GLOBAL DE MODO CLARO === */
+        [data-testid="stAppViewContainer"] {
+            background-color: #f0f2f6 !important;
         }
         
-        /* 2. ENCABEZADO */
-        header[data-testid="stHeader"] {
-            background-color: #0E1117;
-        }
-        h1, h2, h3, .stMarkdown h1, .stMarkdown h2, .stMarkdown h3 {
-            color: #4da6ff !important; 
+        /* Texto general forzado a casi negro */
+        .stApp, p, label, div, span, h1, h2, h3, h4, h5, h6 {
+            color: #262730 !important;
         }
         
-        /* --- 3. ARREGLO DE BOTONES (CRÍTICO) --- */
-        
-        /* Estilo base para TODOS los botones (incluyendo Links) */
-        div.stButton > button, div.stLinkButton > a {
-            width: 100%;
-            border-radius: 8px;
-            font-weight: bold;
-            text-align: center;
-            text-decoration: none; /* Quitar subrayado de links */
-            display: block; /* Asegurar que ocupen el espacio */
-            padding: 0.5rem 1rem;
+        /* Encabezado y Títulos Principales en Azul */
+        header[data-testid="stHeader"] { background-color: #003399 !important; }
+        h1, h2, h3, .stMarkdown h1, .stMarkdown h2, .stMarkdown h3 { 
+            color: #003399 !important; 
         }
 
-        /* BOTONES SECUNDARIOS (Idioma, Coffee, Cursos) */
-        /* Forzamos BLANCO con letras NEGRAS para que se vean sí o sí */
-        div.stButton > button[kind="secondary"], 
-        div.stLinkButton > a {
+        /* === 2. ARREGLO DE INPUTS (EDAD, HIJOS) PARA INSTAGRAM/FACEBOOK === */
+        /* Forzamos el fondo blanco en las cajas de input */
+        div[data-baseweb="input"], div[data-baseweb="base-input"] {
             background-color: #FFFFFF !important;
-            color: #000000 !important; 
-            border: 2px solid #ccc !important;
+            border: 1px solid #ccc !important;
         }
-        div.stButton > button[kind="secondary"]:hover,
-        div.stLinkButton > a:hover {
-            background-color: #f0f0f0 !important;
-            border-color: #4da6ff !important;
+        /* CRÍTICO: Forzar el color del texto dentro del input a NEGRO */
+        input.st-ai, input.st-ah, input {
+            color: #000000 !important;
+            -webkit-text-fill-color: #000000 !important; /* Fix para iPhone/Safari */
+            caret-color: #000000 !important; /* Cursor negro */
+            background-color: #FFFFFF !important;
+        }
+        /* Arreglo para selectbox (menús desplegables) */
+        div[data-baseweb="select"] > div {
+            background-color: #FFFFFF !important;
+            color: #000000 !important;
         }
 
-        /* BOTÓN PRIMARIO (Calcular) */
-        /* Forzamos AZUL con letras BLANCAS */
+        /* === 3. BOTONES "INVISIBLES" CORREGIDOS === */
+        div.stButton > button { width: 100%; border-radius: 8px; font-weight: bold; }
+        
+        /* Botones Secundarios (Idioma, Coffee, Cursos) */
+        /* Ahora tienen BORDE AZUL y LETRA AZUL para contraste máximo */
+        div.stButton > button[kind="secondary"], div.stLinkButton > a {
+            background-color: #FFFFFF !important;
+            color: #003399 !important;
+            border: 2px solid #003399 !important;
+            text-decoration: none !important;
+        }
+        div.stButton > button[kind="secondary"]:hover, div.stLinkButton > a:hover {
+            background-color: #e6f0ff !important;
+        }
+
+        /* Botón Primario (Calcular) */
         div.stButton > button[kind="primary"] {
             background-color: #003399 !important;
-            color: white !important;
-            border: 1px solid white !important;
+            color: #FFFFFF !important;
+            border: none !important;
         }
-        div.stButton > button[kind="primary"]:hover {
-            background-color: #002266 !important;
-        }
-        
-        /* 4. TARJETAS / FORMULARIO */
+
+        /* === 4. TARJETAS Y CAJAS === */
         [data-testid="stForm"] {
-            background-color: #262730;
+            background-color: #FFFFFF !important;
             padding: 1.5rem; 
             border-radius: 15px;
-            border: 1px solid #4da6ff;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1); 
+            border-top: 5px solid #003399;
         }
-        
-        /* 5. INPUTS Y SELECTORES */
-        div[data-baseweb="select"] > div, div[data-baseweb="input"] > div {
-            background-color: #0E1117 !important;
-            color: white !important;
-            border-color: #4da6ff !important;
-        }
-        p, label, span { color: #FAFAFA !important; }
-        
-        /* 6. CAJAS INFORMATIVAS */
-        .info-box { background-color: #1c2e4a; border-left: 5px solid #4da6ff; padding: 15px; border-radius: 5px; margin-bottom: 10px; }
-        .help-box { background-color: #332b00; border-left: 5px solid #ffc107; padding: 15px; border-radius: 5px; margin-bottom: 10px; }
-        .step-box { background-color: #262730; padding: 15px; border-radius: 10px; border: 1px solid #444; margin-bottom: 10px; }
-        
-        /* 7. CAJA DE RESULTADO */
-        .result-box {
-            background-color: #003399;
-            color: white !important;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            margin-top: 20px;
-            border: 2px solid white;
-        }
+        .info-box { background-color: #e8f4fd; border-left: 5px solid #003399; padding: 15px; border-radius: 5px; color: #000 !important; }
+        .help-box { background-color: #fff3cd; border-left: 5px solid #ffc107; padding: 15px; border-radius: 5px; color: #000 !important; }
+        .step-box { background-color: white; padding: 15px; border-radius: 10px; border: 1px solid #ddd; margin-bottom: 10px; color: #000 !important; }
+        .result-box { background-color: #003399; color: white !important; padding: 20px; border-radius: 10px; text-align: center; margin-top: 20px; }
         .result-box h2 { color: white !important; margin: 0; }
+
+        /* === 5. PESTAÑAS (TABS) === */
+        button[data-baseweb="tab"] { color: #000000 !important; }
+        button[data-baseweb="tab"][aria-selected="true"] {
+            background-color: #003399 !important;
+            color: #FFFFFF !important;
+        }
         
-        /* 8. Footer */
-        .footer { margin-top: 50px; padding: 20px; border-top: 1px solid #444; text-align: center; color: #aaa; font-size: 0.85em; }
-        
-        /* Subtítulos */
-        .deco-sub { color: #aaa !important; font-style: italic; margin-bottom: 15px; display: block; }
-        
-        /* Pestañas */
-        button[data-baseweb="tab"] { color: #aaa !important; }
-        button[data-baseweb="tab"][aria-selected="true"] { color: #4da6ff !important; background-color: transparent !important; }
-        
+        /* Footer */
+        .footer { margin-top: 50px; padding: 20px; border-top: 1px solid #ccc; text-align: center; color: #666 !important; font-size: 0.85em; }
+        .deco-sub { color: #666 !important; font-style: italic; margin-bottom: 15px; display: block; }
+
     </style>
 """, unsafe_allow_html=True)
 
@@ -131,7 +117,7 @@ t = {
         'subtitle': "Outil d'analyse pour la Résidence Permanente (TEER, Volets, Score).",
         'disclaimer_title': "⚠️ AVIS IMPORTANT",
         'disclaimer_text': "Ce logiciel est un projet indépendant. Nous ne sommes PAS avocats ni consultants. Nous ne représentons PAS le MIFI.",
-        'coffee': "☕ M'offrir un café",
+        'coffee': "☕ M'offrir un café (Soutenir)",
         'courses': "📚 Cours de Français",
         'main_tabs': ["🧮 Calculatrice", "ℹ️ Guide"],
         'tabs': ["👤 Profil", "💼 Travail", "🗣️ Langues", "⚜️ Québec"],
@@ -170,7 +156,7 @@ t = {
         'subtitle': "Análisis Residencia Permanente (Arrima).",
         'disclaimer_title': "⚠️ AVISO LEGAL",
         'disclaimer_text': "Proyecto independiente. NO abogados/asesores. NO Gobierno (MIFI).",
-        'coffee': "☕ Invítame un café",
+        'coffee': "☕ Café (Apoyo)",
         'courses': "📚 Cursos Francés",
         'main_tabs': ["🧮 Calculadora", "ℹ️ Guía"],
         'tabs': ["👤 Perfil", "💼 Trabajo", "🗣️ Idiomas", "⚜️ Quebec"],
@@ -209,7 +195,7 @@ t = {
         'subtitle': "Residency Analysis Tool (Arrima).",
         'disclaimer_title': "⚠️ DISCLAIMER",
         'disclaimer_text': "Independent. NOT lawyers. NOT Government (MIFI).",
-        'coffee': "☕ Buy me a coffee",
+        'coffee': "☕ Coffee (Support)",
         'courses': "📚 French Courses",
         'main_tabs': ["🧮 Calculator", "ℹ️ Guide"],
         'tabs': ["👤 Profile", "💼 Work", "🗣️ Language", "⚜️ Quebec"],
@@ -388,6 +374,7 @@ with main_tab_calc:
         elif "College" in education: score += 50
         else: score += 30
         
+        # Mapeo
         if "TEER 0, 1" in teer_selection: score += 60 
         elif "TEER 2" in teer_selection: score += 40
         elif "TEER 3" in teer_selection: score += 20
@@ -411,7 +398,7 @@ with main_tab_calc:
             score += score_sp
         score += (k1*4) + (k2*2)
 
-        # Muestra resultados dentro de Tab 4
+        # Muestra resultados
         with tab4:
             st.markdown(f"""
             <div class="result-box">
