@@ -7,67 +7,75 @@ st.set_page_config(
     layout="centered"
 )
 
-# --- 2. ESTILOS CSS (BLINDADO PARA MÓVIL/INSTAGRAM/FACEBOOK) ---
+# --- 2. ESTILOS CSS (CORRECCIÓN FINAL DE COLORES) ---
 st.markdown("""
     <style>
-        /* === 1. FORZADO GLOBAL DE MODO CLARO === */
+        /* === 1. FORZADO GLOBAL DE MODO CLARO (PARA MÓVIL) === */
         [data-testid="stAppViewContainer"] {
             background-color: #f0f2f6 !important;
         }
         
-        /* Texto general forzado a casi negro */
+        /* Texto general a casi negro, PERO excluyendo elementos específicos que arreglaremos abajo */
         .stApp, p, label, div, span, h1, h2, h3, h4, h5, h6 {
             color: #262730 !important;
         }
         
-        /* Encabezado y Títulos Principales en Azul */
+        /* Encabezado */
         header[data-testid="stHeader"] { background-color: #003399 !important; }
         h1, h2, h3, .stMarkdown h1, .stMarkdown h2, .stMarkdown h3 { 
             color: #003399 !important; 
         }
 
-        /* === 2. ARREGLO DE INPUTS (EDAD, HIJOS) PARA INSTAGRAM/FACEBOOK === */
-        /* Forzamos el fondo blanco en las cajas de input */
-        div[data-baseweb="input"], div[data-baseweb="base-input"] {
+        /* === 2. ARREGLO DE INPUTS (FONDO BLANCO, LETRA NEGRA) === */
+        div[data-baseweb="input"], div[data-baseweb="base-input"], div[data-baseweb="select"] > div {
             background-color: #FFFFFF !important;
             border: 1px solid #ccc !important;
-        }
-        /* CRÍTICO: Forzar el color del texto dentro del input a NEGRO */
-        input.st-ai, input.st-ah, input {
             color: #000000 !important;
-            -webkit-text-fill-color: #000000 !important; /* Fix para iPhone/Safari */
-            caret-color: #000000 !important; /* Cursor negro */
-            background-color: #FFFFFF !important;
         }
-        /* Arreglo para selectbox (menús desplegables) */
-        div[data-baseweb="select"] > div {
-            background-color: #FFFFFF !important;
+        input {
             color: #000000 !important;
+            -webkit-text-fill-color: #000000 !important;
+            caret-color: #000000 !important;
         }
 
-        /* === 3. BOTONES "INVISIBLES" CORREGIDOS === */
+        /* === 3. BOTONES === */
         div.stButton > button { width: 100%; border-radius: 8px; font-weight: bold; }
         
-        /* Botones Secundarios (Idioma, Coffee, Cursos) */
-        /* Ahora tienen BORDE AZUL y LETRA AZUL para contraste máximo */
+        /* Botones Secundarios (Idioma, Coffee) -> BLANCO CON AZUL */
         div.stButton > button[kind="secondary"], div.stLinkButton > a {
             background-color: #FFFFFF !important;
             color: #003399 !important;
             border: 2px solid #003399 !important;
             text-decoration: none !important;
         }
-        div.stButton > button[kind="secondary"]:hover, div.stLinkButton > a:hover {
-            background-color: #e6f0ff !important;
-        }
-
-        /* Botón Primario (Calcular) */
+        /* Botón Primario (Calcular) -> AZUL CON BLANCO */
         div.stButton > button[kind="primary"] {
             background-color: #003399 !important;
             color: #FFFFFF !important;
             border: none !important;
         }
+        div.stButton > button[kind="primary"] p {
+            color: #FFFFFF !important; /* Asegurar que el texto interno sea blanco */
+        }
 
-        /* === 4. TARJETAS Y CAJAS === */
+        /* === 4. ARREGLO DE PESTAÑAS (TABS) === */
+        /* Pestaña Inactiva: Fondo transparente, Texto Negro */
+        button[data-baseweb="tab"] {
+            background-color: transparent !important;
+            color: #000000 !important;
+        }
+        /* Pestaña Activa: Fondo Azul, TEXTO BLANCO */
+        button[data-baseweb="tab"][aria-selected="true"] {
+            background-color: #003399 !important;
+            color: #FFFFFF !important;
+        }
+        /* Forzar texto blanco dentro de la pestaña activa (para vencer la regla global) */
+        button[data-baseweb="tab"][aria-selected="true"] > div,
+        button[data-baseweb="tab"][aria-selected="true"] p {
+            color: #FFFFFF !important;
+        }
+
+        /* === 5. TARJETAS Y CAJAS === */
         [data-testid="stForm"] {
             background-color: #FFFFFF !important;
             padding: 1.5rem; 
@@ -78,19 +86,20 @@ st.markdown("""
         .info-box { background-color: #e8f4fd; border-left: 5px solid #003399; padding: 15px; border-radius: 5px; color: #000 !important; }
         .help-box { background-color: #fff3cd; border-left: 5px solid #ffc107; padding: 15px; border-radius: 5px; color: #000 !important; }
         .step-box { background-color: white; padding: 15px; border-radius: 10px; border: 1px solid #ddd; margin-bottom: 10px; color: #000 !important; }
-        .result-box { background-color: #003399; color: white !important; padding: 20px; border-radius: 10px; text-align: center; margin-top: 20px; }
-        .result-box h2 { color: white !important; margin: 0; }
-
-        /* === 5. PESTAÑAS (TABS) === */
-        button[data-baseweb="tab"] { color: #000000 !important; }
-        button[data-baseweb="tab"][aria-selected="true"] {
-            background-color: #003399 !important;
-            color: #FFFFFF !important;
-        }
         
+        /* Caja Resultado Azul con Texto Blanco */
+        .result-box { 
+            background-color: #003399; 
+            padding: 20px; 
+            border-radius: 10px; 
+            text-align: center; 
+            margin-top: 20px; 
+        }
+        .result-box h2 { color: #FFFFFF !important; margin: 0; }
+
         /* Footer */
-        .footer { margin-top: 50px; padding: 20px; border-top: 1px solid #ccc; text-align: center; color: #666 !important; font-size: 0.85em; }
-        .deco-sub { color: #666 !important; font-style: italic; margin-bottom: 15px; display: block; }
+        .footer { margin-top: 50px; padding: 20px; border-top: 1px solid #ccc; text-align: center; }
+        .deco-sub { font-style: italic; margin-bottom: 15px; display: block; color: #666 !important; }
 
     </style>
 """, unsafe_allow_html=True)
@@ -127,21 +136,21 @@ t = {
         'tab4_header': "Facteurs Québec & OEV", 'tab4_sub': "Finalisez votre pointage avec les atouts locaux.",
         'job_title': "Quel est votre emploi actuel ?",
         'job_placeholder': "Ex: Ingénieur, Soudeur, Assembleur...",
-        'teer_manual_help': "Si non trouvé, choisissez niveau :",
+        'teer_manual_help': "Si vous n'avez pas trouvé votre emploi, choisissez selon votre niveau :",
         'teer_label': "Catégorie TEER (Niveau)",
-        'teer_guide': "**Aide:** TEER 0,1=Uni/Gestion | TEER 2=Tech | TEER 3=Métiers | TEER 4,5=Manuel",
-        'exp_label': "Années d'expérience",
+        'teer_guide': "**Aide:** TEER 0,1=Uni/Gestion | TEER 2=Collégial/Technique | TEER 3=Métiers | TEER 4,5=Secondaire/Manuel",
+        'exp_label': "Années d'expérience qualifiée",
         'lang_info': "Volet 1=Niv 7 | Volet 2=Niv 5",
         'age': "Âge", 'spouse': "Conjoint(e) ?", 'kids12': "Enf -12", 'kids13': "Enf +12",
-        'sp_section': "Conjoint (Âge/Études)",
+        'sp_section': "Données du Conjoint (Âge/Études)",
         'sp_fr_title': "Français du Conjoint",
-        'sp_fr_label': "Niveau Oral",
+        'sp_fr_label': "Niveau Oral du conjoint",
         'edu': "Niveau d'études", 'vjo': "Offre (OEV)", 'calc': "CALCULER SCORE",
         'res_title': "Résultat Estimé",
         'advice_good': "Excellent ! Profil compétitif.",
         'advice_low': "Améliorez le français ou cherchez une OEV.",
         'details': "Détails",
-        'sp_points': "Pts Conjoint",
+        'sp_points': "Points Conjoint (Français + Autres)",
         'guide_title': "Feuille de Route",
         'g_step1': "1. Auto-évaluation", 'g_desc1': "Vos points forts.",
         'g_step2': "2. Français", 'g_desc2': "Visez B2 (7).",
@@ -398,7 +407,7 @@ with main_tab_calc:
             score += score_sp
         score += (k1*4) + (k2*2)
 
-        # Muestra resultados
+        # Muestra resultados dentro de Tab 4 (CON CAJA AZUL)
         with tab4:
             st.markdown(f"""
             <div class="result-box">
@@ -431,7 +440,7 @@ with main_tab_guide:
     """, unsafe_allow_html=True)
 
 # ==========================================
-# FOOTER
+# FOOTER (MONETIZACIÓN Y LEGAL AL FINAL)
 # ==========================================
 st.markdown("---")
 st.markdown("<div class='footer'>", unsafe_allow_html=True)
