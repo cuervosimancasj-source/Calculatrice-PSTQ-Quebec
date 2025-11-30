@@ -24,6 +24,22 @@ st.markdown("""
         .help-box { background-color: #fff3cd; border-left: 5px solid #ffc107; padding: 15px; border-radius: 5px; }
         .step-box { background-color: white; padding: 15px; border-radius: 10px; border: 1px solid #ddd; margin-bottom: 10px; }
         
+        /* CAJA DE RESULTADO (NUEVO DISEÑO AZUL) */
+        .result-box {
+            background-color: #003399;
+            color: white !important;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        .result-box h2 {
+            color: white !important;
+            margin: 0;
+            font-size: 2em;
+        }
+        
         /* Footer */
         .footer { margin-top: 50px; padding: 20px; border-top: 1px solid #ccc; text-align: center; color: #666; font-size: 0.85em; }
         
@@ -66,7 +82,7 @@ t = {
         'job_title': "Quel est votre emploi actuel ?",
         'job_placeholder': "Ex: Ingénieur, Soudeur, Assembleur...",
         'teer_manual_help': "Si non trouvé, choisissez niveau :",
-        'teer_label': "Catégorie TEER",
+        'teer_label': "Catégorie TEER (Niveau)",
         'teer_guide': "**Aide:** TEER 0,1=Uni/Gestion | TEER 2=Tech | TEER 3=Métiers | TEER 4,5=Manuel",
         'exp_label': "Années d'expérience",
         'lang_info': "Volet 1=Niv 7 | Volet 2=Niv 5",
@@ -105,7 +121,7 @@ t = {
         'job_title': "¿Cuál es tu trabajo?",
         'job_placeholder': "Ej: Ingeniero, Soldador...",
         'teer_manual_help': "Si no aparece, elige nivel:",
-        'teer_label': "Categoría TEER",
+        'teer_label': "Categoría TEER (Nivel)",
         'teer_guide': "**Ayuda:** TEER 0,1=Uni/Gerencia | TEER 2=Técnico | TEER 3=Oficios | TEER 4,5=Manual",
         'exp_label': "Años de experiencia",
         'lang_info': "Volet 1=Niv 7 | Volet 2=Niv 5",
@@ -237,7 +253,7 @@ with main_tab_calc:
             with c_sp1: sp_age = st.number_input("Age (Conj.)", 18, 65, 30)
             with c_sp2: sp_edu = st.selectbox("Edu (Conj.)", ["PhD", "Master", "Bachelor", "Technical", "Secondary"])
 
-    # 2. TRABAJO (DECORADO)
+    # 2. TRABAJO (DECORADO & TEER DETALLADO)
     with tab2:
         st.markdown(f"### 💼 {lang['tab2_header']} ⚜️")
         st.markdown(f"<span class='deco-sub'>{lang['tab2_sub']}</span>", unsafe_allow_html=True)
@@ -253,13 +269,16 @@ with main_tab_calc:
 
         st.divider()
         st.caption(lang['teer_manual_help'])
+        
+        # --- AQUÍ ESTÁ EL CAMBIO: OPCIONES DETALLADAS ---
         teer_selection = st.selectbox(lang['teer_label'], 
                                       [
-                                          "TEER 0, 1 (Uni/Gestion)",
-                                          "TEER 2 (Collégial/Tech)",
-                                          "TEER 3 (Métiers/Inter)",
-                                          "TEER 4, 5 (Manuel/Sec)"
+                                          "TEER 0, 1: Université / Ingénierie / Gestion (Haute Qualif.)",
+                                          "TEER 2: Collégial / Technique / Superviseurs",
+                                          "TEER 3: Métiers / Administration / Intermédiaire",
+                                          "TEER 4, 5: Manœuvre / Secondaire / Service (Manuel)"
                                       ])
+                                      
         education = st.selectbox(lang['edu'], ["PhD", "Master", "Bachelor (3+)", "College (3y)", "Diploma (1-2y)", "Secondary"])
         experience = st.slider(lang['exp_label'], 0, 10, 3)
 
@@ -290,7 +309,6 @@ with main_tab_calc:
         with cq2: q_fam = st.checkbox("Famille QC ?")
         
         st.markdown("###")
-        # BOTÓN SIN FORMULARIO (100% visible solo en Tab 4)
         if st.button(lang['calc'], type="primary", use_container_width=True):
             trigger_calculation()
 
@@ -299,32 +317,28 @@ with main_tab_calc:
         score = 0
         score_sp = 0 
         
-        # Edad
         if 18 <= age <= 30: score += 130
         elif age <= 45: score += (130 - (age-30)*5)
-        # Edu
         if "PhD" in education: score += 90
         elif "Master" in education: score += 75
         elif "Bachelor" in education: score += 60
         elif "College" in education: score += 50
         else: score += 30
-        # TEER
+        
+        # Mapeo de los nombres largos de TEER
         if "TEER 0, 1" in teer_selection: score += 60 
         elif "TEER 2" in teer_selection: score += 40
         elif "TEER 3" in teer_selection: score += 20
-        # Exp
+        
         score += min(80, int(experience * 10))
-        # Idioma
         fr_pts = {"0":0, "A1":0, "A2":10, "B1":20, "B2":50, "C1":70, "C2":80}
         score += fr_pts[fr_oral] * 1.2 + fr_pts[fr_write] * 0.8
         if en_lvl == "Advanced": score += 25
         elif en_lvl == "Intermediate": score += 15
-        # VJO
         if vjo == "Hors Montreal": score += 380
         elif vjo == "Montreal": score += 180
         if q_stud: score += 50
         if q_fam: score += 30
-        # Spouse
         if spouse:
             if 18 <= sp_age <= 40: score_sp += 10
             if "Bachelor" in sp_edu or "Master" in sp_edu or "PhD" in sp_edu: score_sp += 10
@@ -333,14 +347,15 @@ with main_tab_calc:
             elif sp_fr == "B2": score_sp += 20
             elif sp_fr in ["A2", "B1"]: score_sp += 10
             score += score_sp
-        # Kids
         score += (k1*4) + (k2*2)
 
-        # Muestra resultados dentro de Tab 4 (al final)
+        # Muestra resultados dentro de Tab 4 (CON CAJA AZUL)
         with tab4:
-            st.markdown("---")
-            st.markdown(f"<h2 style='text-align: center; color: #003399;'>{lang['res_title']}: {int(score)} / 1350</h2>", unsafe_allow_html=True)
-            st.progress(min(score/1350, 1.0))
+            st.markdown(f"""
+            <div class="result-box">
+                <h2>{lang['res_title']}: {int(score)} / 1350</h2>
+            </div>
+            """, unsafe_allow_html=True)
             
             with st.expander(lang['details']):
                 st.write(f"**Principal:** {int(score - score_sp - (k1*4 + k2*2))} pts")
