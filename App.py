@@ -7,7 +7,7 @@ st.set_page_config(
     layout="centered"
 )
 
-# --- 2. ESTILOS CSS (DISEÑO DARK MODE / MÓVIL) ---
+# --- 2. ESTILOS CSS (ALTO CONTRASTE) ---
 st.markdown("""
     <style>
         /* 1. FONDO PRINCIPAL OSCURO */
@@ -16,66 +16,73 @@ st.markdown("""
             color: #FAFAFA;
         }
         
-        /* 2. ENCABEZADO Y TÍTULOS */
+        /* 2. ENCABEZADO */
         header[data-testid="stHeader"] {
             background-color: #0E1117;
         }
-        /* Títulos en Azul Claro para que resalten en fondo negro */
         h1, h2, h3, .stMarkdown h1, .stMarkdown h2, .stMarkdown h3 {
             color: #4da6ff !important; 
         }
         
-        /* 3. BOTONES */
-        div.stButton > button { width: 100%; border-radius: 8px; font-weight: bold; }
-        div.stButton > button[type="primary"] {
-            background-color: #003399; /* Azul Quebec */
-            color: white; 
-            border: 1px solid white;
-        }
-        div.stButton > button[type="primary"]:hover { background-color: #002266; border-color: #4da6ff; }
+        /* --- 3. ARREGLO DE BOTONES (CRÍTICO) --- */
         
-        /* 4. TARJETAS / FORMULARIO (Fondo Gris Oscuro) */
+        /* Estilo base para TODOS los botones (incluyendo Links) */
+        div.stButton > button, div.stLinkButton > a {
+            width: 100%;
+            border-radius: 8px;
+            font-weight: bold;
+            text-align: center;
+            text-decoration: none; /* Quitar subrayado de links */
+            display: block; /* Asegurar que ocupen el espacio */
+            padding: 0.5rem 1rem;
+        }
+
+        /* BOTONES SECUNDARIOS (Idioma, Coffee, Cursos) */
+        /* Forzamos BLANCO con letras NEGRAS para que se vean sí o sí */
+        div.stButton > button[kind="secondary"], 
+        div.stLinkButton > a {
+            background-color: #FFFFFF !important;
+            color: #000000 !important; 
+            border: 2px solid #ccc !important;
+        }
+        div.stButton > button[kind="secondary"]:hover,
+        div.stLinkButton > a:hover {
+            background-color: #f0f0f0 !important;
+            border-color: #4da6ff !important;
+        }
+
+        /* BOTÓN PRIMARIO (Calcular) */
+        /* Forzamos AZUL con letras BLANCAS */
+        div.stButton > button[kind="primary"] {
+            background-color: #003399 !important;
+            color: white !important;
+            border: 1px solid white !important;
+        }
+        div.stButton > button[kind="primary"]:hover {
+            background-color: #002266 !important;
+        }
+        
+        /* 4. TARJETAS / FORMULARIO */
         [data-testid="stForm"] {
-            background-color: #262730; /* Gris oscuro para la tarjeta */
+            background-color: #262730;
             padding: 1.5rem; 
             border-radius: 15px;
-            border: 1px solid #4da6ff; /* Borde azul brillante */
+            border: 1px solid #4da6ff;
             box-shadow: 0 4px 8px rgba(0,0,0,0.5);
         }
         
-        /* 5. INPUTS Y SELECTORES (Corrección para Móvil) */
-        /* Esto asegura que el texto dentro de las cajas sea legible */
+        /* 5. INPUTS Y SELECTORES */
         div[data-baseweb="select"] > div, div[data-baseweb="input"] > div {
             background-color: #0E1117 !important;
             color: white !important;
             border-color: #4da6ff !important;
         }
-        p, label, span {
-            color: #FAFAFA !important; /* Texto blanco forzado */
-        }
+        p, label, span { color: #FAFAFA !important; }
         
-        /* 6. CAJAS INFORMATIVAS (Adaptadas a Dark) */
-        .info-box { 
-            background-color: #1c2e4a; /* Azul muy oscuro */
-            border-left: 5px solid #4da6ff; 
-            padding: 15px; 
-            border-radius: 5px; 
-            margin-bottom: 10px;
-        }
-        .help-box { 
-            background-color: #332b00; /* Amarillo muy oscuro */
-            border-left: 5px solid #ffc107; 
-            padding: 15px; 
-            border-radius: 5px; 
-            margin-bottom: 10px;
-        }
-        .step-box { 
-            background-color: #262730; 
-            padding: 15px; 
-            border-radius: 10px; 
-            border: 1px solid #444; 
-            margin-bottom: 10px; 
-        }
+        /* 6. CAJAS INFORMATIVAS */
+        .info-box { background-color: #1c2e4a; border-left: 5px solid #4da6ff; padding: 15px; border-radius: 5px; margin-bottom: 10px; }
+        .help-box { background-color: #332b00; border-left: 5px solid #ffc107; padding: 15px; border-radius: 5px; margin-bottom: 10px; }
+        .step-box { background-color: #262730; padding: 15px; border-radius: 10px; border: 1px solid #444; margin-bottom: 10px; }
         
         /* 7. CAJA DE RESULTADO */
         .result-box {
@@ -92,7 +99,7 @@ st.markdown("""
         /* 8. Footer */
         .footer { margin-top: 50px; padding: 20px; border-top: 1px solid #444; text-align: center; color: #aaa; font-size: 0.85em; }
         
-        /* Subtítulos decorativos */
+        /* Subtítulos */
         .deco-sub { color: #aaa !important; font-style: italic; margin-bottom: 15px; display: block; }
         
         /* Pestañas */
@@ -124,7 +131,7 @@ t = {
         'subtitle': "Outil d'analyse pour la Résidence Permanente (TEER, Volets, Score).",
         'disclaimer_title': "⚠️ AVIS IMPORTANT",
         'disclaimer_text': "Ce logiciel est un projet indépendant. Nous ne sommes PAS avocats ni consultants. Nous ne représentons PAS le MIFI.",
-        'coffee': "☕ M'offrir un café (Soutenir)",
+        'coffee': "☕ M'offrir un café",
         'courses': "📚 Cours de Français",
         'main_tabs': ["🧮 Calculatrice", "ℹ️ Guide"],
         'tabs': ["👤 Profil", "💼 Travail", "🗣️ Langues", "⚜️ Québec"],
@@ -163,7 +170,7 @@ t = {
         'subtitle': "Análisis Residencia Permanente (Arrima).",
         'disclaimer_title': "⚠️ AVISO LEGAL",
         'disclaimer_text': "Proyecto independiente. NO abogados/asesores. NO Gobierno (MIFI).",
-        'coffee': "☕ Café (Apoyo)",
+        'coffee': "☕ Invítame un café",
         'courses': "📚 Cursos Francés",
         'main_tabs': ["🧮 Calculadora", "ℹ️ Guía"],
         'tabs': ["👤 Perfil", "💼 Trabajo", "🗣️ Idiomas", "⚜️ Quebec"],
@@ -202,7 +209,7 @@ t = {
         'subtitle': "Residency Analysis Tool (Arrima).",
         'disclaimer_title': "⚠️ DISCLAIMER",
         'disclaimer_text': "Independent. NOT lawyers. NOT Government (MIFI).",
-        'coffee': "☕ Coffee (Support)",
+        'coffee': "☕ Buy me a coffee",
         'courses': "📚 French Courses",
         'main_tabs': ["🧮 Calculator", "ℹ️ Guide"],
         'tabs': ["👤 Profile", "💼 Work", "🗣️ Language", "⚜️ Quebec"],
@@ -238,7 +245,7 @@ t = {
 }
 lang = t[st.session_state.language]
 
-# --- 5. DATA JOBS (CÓDIGOS REALES 5 DÍGITOS) ---
+# --- 5. DATA JOBS ---
 jobs_db = {
     "ingenie": {"code": "21300", "teer": "1", "volet": "Volet 1"},
     "engineer": {"code": "21300", "teer": "1", "volet": "Volet 1"},
@@ -270,7 +277,7 @@ def find_job_details(keyword):
     return None
 
 # ==========================================
-# HEADER INTEGRADO
+# HEADER
 # ==========================================
 col_brand, col_lang = st.columns([3, 1])
 with col_brand:
@@ -278,7 +285,7 @@ with col_brand:
     st.caption(lang['subtitle'])
 with col_lang:
     st.markdown("###") 
-    st.button(lang['btn_lang'], on_click=cycle_language, key="top_lang_btn")
+    st.button(lang['btn_lang'], on_click=cycle_language, type="secondary", key="top_lang_btn")
 
 # ==========================================
 # APP PRINCIPAL
@@ -327,7 +334,6 @@ with main_tab_calc:
         st.divider()
         st.caption(lang['teer_manual_help'])
         
-        # --- SELECTOR DE TEER CON DESCRIPCIÓN COMPLETA ---
         teer_selection = st.selectbox(lang['teer_label'], 
                                       [
                                           "TEER 0, 1: Université / Ingénierie / Gestion (Haute Qualif.)",
@@ -355,7 +361,7 @@ with main_tab_calc:
             st.markdown(f"**{lang['sp_fr_title']}**")
             sp_fr = st.select_slider(lang['sp_fr_label'], options=["0", "A1", "A2", "B1", "B2", "C1", "C2"], value="0")
 
-    # 4. QUEBEC (BOTÓN AQUÍ)
+    # 4. QUEBEC
     with tab4:
         st.markdown(f"### ⚜️ {lang['tab4_header']}")
         st.markdown(f"<span class='deco-sub'>{lang['tab4_sub']}</span>", unsafe_allow_html=True)
@@ -374,17 +380,14 @@ with main_tab_calc:
         score = 0
         score_sp = 0 
         
-        # Edad
         if 18 <= age <= 30: score += 130
         elif age <= 45: score += (130 - (age-30)*5)
-        # Edu
         if "PhD" in education: score += 90
         elif "Master" in education: score += 75
         elif "Bachelor" in education: score += 60
         elif "College" in education: score += 50
         else: score += 30
         
-        # Mapeo
         if "TEER 0, 1" in teer_selection: score += 60 
         elif "TEER 2" in teer_selection: score += 40
         elif "TEER 3" in teer_selection: score += 20
@@ -408,7 +411,7 @@ with main_tab_calc:
             score += score_sp
         score += (k1*4) + (k2*2)
 
-        # Muestra resultados dentro de Tab 4 (CON CAJA AZUL)
+        # Muestra resultados dentro de Tab 4
         with tab4:
             st.markdown(f"""
             <div class="result-box">
@@ -441,7 +444,7 @@ with main_tab_guide:
     """, unsafe_allow_html=True)
 
 # ==========================================
-# FOOTER (MONETIZACIÓN Y LEGAL AL FINAL)
+# FOOTER
 # ==========================================
 st.markdown("---")
 st.markdown("<div class='footer'>", unsafe_allow_html=True)
