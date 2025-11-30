@@ -7,86 +7,97 @@ st.set_page_config(
     layout="centered"
 )
 
-# --- 2. ESTILOS CSS (FORZAR MODO CLARO / LIGHT MODE) ---
+# --- 2. ESTILOS CSS (DISEÑO DARK MODE / MÓVIL) ---
 st.markdown("""
     <style>
-        /* 1. REDEFINIR VARIABLES GLOBALES PARA FORZAR TEMA CLARO */
-        :root {
-            --primary-color: #003399;
-            --background-color: #ffffff;
-            --secondary-background-color: #f0f2f6;
-            --text-color: #31333F;
-            --font: sans-serif;
-        }
-
-        /* 2. FONDO GENERAL */
+        /* 1. FONDO PRINCIPAL OSCURO */
         .stApp {
-            background-color: #f0f2f6;
+            background-color: #0E1117;
+            color: #FAFAFA;
         }
-        [data-testid="stAppViewContainer"] {
-            background-color: #f0f2f6;
-        }
-
-        /* 3. HEADER AZUL */
+        
+        /* 2. ENCABEZADO Y TÍTULOS */
         header[data-testid="stHeader"] {
-            background-color: #003399;
+            background-color: #0E1117;
         }
-        h1, h2, h3, h4, h5, .stMarkdown h1, .stMarkdown h2, .stMarkdown h3 {
-            color: #003399 !important;
-        }
-
-        /* 4. ARREGLO CRÍTICO DE INPUTS (EDAD, TEXTO) PARA MÓVIL */
-        /* Fuerza el texto a ser gris oscuro, no blanco */
-        input, .stNumberInput input, .stTextInput input {
-            color: #31333F !important;
-            background-color: #ffffff !important;
-            caret-color: #000000; /* Cursor negro */
-        }
-        /* Fondo de la caja del input */
-        div[data-baseweb="input"] {
-            background-color: #ffffff !important;
-            border: 1px solid #d1d5db !important;
-        }
-        /* Fondo de los selectores (Menús) */
-        div[data-baseweb="select"] > div {
-            background-color: #ffffff !important;
-            color: #31333F !important;
+        /* Títulos en Azul Claro para que resalten en fondo negro */
+        h1, h2, h3, .stMarkdown h1, .stMarkdown h2, .stMarkdown h3 {
+            color: #4da6ff !important; 
         }
         
-        /* 5. ARREGLO DE PESTAÑAS (TABS) */
-        /* Texto de pestañas inactivas */
-        button[data-baseweb="tab"] {
-            color: #31333F !important;
-        }
-        button[data-baseweb="tab"] div {
-            color: #31333F !important;
-        }
-        /* Pestaña activa (Fondo azul, texto blanco) */
-        button[data-baseweb="tab"][aria-selected="true"] {
-            background-color: #003399 !important;
-        }
-        button[data-baseweb="tab"][aria-selected="true"] div {
-            color: #ffffff !important;
-        }
-
-        /* 6. CAJAS Y BOTONES */
-        [data-testid="stForm"] {
-            background-color: white; padding: 1.5rem; border-radius: 15px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1); border-top: 5px solid #003399;
-        }
+        /* 3. BOTONES */
+        div.stButton > button { width: 100%; border-radius: 8px; font-weight: bold; }
         div.stButton > button[type="primary"] {
-            background-color: #003399; color: white; border: none; width: 100%;
+            background-color: #003399; /* Azul Quebec */
+            color: white; 
+            border: 1px solid white;
         }
-        .info-box { background-color: #e8f4fd; border-left: 5px solid #003399; padding: 15px; border-radius: 5px; color: #31333F; }
-        .help-box { background-color: #fff3cd; border-left: 5px solid #ffc107; padding: 15px; border-radius: 5px; color: #31333F; }
-        .step-box { background-color: white; padding: 15px; border-radius: 10px; border: 1px solid #ddd; margin-bottom: 10px; color: #31333F; }
-        .result-box { background-color: #003399; color: white !important; padding: 20px; border-radius: 10px; text-align: center; margin-top: 20px; }
-        .result-box h2 { color: white !important; }
-        .footer { margin-top: 50px; padding: 20px; border-top: 1px solid #ccc; text-align: center; color: #666; font-size: 0.85em; }
-        .deco-sub { color: #666; font-style: italic; margin-bottom: 15px; display: block; }
+        div.stButton > button[type="primary"]:hover { background-color: #002266; border-color: #4da6ff; }
         
-        /* Textos generales y labels */
-        label, .stMarkdown p { color: #31333F !important; }
+        /* 4. TARJETAS / FORMULARIO (Fondo Gris Oscuro) */
+        [data-testid="stForm"] {
+            background-color: #262730; /* Gris oscuro para la tarjeta */
+            padding: 1.5rem; 
+            border-radius: 15px;
+            border: 1px solid #4da6ff; /* Borde azul brillante */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+        }
+        
+        /* 5. INPUTS Y SELECTORES (Corrección para Móvil) */
+        /* Esto asegura que el texto dentro de las cajas sea legible */
+        div[data-baseweb="select"] > div, div[data-baseweb="input"] > div {
+            background-color: #0E1117 !important;
+            color: white !important;
+            border-color: #4da6ff !important;
+        }
+        p, label, span {
+            color: #FAFAFA !important; /* Texto blanco forzado */
+        }
+        
+        /* 6. CAJAS INFORMATIVAS (Adaptadas a Dark) */
+        .info-box { 
+            background-color: #1c2e4a; /* Azul muy oscuro */
+            border-left: 5px solid #4da6ff; 
+            padding: 15px; 
+            border-radius: 5px; 
+            margin-bottom: 10px;
+        }
+        .help-box { 
+            background-color: #332b00; /* Amarillo muy oscuro */
+            border-left: 5px solid #ffc107; 
+            padding: 15px; 
+            border-radius: 5px; 
+            margin-bottom: 10px;
+        }
+        .step-box { 
+            background-color: #262730; 
+            padding: 15px; 
+            border-radius: 10px; 
+            border: 1px solid #444; 
+            margin-bottom: 10px; 
+        }
+        
+        /* 7. CAJA DE RESULTADO */
+        .result-box {
+            background-color: #003399;
+            color: white !important;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 20px;
+            border: 2px solid white;
+        }
+        .result-box h2 { color: white !important; margin: 0; }
+        
+        /* 8. Footer */
+        .footer { margin-top: 50px; padding: 20px; border-top: 1px solid #444; text-align: center; color: #aaa; font-size: 0.85em; }
+        
+        /* Subtítulos decorativos */
+        .deco-sub { color: #aaa !important; font-style: italic; margin-bottom: 15px; display: block; }
+        
+        /* Pestañas */
+        button[data-baseweb="tab"] { color: #aaa !important; }
+        button[data-baseweb="tab"][aria-selected="true"] { color: #4da6ff !important; background-color: transparent !important; }
         
     </style>
 """, unsafe_allow_html=True)
@@ -227,7 +238,7 @@ t = {
 }
 lang = t[st.session_state.language]
 
-# --- 5. DATA JOBS ---
+# --- 5. DATA JOBS (CÓDIGOS REALES 5 DÍGITOS) ---
 jobs_db = {
     "ingenie": {"code": "21300", "teer": "1", "volet": "Volet 1"},
     "engineer": {"code": "21300", "teer": "1", "volet": "Volet 1"},
@@ -259,7 +270,7 @@ def find_job_details(keyword):
     return None
 
 # ==========================================
-# HEADER
+# HEADER INTEGRADO
 # ==========================================
 col_brand, col_lang = st.columns([3, 1])
 with col_brand:
@@ -316,6 +327,7 @@ with main_tab_calc:
         st.divider()
         st.caption(lang['teer_manual_help'])
         
+        # --- SELECTOR DE TEER CON DESCRIPCIÓN COMPLETA ---
         teer_selection = st.selectbox(lang['teer_label'], 
                                       [
                                           "TEER 0, 1: Université / Ingénierie / Gestion (Haute Qualif.)",
@@ -343,7 +355,7 @@ with main_tab_calc:
             st.markdown(f"**{lang['sp_fr_title']}**")
             sp_fr = st.select_slider(lang['sp_fr_label'], options=["0", "A1", "A2", "B1", "B2", "C1", "C2"], value="0")
 
-    # 4. QUEBEC
+    # 4. QUEBEC (BOTÓN AQUÍ)
     with tab4:
         st.markdown(f"### ⚜️ {lang['tab4_header']}")
         st.markdown(f"<span class='deco-sub'>{lang['tab4_sub']}</span>", unsafe_allow_html=True)
@@ -362,14 +374,17 @@ with main_tab_calc:
         score = 0
         score_sp = 0 
         
+        # Edad
         if 18 <= age <= 30: score += 130
         elif age <= 45: score += (130 - (age-30)*5)
+        # Edu
         if "PhD" in education: score += 90
         elif "Master" in education: score += 75
         elif "Bachelor" in education: score += 60
         elif "College" in education: score += 50
         else: score += 30
         
+        # Mapeo
         if "TEER 0, 1" in teer_selection: score += 60 
         elif "TEER 2" in teer_selection: score += 40
         elif "TEER 3" in teer_selection: score += 20
