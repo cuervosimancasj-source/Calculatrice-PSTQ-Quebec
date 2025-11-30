@@ -7,66 +7,74 @@ st.set_page_config(
     layout="centered"
 )
 
-# --- 2. ESTILOS CSS (CORRECCIÓN TOTAL DE COLORES) ---
+# --- 2. ESTILOS CSS (CORRECCIÓN EXTREMA PARA MÓVIL) ---
 st.markdown("""
     <style>
-        /* === 1. FONDO GLOBAL CLARO === */
+        /* === 1. FONDO GLOBAL === */
         [data-testid="stAppViewContainer"] {
             background-color: #f0f2f6 !important;
         }
         
-        /* Texto general a negro */
+        /* Texto base a negro */
         .stApp, p, label, div, span, h1, h2, h3, h4, h5, h6 {
             color: #000000 !important;
         }
         
-        /* Encabezado Azul */
+        /* Encabezado */
         header[data-testid="stHeader"] { background-color: #003399 !important; }
         h1, h2, h3, .stMarkdown h1, .stMarkdown h2, .stMarkdown h3 { 
             color: #003399 !important; 
         }
 
-        /* === 2. ARREGLO DE INPUTS Y SELECTBOX (CRÍTICO) === */
-        /* Caja cerrada */
-        div[data-baseweb="select"] > div, div[data-baseweb="input"] > div {
+        /* === 2. ARREGLO DE CAJAS DE SELECCIÓN (SELECTBOX) Y TEXTO === */
+        
+        /* El contenedor de la caja (cerrada) */
+        div[data-baseweb="select"] > div, 
+        div[data-baseweb="input"] > div {
             background-color: #FFFFFF !important;
             border: 1px solid #ccc !important;
-            color: #000000 !important;
         }
-        /* Texto dentro del input */
+
+        /* El TEXTO dentro de la caja cerrada (Ej: "Selecciona una opción") */
+        div[data-baseweb="select"] span {
+            color: #000000 !important;
+            -webkit-text-fill-color: #000000 !important; /* Fix para iPhone */
+        }
+
+        /* El TEXTO que escribes (Inputs) */
         input {
             color: #000000 !important;
             -webkit-text-fill-color: #000000 !important;
-            caret-color: #000000 !important;
+            background-color: transparent !important;
         }
+
+        /* === 3. ARREGLO DEL MENÚ DESPLEGABLE (LA LISTA QUE SE ABRE) === */
         
-        /* === CORRECCIÓN MENÚ DESPLEGABLE (LAS OPCIONES) === */
-        /* Fondo de la lista desplegable */
+        /* Fondo de la lista */
         ul[data-baseweb="menu"] {
             background-color: #FFFFFF !important;
         }
-        /* Texto de las opciones de la lista */
+        
+        /* Texto de las opciones en la lista */
         li[data-baseweb="menu-item"] {
-            color: #000000 !important; 
-        }
-        /* Opción seleccionada o hover */
-        li[data-baseweb="menu-item"]:hover, li[aria-selected="true"] {
-            background-color: #e6f0ff !important; /* Azul muy clarito */
-            color: #003399 !important;
-        }
-
-        /* === 3. ARREGLO DE RADIO BUTTONS (CÍRCULOS DE SELECCIÓN) === */
-        div[role="radiogroup"] {
-            background-color: transparent !important;
-        }
-        /* Texto de las opciones del radio button */
-        div[role="radiogroup"] label {
             color: #000000 !important;
         }
-        /* El círculo del radio button */
-        div[data-baseweb="radio"] div {
-            background-color: #FFFFFF !important; 
-            border-color: #003399 !important;
+        
+        /* Texto dentro de las opciones (a veces es un div o span) */
+        li[data-baseweb="menu-item"] div, 
+        li[data-baseweb="menu-item"] span {
+            color: #000000 !important;
+        }
+
+        /* Color al pasar el mouse o seleccionar en la lista */
+        li[data-baseweb="menu-item"]:hover, 
+        li[aria-selected="true"] {
+            background-color: #e6f0ff !important;
+            color: #003399 !important;
+        }
+        li[data-baseweb="menu-item"]:hover span, 
+        li[aria-selected="true"] span {
+            color: #003399 !important;
         }
 
         /* === 4. BOTONES === */
@@ -92,12 +100,17 @@ st.markdown("""
         /* === 5. PESTAÑAS (TABS) === */
         button[data-baseweb="tab"] {
             background-color: transparent !important;
+        }
+        /* Texto de pestaña inactiva */
+        button[data-baseweb="tab"] div, button[data-baseweb="tab"] p {
             color: #000000 !important;
         }
+        /* Pestaña Activa */
         button[data-baseweb="tab"][aria-selected="true"] {
             background-color: #003399 !important;
-            color: #FFFFFF !important;
         }
+        /* Texto de pestaña activa */
+        button[data-baseweb="tab"][aria-selected="true"] div, 
         button[data-baseweb="tab"][aria-selected="true"] p {
             color: #FFFFFF !important;
         }
@@ -111,10 +124,10 @@ st.markdown("""
             border-top: 5px solid #003399;
         }
         
-        /* Cajas Informativas (Forzando texto negro) */
-        .info-box { background-color: #e8f4fd; border-left: 5px solid #003399; padding: 15px; border-radius: 5px; color: #000000 !important; }
-        .help-box { background-color: #fff3cd; border-left: 5px solid #ffc107; padding: 15px; border-radius: 5px; color: #000000 !important; }
-        .step-box { background-color: white; padding: 15px; border-radius: 10px; border: 1px solid #ddd; margin-bottom: 10px; color: #000000 !important; }
+        /* Cajas Informativas */
+        .info-box { background-color: #e8f4fd; border-left: 5px solid #003399; padding: 15px; border-radius: 5px; }
+        .help-box { background-color: #fff3cd; border-left: 5px solid #ffc107; padding: 15px; border-radius: 5px; }
+        .step-box { background-color: white; padding: 15px; border-radius: 10px; border: 1px solid #ddd; margin-bottom: 10px; }
         
         /* Resultado */
         .result-box { background-color: #003399; padding: 20px; border-radius: 10px; text-align: center; margin-top: 20px; }
@@ -159,15 +172,15 @@ t = {
         'tab4_header': "Facteurs Québec & OEV", 'tab4_sub': "Finalisez votre pointage avec les atouts locaux.",
         'job_title': "Quel est votre emploi actuel ?",
         'job_placeholder': "Ex: Ingénieur, Soudeur, Assembleur...",
-        'teer_manual_help': "Si vous n'avez pas trouvé votre emploi, choisissez selon votre niveau :",
+        'teer_manual_help': "Si non trouvé, choisissez niveau :",
         'teer_label': "Catégorie TEER (Niveau)",
         'teer_guide': "**Aide:** TEER 0,1=Uni/Gestion | TEER 2=Collégial/Technique | TEER 3=Métiers | TEER 4,5=Secondaire/Manuel",
-        'exp_label': "Années d'expérience qualifiée",
+        'exp_label': "Années d'expérience",
         'lang_info': "Volet 1=Niv 7 | Volet 2=Niv 5",
         'age': "Âge", 'spouse': "Conjoint(e) ?", 'kids12': "Enf -12", 'kids13': "Enf +12",
         'sp_section': "Conjoint (Âge/Études)",
         'sp_fr_title': "Français du Conjoint",
-        'sp_fr_label': "Niveau Oral du conjoint",
+        'sp_fr_label': "Niveau Oral",
         'edu': "Niveau d'études", 'vjo': "Offre (OEV)", 'calc': "CALCULER SCORE",
         'res_title': "Résultat Estimé",
         'advice_good': "Excellent ! Profil compétitif.",
@@ -352,6 +365,7 @@ with main_tab_calc:
         st.divider()
         st.caption(lang['teer_manual_help'])
         
+        # --- SELECTOR DE TEER CON DESCRIPCIÓN COMPLETA ---
         teer_selection = st.selectbox(lang['teer_label'], 
                                       [
                                           "TEER 0, 1: Université / Ingénierie / Gestion (Haute Qualif.)",
@@ -398,14 +412,17 @@ with main_tab_calc:
         score = 0
         score_sp = 0 
         
+        # Edad
         if 18 <= age <= 30: score += 130
         elif age <= 45: score += (130 - (age-30)*5)
+        # Edu
         if "PhD" in education: score += 90
         elif "Master" in education: score += 75
         elif "Bachelor" in education: score += 60
         elif "College" in education: score += 50
         else: score += 30
         
+        # Mapeo
         if "TEER 0, 1" in teer_selection: score += 60 
         elif "TEER 2" in teer_selection: score += 40
         elif "TEER 3" in teer_selection: score += 20
@@ -429,7 +446,7 @@ with main_tab_calc:
             score += score_sp
         score += (k1*4) + (k2*2)
 
-        # Muestra resultados dentro de Tab 4 (CON CAJA AZUL)
+        # Muestra resultados
         with tab4:
             st.markdown(f"""
             <div class="result-box">
