@@ -7,80 +7,86 @@ st.set_page_config(
     layout="centered"
 )
 
-# --- 2. ESTILOS CSS (CORRECCIÓN BOTONES + WIZARD) ---
+# --- 2. ESTILOS CSS (BLINDAJE ANTI-MODO OSCURO MÓVIL) ---
 st.markdown("""
     <style>
-        /* === 0. INSTRUCCIÓN MAESTRA === */
+        /* === 0. FORZAR TEMA CLARO GLOBAL === */
         :root { color-scheme: light; }
-        
-        /* === 1. FONDO Y TEXTOS === */
-        [data-testid="stAppViewContainer"] { background-color: #f0f2f6 !important; }
-        .stApp, p, label, h1, h2, h3, h4, h5, h6, div, span, li { color: #000000 !important; }
-        header[data-testid="stHeader"] { background-color: #003399 !important; }
-        h1, h2, h3 { color: #003399 !important; }
+        [data-testid="stAppViewContainer"], header[data-testid="stHeader"] { background-color: #f0f2f6 !important; }
+        /* Forzar texto negro en casi todo */
+        .stApp, p, label, h1, h2, h3, h4, h5, h6, div, span, li, b, strong { color: #000000 !important; }
+        h1, h2, h3, strong, b { color: #003399 !important; } /* Títulos en azul */
 
-        /* === 2. INPUTS Y SELECTORES === */
-        div[data-baseweb="select"] > div, 
-        div[data-baseweb="input"] > div,
-        div[data-baseweb="base-input"] {
+        /* === 1. INPUTS NUMÉRICOS Y DE TEXTO (Fondo Blanco, Texto Negro) === */
+        div[data-baseweb="input"], div[data-baseweb="base-input"] {
             background-color: #FFFFFF !important;
             border: 1px solid #ccc !important;
+        }
+        input[type="text"], input[type="number"] {
+            color: #000000 !important;
+            -webkit-text-fill-color: #000000 !important; /* Fix para Safari/iOS */
+            background-color: transparent !important;
+        }
+        /* Botones +/- en inputs numéricos */
+        div[data-baseweb="spin-button"] button {
+            background-color: #e0e0e0 !important;
             color: #000000 !important;
         }
-        input { color: #000000 !important; -webkit-text-fill-color: #000000 !important; }
-        div[data-baseweb="select"] * { color: #000000 !important; }
-        
-        /* Menú desplegable */
+
+        /* === 2. SELECTORES Y MENÚS DESPLEGABLES === */
+        div[data-baseweb="select"] > div {
+            background-color: #FFFFFF !important;
+            border: 1px solid #ccc !important;
+        }
+        div[data-baseweb="select"] span { color: #000000 !important; }
+        div[data-baseweb="select"] svg { fill: #000000 !important; }
+
+        /* El menú desplegable en sí */
         ul[data-baseweb="menu"] { background-color: #FFFFFF !important; }
         li[data-baseweb="menu-item"] { background-color: #FFFFFF !important; color: #000000 !important; }
-        li[data-baseweb="menu-item"]:hover { background-color: #e6f0ff !important; color: #003399 !important; }
-
-        /* === 3. BOTONES DE NAVEGACIÓN (CORREGIDO TEXTO BLANCO) === */
-        div.stButton > button { width: 100%; border-radius: 8px; font-weight: bold; }
-        
-        /* Botón Siguiente/Calcular (Azul) */
-        div.stButton > button[kind="primary"] {
-            background-color: #003399 !important;
-            color: #FFFFFF !important;
-            border: none !important;
-            padding: 10px 20px;
+        /* Elemento seleccionado o bajo el cursor */
+        li[data-baseweb="menu-item"][aria-selected="true"], li[data-baseweb="menu-item"]:hover {
+            background-color: #e6f0ff !important;
         }
+        li[data-baseweb="menu-item"][aria-selected="true"] *, li[data-baseweb="menu-item"]:hover * {
+             color: #003399 !important; /* Texto azul al seleccionar */
+        }
+
+        /* === 3. RADIO BUTTONS (Círculos de opción) === */
+        /* El texto del radio button */
+        div[role="radiogroup"] label > div { color: #000000 !important; }
+        /* El círculo externo */
+        div[data-baseweb="radio"] > div {
+            background-color: #FFFFFF !important;
+            border-color: #003399 !important;
+        }
+        /* El punto interno cuando está seleccionado */
+        div[data-baseweb="radio"][aria-checked="true"] > div > div {
+             background-color: #003399 !important;
+        }
+
+        /* === 4. BOTONES DE ACCIÓN === */
+        div.stButton > button { width: 100%; border-radius: 8px; font-weight: bold; }
+        /* Primario (Azul) */
+        div.stButton > button[kind="primary"] {
+            background-color: #003399 !important; color: #FFFFFF !important; border: none !important; padding: 10px 20px;
+        }
+        div.stButton > button[kind="primary"] * { color: #FFFFFF !important; } /* Forzar texto blanco */
         div.stButton > button[kind="primary"]:hover { background-color: #002266 !important; }
         
-        /* ESTA REGLA FUERZA EL TEXTO BLANCO DENTRO DEL BOTÓN AZUL */
-        div.stButton > button[kind="primary"] * {
-            color: #FFFFFF !important;
-        }
-
-        /* Botón Anterior/Secundario (Blanco) */
+        /* Secundario (Blanco) */
         div.stButton > button[kind="secondary"] {
-            background-color: #FFFFFF !important;
-            color: #003399 !important;
-            border: 2px solid #003399 !important;
+            background-color: #FFFFFF !important; color: #003399 !important; border: 2px solid #003399 !important;
         }
         div.stButton > button[kind="secondary"] * { color: #003399 !important; }
 
-        /* === 4. TARJETA PRINCIPAL === */
-        [data-testid="stForm"] {
-            background-color: #FFFFFF !important;
-            padding: 2rem; 
-            border-radius: 15px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1); 
-            border-top: 5px solid #003399;
-        }
-        
-        /* Cajas Informativas */
-        .info-box { background-color: #e8f4fd; border-left: 5px solid #003399; padding: 15px; border-radius: 5px; color: #000 !important; margin-bottom: 15px;}
-        .help-box { background-color: #fff3cd; border-left: 5px solid #ffc107; padding: 15px; border-radius: 5px; color: #000 !important; }
-        .step-box { background-color: white; padding: 15px; border-radius: 10px; border: 1px solid #ddd; margin-bottom: 10px; color: #000 !important; }
-        
-        /* Resultado */
+        /* === 5. OTROS ELEMENTOS === */
+        .info-box { background-color: #e8f4fd; border-left: 5px solid #003399; padding: 15px; border-radius: 5px; margin-bottom: 15px;}
+        .help-box { background-color: #fff3cd; border-left: 5px solid #ffc107; padding: 15px; border-radius: 5px; margin-bottom: 15px; }
+        .step-box { background-color: white; padding: 15px; border-radius: 10px; border: 1px solid #ddd; margin-bottom: 10px; }
         .result-box { background-color: #003399; padding: 20px; border-radius: 10px; text-align: center; margin-top: 20px; }
         .result-box h2 { color: #FFFFFF !important; margin: 0; }
-
-        /* Footer */
         .footer { margin-top: 50px; padding: 20px; border-top: 1px solid #ccc; text-align: center; }
-        .deco-sub { font-style: italic; margin-bottom: 15px; display: block; color: #666666 !important; }
 
     </style>
 """, unsafe_allow_html=True)
@@ -97,6 +103,7 @@ default_values = {
     'sp_age': 30,
     'sp_edu': 'Secondary',
     'sp_fr': '0',
+    # TEER inicial largo
     'teer_sel': 'TEER 0, 1: Université / Gestion / Ingénierie',
     'edu': 'Secondary',
     'exp': 3,
@@ -114,9 +121,11 @@ for key, value in default_values.items():
         st.session_state[key] = value
 
 def cycle_language():
-    if st.session_state.language == 'fr': st.session_state.language = 'es'
-    elif st.session_state.language == 'es': st.session_state.language = 'en'
-    else: st.session_state.language = 'fr'
+    lang_map = {'fr': 'es', 'es': 'en', 'en': 'fr'}
+    st.session_state.language = lang_map[st.session_state.language]
+    # Resetear selección TEER al cambiar idioma para evitar inconsistencias
+    st.session_state.teer_sel = t[st.session_state.language]['teer_opts'][0]
+
 
 def next_step(): st.session_state.step += 1
 def prev_step(): st.session_state.step -= 1
@@ -124,18 +133,21 @@ def reset_calc():
     st.session_state.step = 1
     st.session_state.show_results = False
     st.session_state.job_search_term = ''
+    # Reset TEER al default del idioma actual
+    st.session_state.teer_sel = t[st.session_state.language]['teer_opts'][0]
+
 
 def trigger_calculation():
     st.session_state.show_results = True
 
-# --- 4. TRADUCCIONES (REVISADAS) ---
+# --- 4. TRADUCCIONES (TEER LARGOS RESTAURADOS) ---
 t = {
     'fr': {
         'btn_lang': "🌐 Changer la langue",
         'brand': "Calculatrice PSTQ Québec ⚜️",
         'subtitle': "Outil d'analyse pour la Résidence Permanente (TEER, Volets, Score).",
         'disclaimer_title': "⚠️ AVIS IMPORTANT",
-        'disclaimer_text': "Ce logiciel est un projet indépendant. Nous ne sommes PAS avocats ni consultants. Nous ne représentons PAS le MIFI.",
+        'disclaimer_text': "Ce logiciel est un projet indépendant. Nous ne sommes PAS avocats ni consultants.",
         'coffee': "☕ M'offrir un café",
         'courses': "📚 Cours de Français",
         'main_tabs': ["🧮 Calculatrice", "ℹ️ Guide"],
@@ -153,13 +165,19 @@ t = {
         'job_title': "Quel est votre emploi actuel ?",
         'job_place': "Ex: Ingénieur, Soudeur (Appuyez sur Entrée)",
         'teer_label': "Catégorie TEER",
-        'teer_opts': ["TEER 0, 1: Université / Gestion / Ingénierie", "TEER 2: Collégial / Technique / Superviseurs", "TEER 3: Métiers / Administration / Intermédiaire", "TEER 4, 5: Manœuvre / Secondaire / Service"],
+        # TEER LARGOS RESTAURADOS
+        'teer_opts': [
+            "TEER 0, 1: Université / Gestion / Ingénierie",
+            "TEER 2: Collégial / Technique / Superviseurs",
+            "TEER 3: Métiers / Administration / Intermédiaire",
+            "TEER 4, 5: Manœuvre / Secondaire / Service"
+        ],
         'teer_manual_help': "Si non trouvé, choisissez ci-dessous:",
         'exp_label': "Années d'expérience",
         'lang_info': "**Exigences :** Volet 1 = Niv 7 | Volet 2 = Niv 5 | Conjoint = Niv 4",
         'fr_oral': "Français Oral (Vous)", 'fr_write': "Français Écrit (Vous)", 'en': "Anglais",
         'sp_fr_title': "Français du Conjoint (Oral)",
-        'oev_info': "**ℹ️ OEV (Offre d'emploi validée) :** EIMT ou validée par le MIFI.",
+        'oev_info': "**ℹ️ OEV (Offre validée) :** EIMT ou validée par le MIFI.",
         'vjo_label': "Avez-vous une Offre Validée (OEV) ?",
         'vjo_opts': ["Non", "Oui, Grand Montréal", "Oui, Hors Montréal (Région)"],
         'dip_qc_label': "Diplôme du Québec ?",
@@ -205,7 +223,13 @@ t = {
         'job_title': "Trabajo actual",
         'job_place': "Ej: Ingeniero (Enter para buscar)...",
         'teer_label': "Categoría TEER",
-        'teer_opts': ["TEER 0, 1: Universidad / Gerencia", "TEER 2: College / Técnico", "TEER 3: Oficios / Intermedio", "TEER 4, 5: Operarios / Manual"],
+        # TEER LARGOS RESTAURADOS
+        'teer_opts': [
+            "TEER 0, 1: Universidad / Gerencia / Ingeniería",
+            "TEER 2: College / Técnico / Supervisores",
+            "TEER 3: Oficios / Administración / Intermedio",
+            "TEER 4, 5: Operarios / Secundaria / Manual"
+        ],
         'teer_manual_help': "Si no encuentras, elige abajo:",
         'exp_label': "Años de experiencia",
         'lang_info': "**Requisitos:** Volet 1 = Niv 7 | Volet 2 = Niv 5 | Pareja = Niv 4",
@@ -214,8 +238,10 @@ t = {
         'oev_info': "**ℹ️ VJO (Oferta Validada):** Con LMIA o aprobada por MIFI.",
         'vjo_label': "¿Tienes Oferta Validada (VJO)?",
         'vjo_opts': ["No", "Sí, Gran Montreal", "Sí, Fuera de Montreal"],
-        'dip_qc_label': "¿Diploma de Quebec?", 'dip_qc_help': "AEC, DEC, Bachelor, etc.",
-        'fam_qc_label': "¿Familia en Quebec?", 'fam_qc_help': "Residente o Ciudadano.",
+        'dip_qc_label': "¿Diploma de Quebec?",
+        'dip_qc_help': "AEC, DEP, DEC, Bachelor, Maestría, Doctorado obtenido en una institución de Quebec.",
+        'fam_qc_label': "¿Familia en Quebec?",
+        'fam_qc_help': "Parent, niño, cónyuge, hermano/a, abuelo/a (Ciudadano o Residente).",
         'arr_year': "Año llegada", 'city_label': "Ciudad", 'city_opts': ["-", "Montréal", "Québec", "Laval", "Gatineau", "Otra"],
         'res_title': "Resultado", 'advice_good': "¡Excelente! Competitivo.", 'advice_low': "Mejora el francés.",
         'details': "Detalles", 'sp_points': "Puntos Pareja",
@@ -231,7 +257,6 @@ t = {
         'btn_lang': "🌐 Change Language",
         'brand': "Calculatrice PSTQ ⚜️",
         'subtitle': "Residency Analysis Tool.",
-        'disclaimer_title': "⚠️ DISCLAIMER",
         'disclaimer_text': "Independent. NOT lawyers. Estimated results.",
         'coffee': "☕ Support",
         'courses': "📚 French Courses",
@@ -250,7 +275,13 @@ t = {
         'job_title': "Current Job",
         'job_place': "Ex: Engineer (Press Enter)...",
         'teer_label': "TEER Category",
-        'teer_opts': ["TEER 0,1 (Uni)", "TEER 2 (Tech)", "TEER 3 (Trades)", "TEER 4,5 (Manual)"],
+        # TEER LARGOS RESTAURADOS
+        'teer_opts': [
+            "TEER 0, 1: University / Management / Engineering",
+            "TEER 2: College / Technical / Supervisors",
+            "TEER 3: Trades / Admin / Intermediate",
+            "TEER 4, 5: Labourer / High School / Service"
+        ],
         'teer_manual_help': "If not found, select below:",
         'exp_label': "Years Experience",
         'lang_info': "**Reqs:** Volet 1 = Lvl 7 | Volet 2 = Lvl 5 | Spouse = Lvl 4",
@@ -259,8 +290,8 @@ t = {
         'oev_info': "**ℹ️ VJO:** Validated Offer (LMIA/MIFI).",
         'vjo_label': "Validated Job Offer?",
         'vjo_opts': ["No", "Yes, Greater Montreal", "Yes, Outside Montreal"],
-        'dip_qc_label': "Quebec Diploma?", 'dip_qc_help': "AEC, DEC, etc.",
-        'fam_qc_label': "Family in Quebec?", 'fam_qc_help': "PR or Citizen.",
+        'dip_qc_label': "Quebec Diploma?", 'dip_qc_help': "AEC, DEP, DEC, Bachelor, Master, PhD from a Quebec institution.",
+        'fam_qc_label': "Family in Quebec?", 'fam_qc_help': "Spouse, parent, child, sibling, grandparent (PR or Citizen).",
         'arr_year': "Arrival Year", 'city_label': "City", 'city_opts': ["-", "Montréal", "Québec", "Laval", "Gatineau", "Other"],
         'res_title': "Result", 'advice_good': "Excellent!", 'advice_low': "Improve French.",
         'details': "Details", 'sp_points': "Spouse Pts",
@@ -382,9 +413,14 @@ with main_tab_calc:
 
         st.divider()
         
-        current_idx = 0
-        if st.session_state.teer_sel in lang['teer_opts']:
-            current_idx = lang['teer_opts'].index(st.session_state.teer_sel)
+        # Lógica para manejar el cambio de idioma y la selección larga
+        current_teer_sel = st.session_state.teer_sel
+        # Verificar si la selección actual es válida en el idioma actual
+        if current_teer_sel not in lang['teer_opts']:
+             # Si no es válida (ej: cambiaron idioma), resetear al primero
+             current_teer_sel = lang['teer_opts'][0]
+
+        current_idx = lang['teer_opts'].index(current_teer_sel)
             
         st.session_state.teer_sel = st.selectbox(lang['teer_label'], lang['teer_opts'], index=current_idx, key="teer_input")
         st.session_state.edu = st.selectbox("Education", ["PhD", "Master", "Bachelor", "College (3y)", "Diploma (1-2y)", "Secondary"], index=2, key="edu_input")
@@ -490,6 +526,7 @@ with main_tab_calc:
         elif "College" in edu: score += 50
         else: score += 30
         
+        # Lógica TEER robusta (busca texto parcial por si acaso)
         if "TEER 0, 1" in teer or "TEER 0,1" in teer: score += 60 
         elif "TEER 2" in teer: score += 40
         elif "TEER 3" in teer: score += 20
