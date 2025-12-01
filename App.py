@@ -7,64 +7,40 @@ st.set_page_config(
     layout="centered"
 )
 
-# --- 2. ESTILOS CSS (MODO NUCLEAR PARA INSTAGRAM) ---
+# --- 2. ESTILOS CSS (MODO "NUCLEAR" PARA INSTAGRAM) ---
 st.markdown("""
     <style>
-        /* === 0. FORZADO AGRESIVO DE TEMA CLARO === */
-        :root {
-            color-scheme: light !important;
-        }
-        html, body, [data-testid="stAppViewContainer"] {
-            background-color: #f0f2f6 !important;
-            color: #000000 !important;
-        }
+        /* Obligar al navegador a usar modo claro */
+        :root { color-scheme: light !important; }
         
-        /* Forzar color negro en TODOS los textos base */
-        p, label, h1, h2, h3, h4, h5, h6, div, span, li, b, strong {
-            color: #000000 !important;
-        }
-        
-        /* Excepción: Encabezados y Títulos en Azul */
+        /* Fondo y textos base */
+        [data-testid="stAppViewContainer"] { background-color: #f0f2f6 !important; }
+        .stApp, p, label, h1, h2, h3, h4, h5, h6, span, li, div { color: #000000 !important; }
         header[data-testid="stHeader"] { background-color: #003399 !important; }
         h1, h2, h3 { color: #003399 !important; }
 
-        /* === 1. ARREGLO DE INPUTS (CRÍTICO PARA INSTAGRAM) === */
-        
-        /* Contenedor del input */
+        /* === BLINDAJE DE INPUTS (CAJAS DE TEXTO) === */
+        /* Fondo blanco OBLIGATORIO */
         div[data-baseweb="input"], div[data-baseweb="base-input"], div[data-baseweb="select"] > div {
             background-color: #FFFFFF !important;
             border: 1px solid #ccc !important;
             color: #000000 !important;
         }
-
-        /* El texto que escribe el usuario */
-        input {
-            color: #000000 !important;
-            -webkit-text-fill-color: #000000 !important; /* Truco para iPhone/Instagram */
-            caret-color: #000000 !important; /* El cursor parpadeante */
+        /* Texto negro OBLIGATORIO */
+        input { 
+            color: #000000 !important; 
+            -webkit-text-fill-color: #000000 !important; /* Fix iPhone */
             background-color: #FFFFFF !important;
-            opacity: 1 !important; /* Evitar transparencias */
-        }
-        
-        /* El texto de "placeholder" (ej: Escribe aquí...) */
-        ::placeholder {
-            color: #666666 !important;
-            -webkit-text-fill-color: #666666 !important;
             opacity: 1 !important;
         }
-
-        /* Texto dentro de selectores cerrados */
+        
+        /* === BLINDAJE DE SELECTORES (DROPDOWN) === */
+        /* El texto seleccionado */
         div[data-baseweb="select"] span {
             color: #000000 !important;
             -webkit-text-fill-color: #000000 !important;
         }
-        
-        /* Iconos (flechitas) */
-        div[data-baseweb="select"] svg {
-            fill: #000000 !important;
-        }
-
-        /* === 2. MENÚS DESPLEGABLES === */
+        /* La lista de opciones desplegada */
         ul[data-baseweb="menu"] {
             background-color: #FFFFFF !important;
         }
@@ -75,104 +51,61 @@ st.markdown("""
         li[data-baseweb="menu-item"] * {
             color: #000000 !important;
         }
-        /* Hover / Selección */
+        /* Hover en la lista */
         li[data-baseweb="menu-item"]:hover, li[aria-selected="true"] {
             background-color: #e6f0ff !important;
         }
-        li[data-baseweb="menu-item"]:hover *, li[aria-selected="true"] * {
-            color: #003399 !important;
-        }
 
-        /* === 3. RADIO BUTTONS (CÍRCULOS) Y CHECKBOX === */
-        div[role="radiogroup"] label {
-            color: #000000 !important;
-        }
-        label[data-baseweb="checkbox"] span {
-            color: #000000 !important;
-        }
-        /* El círculo/cuadrado en sí */
-        div[data-baseweb="radio"] div, div[data-baseweb="checkbox"] div {
-            background-color: #FFFFFF !important;
-        }
-
-        /* === 4. BOTONES === */
+        /* === BOTONES === */
         div.stButton > button { width: 100%; border-radius: 8px; font-weight: bold; }
         
-        /* Botón Azul (Primario) */
+        /* Botón Azul */
         div.stButton > button[kind="primary"] {
             background-color: #003399 !important;
-            border: 1px solid #003399 !important;
-        }
-        div.stButton > button[kind="primary"] p, 
-        div.stButton > button[kind="primary"] div { 
             color: #FFFFFF !important;
-            -webkit-text-fill-color: #FFFFFF !important;
+            border: none !important;
         }
+        div.stButton > button[kind="primary"] * { color: #FFFFFF !important; }
 
-        /* Botón Blanco (Secundario) */
+        /* Botón Blanco */
         div.stButton > button[kind="secondary"] {
             background-color: #FFFFFF !important;
+            color: #003399 !important;
             border: 2px solid #003399 !important;
         }
-        div.stButton > button[kind="secondary"] p,
-        div.stButton > button[kind="secondary"] div { 
-            color: #003399 !important;
-            -webkit-text-fill-color: #003399 !important;
-        }
+        div.stButton > button[kind="secondary"] * { color: #003399 !important; }
 
-        /* === 5. TARJETA PRINCIPAL === */
+        /* === CAJAS === */
         [data-testid="stForm"] {
             background-color: #FFFFFF !important;
-            padding: 1.5rem; 
+            padding: 2rem; 
             border-radius: 15px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1); 
             border-top: 5px solid #003399;
         }
-        
-        /* === 6. OTROS ELEMENTOS === */
-        .info-box { background-color: #e8f4fd; border-left: 5px solid #003399; padding: 15px; border-radius: 5px; margin-bottom: 15px; }
-        .help-box { background-color: #fff3cd; border-left: 5px solid #ffc107; padding: 15px; border-radius: 5px; }
-        .step-box { background-color: white; padding: 15px; border-radius: 10px; border: 1px solid #ddd; margin-bottom: 10px; }
+        .info-box { background-color: #e8f4fd; border-left: 5px solid #003399; padding: 15px; border-radius: 5px; color: #000 !important; margin-bottom: 15px;}
         .result-box { background-color: #003399; padding: 20px; border-radius: 10px; text-align: center; margin-top: 20px; }
         .result-box h2 { color: #FFFFFF !important; margin: 0; }
         .footer { margin-top: 50px; padding: 20px; border-top: 1px solid #ccc; text-align: center; }
-        .deco-sub { font-style: italic; margin-bottom: 15px; display: block; color: #666666 !important; }
-
     </style>
 """, unsafe_allow_html=True)
 
 # --- 3. INICIALIZACIÓN ---
 default_values = {
-    'language': 'fr',
-    'step': 1,
-    'show_results': False,
-    'age': 30,
-    'spouse': False,
-    'k1': 0,
-    'k2': 0,
-    'sp_age': 30,
-    'sp_edu': 'Secondary',
-    'sp_fr': '0',
+    'language': 'fr', 'step': 1, 'show_results': False,
+    'age': 30, 'spouse': False, 'k1': 0, 'k2': 0,
+    'sp_age': 30, 'sp_edu': 'Secondary', 'sp_fr': '0',
     'teer_sel': 'TEER 0, 1: Université / Gestion / Ingénierie',
-    'edu': 'Secondary',
-    'exp': 3,
-    'fr_oral': 'B2',
-    'fr_write': 'B1',
-    'en_lvl': '0',
-    'vjo': '',
-    'q_stud_val': 'Non',
-    'q_fam_val': 'Non',
+    'edu': 'Secondary', 'exp': 3,
+    'fr_oral': 'B2', 'fr_write': 'B1', 'en_lvl': '0',
+    'vjo': '', 'q_stud_val': 'Non', 'q_fam_val': 'Non',
     'job_search_term': ''
 }
-
 for key, value in default_values.items():
-    if key not in st.session_state:
-        st.session_state[key] = value
+    if key not in st.session_state: st.session_state[key] = value
 
 def cycle_language():
-    if st.session_state.language == 'fr': st.session_state.language = 'es'
-    elif st.session_state.language == 'es': st.session_state.language = 'en'
-    else: st.session_state.language = 'fr'
+    lang_map = {'fr': 'es', 'es': 'en', 'en': 'fr'}
+    st.session_state.language = lang_map[st.session_state.language]
 
 def next_step(): st.session_state.step += 1
 def prev_step(): st.session_state.step -= 1
@@ -180,167 +113,114 @@ def reset_calc():
     st.session_state.step = 1
     st.session_state.show_results = False
     st.session_state.job_search_term = ''
+def trigger_calculation(): st.session_state.show_results = True
 
-def trigger_calculation():
-    st.session_state.show_results = True
-
-# --- 4. TRADUCCIONES ---
+# --- 4. TRADUCCIONES (REVISADAS) ---
 t = {
     'fr': {
-        'btn_lang': "🌐 Changer la langue",
-        'brand': "Calculatrice PSTQ Québec ⚜️",
-        'subtitle': "Outil d'analyse pour la Résidence Permanente (TEER, Volets, Score).",
+        'btn_lang': "🌐 Changer la langue", 'brand': "Calculatrice PSTQ Québec ⚜️",
+        'subtitle': "Outil d'analyse pour la Résidence Permanente.",
         'disclaimer_title': "⚠️ AVIS IMPORTANT",
-        'disclaimer_text': "Ce logiciel est un projet indépendant. Nous ne sommes PAS avocats ni consultants. Nous ne représentons PAS le MIFI.",
-        'coffee': "☕ M'offrir un café",
-        'courses': "📚 Cours de Français",
+        'disclaimer_text': "Projet indépendant. PAS avocats. Résultats estimés.",
+        'coffee': "☕ M'offrir un café", 'courses': "📚 Cours de Français",
         'main_tabs': ["🧮 Calculatrice", "ℹ️ Guide"],
         'next': "Suivant ➡", 'prev': "⬅ Retour", 'calc': "CALCULER MON SCORE",
-        'yes_no': ["Non", "Oui"], 
-        'step1': "Étape 1 : Profil & Famille",
-        'step2': "Étape 2 : Travail & TEER",
-        'step3': "Étape 3 : Langues",
-        'step4': "Étape 4 : Québec & Offre",
-        'age': "Âge du candidat principal",
-        'spouse': "Avez-vous un conjoint ?",
-        'kids12': "Enfants -12 ans", 'kids13': "Enfants +12 ans",
-        'sp_header': "Données du Conjoint",
-        'sp_age': "Âge du conjoint", 'sp_edu': "Éducation du conjoint",
-        'job_title': "Quel est votre emploi actuel ?",
-        'job_place': "Ex: Ingénieur, Soudeur (Appuyez sur Entrée)",
+        'yes_no': ["Non", "Oui"],
+        'step1': "Étape 1 : Profil", 'step2': "Étape 2 : Travail", 'step3': "Étape 3 : Langues", 'step4': "Étape 4 : Québec",
+        'age': "Âge", 'spouse': "Avez-vous un conjoint ?", 'kids12': "Enfants -12", 'kids13': "Enfants +12",
+        'sp_header': "Données du Conjoint", # CLAVE VERIFICADA
+        'sp_age': "Âge conjoint", 'sp_edu': "Éducation conjoint",
+        'job_title': "Emploi actuel", 'job_place': "Ex: Soudeur (Entrée)",
         'teer_label': "Catégorie TEER",
-        'teer_opts': [
-            "TEER 0, 1: Université / Gestion / Ingénierie",
-            "TEER 2: Collégial / Technique / Superviseurs",
-            "TEER 3: Métiers / Administration / Intermédiaire",
-            "TEER 4, 5: Manœuvre / Secondaire / Service"
-        ],
+        'teer_opts': ["TEER 0,1 (Uni/Gestion)", "TEER 2 (Collégial)", "TEER 3 (Métiers)", "TEER 4,5 (Manuel)"],
         'teer_manual_help': "Si non trouvé, choisissez ci-dessous:",
         'exp_label': "Années d'expérience",
-        'lang_info': "**Exigences :** Volet 1 = Niv 7 | Volet 2 = Niv 5 | Conjoint = Niv 4",
-        'fr_oral': "Français Oral (Vous)", 'fr_write': "Français Écrit (Vous)", 'en': "Anglais",
-        'sp_fr_title': "Français du Conjoint (Oral)",
-        'oev_info': "**ℹ️ OEV (Offre d'emploi validée) :** EIMT ou validée par le MIFI.",
-        'vjo_label': "Avez-vous une Offre Validée (OEV) ?",
-        'vjo_opts': ["Non", "Oui, Grand Montréal", "Oui, Hors Montréal (Région)"],
-        'dip_qc_label': "Diplôme du Québec ?",
-        'dip_qc_help': "AEC, DEP, DEC, Baccalauréat, Maîtrise, Doctorat obtenu au Québec.",
-        'fam_qc_label': "Famille au Québec ?",
-        'fam_qc_help': "Parent, enfant, conjoint, frère/sœur, grand-parent (Citoyen ou Résident).",
-        'arr_year': "Année d'arrivée",
-        'city_label': "Ville de résidence",
-        'city_opts': ["-", "Montréal", "Québec", "Laval", "Gatineau", "Sherbrooke", "Autre"],
-        'res_title': "Résultat Estimé",
-        'advice_good': "Excellent ! Profil compétitif.",
-        'advice_low': "Améliorez le français ou cherchez une OEV.",
-        'details': "Détails du score",
-        'sp_points': "Points Conjoint",
-        'guide_title': "Votre Feuille de Route",
-        'g_step1': "1. Auto-évaluation", 'g_desc1': "Vos points forts.",
+        'lang_info': "**Exigences:** Volet 1=Niv 7 | Volet 2=Niv 5 | Conjoint=Niv 4",
+        'fr_oral': "Français Oral", 'fr_write': "Français Écrit", 'en': "Anglais",
+        'sp_fr_title': "Français du Conjoint", 'sp_fr_label': "Niveau Oral",
+        'oev_info': "**ℹ️ OEV:** Offre validée (EIMT/MIFI).",
+        'vjo_label': "Avez-vous une OEV ?", 'vjo_opts': ["Non", "Oui, Grand Montréal", "Oui, Région"],
+        'dip_qc_label': "Diplôme du Québec ?", 'dip_qc_help': "AEC, DEC, Bac, etc.",
+        'fam_qc_label': "Famille au Québec ?", 'fam_qc_help': "Résident ou Citoyen.",
+        'city_label': "Ville", 'city_opts': ["-", "Montréal", "Québec", "Sherbrooke", "Autre"], 'arr_year': "Année",
+        'res_title': "Résultat", 'advice_good': "Excellent !", 'advice_low': "Améliorez le français.",
+        'details': "Détails", 'sp_points': "Points Conjoint",
+        'guide_title': "Feuille de Route", 'g_step1': "1. Auto-évaluation", 'g_desc1': "Vos points forts.",
         'g_step2': "2. Français", 'g_desc2': "Visez B2 (7).",
         'g_step3': "3. Arrima", 'g_desc3': "Profil gratuit.",
         'g_step4': "4. CSQ", 'g_desc4': "Certificat Sélection.",
         'g_step5': "5. Fédéral", 'g_desc5': "Résidence Permanente.",
-        'noc_link_text': "🔎 Chercher sur le site officiel du Canada (CNP)"
+        'noc_link_text': "🔎 Chercher CNP (Site Officiel)"
     },
     'es': {
-        'btn_lang': "🌐 Cambiar Idioma",
-        'brand': "Calculatrice PSTQ ⚜️",
-        'subtitle': "Análisis Residencia Permanente (Arrima).",
+        'btn_lang': "🌐 Cambiar Idioma", 'brand': "Calculatrice PSTQ ⚜️",
+        'subtitle': "Análisis Residencia Permanente.",
         'disclaimer_title': "⚠️ AVISO LEGAL",
-        'disclaimer_text': "Proyecto independiente. NO abogados. Resultados estimados.",
-        'coffee': "☕ Invítame un café",
-        'courses': "📚 Cursos de Francés",
+        'disclaimer_text': "Independiente. NO abogados. Resultados estimados.",
+        'coffee': "☕ Apoyar", 'courses': "📚 Cursos Francés",
         'main_tabs': ["🧮 Calculadora", "ℹ️ Guía"],
         'next': "Siguiente ➡", 'prev': "⬅ Atrás", 'calc': "CALCULAR PUNTAJE",
         'yes_no': ["No", "Sí"],
-        'step1': "Paso 1: Perfil y Familia",
-        'step2': "Paso 2: Trabajo y TEER",
-        'step3': "Paso 3: Idiomas",
-        'step4': "Paso 4: Quebec y Oferta",
-        'age': "Edad del candidato",
-        'spouse': "¿Tienes pareja?",
-        'kids12': "Hijos -12 años", 'kids13': "Hijos +12 años",
-        'sp_header': "Datos de la Pareja",
+        'step1': "Paso 1: Perfil", 'step2': "Paso 2: Trabajo", 'step3': "Paso 3: Idiomas", 'step4': "Paso 4: Quebec",
+        'age': "Edad", 'spouse': "¿Tienes pareja?", 'kids12': "Hijos -12", 'kids13': "Hijos +12",
+        'sp_header': "Datos de la Pareja", # CLAVE VERIFICADA
         'sp_age': "Edad pareja", 'sp_edu': "Educación pareja",
-        'job_title': "Trabajo actual",
-        'job_place': "Ej: Ingeniero (Enter para buscar)...",
+        'job_title': "Trabajo actual", 'job_place': "Ej: Soldador (Enter)",
         'teer_label': "Categoría TEER",
-        'teer_opts': [
-            "TEER 0, 1: Universidad / Gerencia / Ingeniería",
-            "TEER 2: College / Técnico / Supervisores",
-            "TEER 3: Oficios / Administración / Intermedio",
-            "TEER 4, 5: Operarios / Secundaria / Manual"
-        ],
+        'teer_opts': ["TEER 0,1 (Uni/Gerencia)", "TEER 2 (Técnico)", "TEER 3 (Oficios)", "TEER 4,5 (Manual)"],
         'teer_manual_help': "Si no encuentras, elige abajo:",
         'exp_label': "Años de experiencia",
-        'lang_info': "**Requisitos:** Volet 1 = Niv 7 | Volet 2 = Niv 5 | Pareja = Niv 4",
-        'fr_oral': "Francés Oral (Tú)", 'fr_write': "Francés Escrito (Tú)", 'en': "Inglés",
-        'sp_fr_title': "Francés de la Pareja (Oral)",
-        'oev_info': "**ℹ️ VJO (Oferta Validada):** Con LMIA o aprobada por MIFI.",
-        'vjo_label': "¿Tienes Oferta Validada (VJO)?",
-        'vjo_opts': ["No", "Sí, Gran Montreal", "Sí, Fuera de Montreal"],
-        'dip_qc_label': "¿Diploma de Quebec?", 'dip_qc_help': "AEC, DEC, Bachelor, etc.",
-        'fam_qc_label': "¿Familia en Quebec?", 'fam_qc_help': "Residente o Ciudadano.",
-        'arr_year': "Año llegada", 'city_label': "Ciudad", 'city_opts': ["-", "Montréal", "Québec", "Laval", "Gatineau", "Otra"],
-        'res_title': "Resultado", 'advice_good': "¡Excelente! Competitivo.", 'advice_low': "Mejora el francés.",
+        'lang_info': "**Requisitos:** Volet 1=Niv 7 | Volet 2=Niv 5 | Pareja=Niv 4",
+        'fr_oral': "Francés Oral", 'fr_write': "Francés Escrito", 'en': "Inglés",
+        'sp_fr_title': "Francés de la Pareja", 'sp_fr_label': "Nivel Oral",
+        'oev_info': "**ℹ️ VJO:** Oferta Validada (LMIA/MIFI).",
+        'vjo_label': "¿Tienes VJO?", 'vjo_opts': ["No", "Sí, Gran Montreal", "Sí, Región"],
+        'dip_qc_label': "¿Diploma Quebec?", 'dip_qc_help': "AEC, DEC, Bachelor, etc.",
+        'fam_qc_label': "¿Familia Quebec?", 'fam_qc_help': "Residente o Ciudadano.",
+        'city_label': "Ciudad", 'city_opts': ["-", "Montréal", "Québec", "Sherbrooke", "Otra"], 'arr_year': "Año",
+        'res_title': "Resultado", 'advice_good': "¡Excelente!", 'advice_low': "Mejora el francés.",
         'details': "Detalles", 'sp_points': "Puntos Pareja",
-        'guide_title': "Tu Hoja de Ruta",
-        'g_step1': "1. Autoevaluación", 'g_desc1': "Tus fortalezas.",
+        'guide_title': "Tu Hoja de Ruta", 'g_step1': "1. Autoevaluación", 'g_desc1': "Tus fortalezas.",
         'g_step2': "2. Francés", 'g_desc2': "Apunta a B2 (7).",
         'g_step3': "3. Arrima", 'g_desc3': "Perfil gratis.",
         'g_step4': "4. CSQ", 'g_desc4': "Certificado Selección.",
         'g_step5': "5. Federal", 'g_desc5': "Residencia Permanente.",
-        'noc_link_text': "🔎 Buscar en sitio oficial Canadá (NOC)"
+        'noc_link_text': "🔎 Buscar NOC (Sitio Oficial)"
     },
     'en': {
-        'btn_lang': "🌐 Change Language",
-        'brand': "Calculatrice PSTQ ⚜️",
+        'btn_lang': "🌐 Change Language", 'brand': "Calculatrice PSTQ ⚜️",
         'subtitle': "Residency Analysis Tool.",
+        'disclaimer_title': "⚠️ DISCLAIMER",
         'disclaimer_text': "Independent. NOT lawyers. Estimated results.",
-        'coffee': "☕ Support",
-        'courses': "📚 French Courses",
+        'coffee': "☕ Support", 'courses': "📚 French Courses",
         'main_tabs': ["🧮 Calculator", "ℹ️ Guide"],
         'next': "Next ➡", 'prev': "⬅ Back", 'calc': "CALCULATE SCORE",
         'yes_no': ["No", "Yes"],
-        'step1': "Step 1: Profile & Family",
-        'step2': "Step 2: Work & TEER",
-        'step3': "Step 3: Languages",
-        'step4': "Step 4: Quebec & Offer",
-        'age': "Age",
-        'spouse': "Have a spouse?",
-        'kids12': "Kids -12", 'kids13': "Kids +12",
-        'sp_header': "Spouse Data",
+        'step1': "Step 1: Profile", 'step2': "Step 2: Work", 'step3': "Step 3: Languages", 'step4': "Step 4: Quebec",
+        'age': "Age", 'spouse': "Spouse?", 'kids12': "Kids -12", 'kids13': "Kids +12",
+        'sp_header': "Spouse Data", # CLAVE VERIFICADA
         'sp_age': "Spouse Age", 'sp_edu': "Spouse Edu",
-        'job_title': "Current Job",
-        'job_place': "Ex: Engineer (Press Enter)...",
+        'job_title': "Current Job", 'job_place': "Ex: Welder (Enter)",
         'teer_label': "TEER Category",
-        'teer_opts': [
-            "TEER 0, 1: University / Management / Engineering",
-            "TEER 2: College / Technical / Supervisors",
-            "TEER 3: Trades / Admin / Intermediate",
-            "TEER 4, 5: Labourer / High School / Service"
-        ],
+        'teer_opts': ["TEER 0,1 (Uni/Mgmt)", "TEER 2 (Tech)", "TEER 3 (Trades)", "TEER 4,5 (Manual)"],
         'teer_manual_help': "If not found, select below:",
         'exp_label': "Years Experience",
-        'lang_info': "**Reqs:** Volet 1 = Lvl 7 | Volet 2 = Lvl 5 | Spouse = Lvl 4",
-        'fr_oral': "French Oral (You)", 'fr_write': "French Written (You)", 'en': "English",
-        'sp_fr_title': "Spouse's French (Oral)",
+        'lang_info': "**Reqs:** Volet 1=Lvl 7 | Volet 2=Lvl 5 | Spouse=Lvl 4",
+        'fr_oral': "French Oral", 'fr_write': "French Written", 'en': "English",
+        'sp_fr_title': "Spouse's French", 'sp_fr_label': "Oral Level",
         'oev_info': "**ℹ️ VJO:** Validated Offer (LMIA/MIFI).",
-        'vjo_label': "Validated Job Offer?",
-        'vjo_opts': ["No", "Yes, Greater Montreal", "Yes, Outside Montreal"],
-        'dip_qc_label': "Quebec Diploma?", 'dip_qc_help': "AEC, DEC, etc.",
+        'vjo_label': "Validated Job Offer?", 'vjo_opts': ["No", "Yes, Greater Montreal", "Yes, Region"],
+        'dip_qc_label': "Quebec Diploma?", 'dip_qc_help': "AEC, DEC, Bachelor, etc.",
         'fam_qc_label': "Family in Quebec?", 'fam_qc_help': "PR or Citizen.",
-        'arr_year': "Arrival Year", 'city_label': "City", 'city_opts': ["-", "Montréal", "Québec", "Laval", "Gatineau", "Other"],
+        'city_label': "City", 'city_opts': ["-", "Montréal", "Québec", "Sherbrooke", "Other"], 'arr_year': "Year",
         'res_title': "Result", 'advice_good': "Excellent!", 'advice_low': "Improve French.",
         'details': "Details", 'sp_points': "Spouse Pts",
-        'guide_title': "Roadmap",
-        'g_step1': "1. Self-Assess", 'g_desc1': "Know strengths.",
+        'guide_title': "Roadmap", 'g_step1': "1. Self-Assess", 'g_desc1': "Strengths.",
         'g_step2': "2. French", 'g_desc2': "Aim B2 (7).",
         'g_step3': "3. Arrima", 'g_desc3': "Free profile.",
         'g_step4': "4. CSQ", 'g_desc4': "Selection Cert.",
-        'g_step5': "5. Federal", 'g_desc5': "Residency.",
-        'noc_link_text': "🔎 Search on official Canada site (NOC)"
+        'g_step5': "5. Federal", 'g_desc5': "PR Canada.",
+        'noc_link_text': "🔎 Search NOC (Official Site)"
     }
 }
 lang = t[st.session_state.language]
@@ -353,7 +233,6 @@ jobs_db = {
     "web": {"code": "21222", "teer": "1", "volet": "Volet 1"},
     "infirmier": {"code": "31301", "teer": "1", "volet": "Volet 1"},
     "nurse": {"code": "31301", "teer": "1", "volet": "Volet 1"},
-    "architect": {"code": "21200", "teer": "1", "volet": "Volet 1"},
     "administra": {"code": "13100", "teer": "3", "volet": "Volet 2"},
     "technicien": {"code": "22300", "teer": "2", "volet": "Volet 1/2"},
     "soud": {"code": "72106", "teer": "2", "volet": "Volet 1/2"},
@@ -389,13 +268,11 @@ with col_lang:
     st.button(lang['btn_lang'], on_click=cycle_language, type="secondary", key="top_lang_btn")
 
 # ==========================================
-# APP PRINCIPAL (WIZARD SIN FORMULARIOS)
+# APP PRINCIPAL
 # ==========================================
 main_tab_calc, main_tab_guide = st.tabs(lang['main_tabs'])
 
-# --- PESTAÑA CALCULADORA ---
 with main_tab_calc:
-    
     progress = (st.session_state.step / 4)
     st.progress(progress)
 
@@ -404,10 +281,8 @@ with main_tab_calc:
         st.markdown(f"### 👤 {lang['step1']}")
         
         c1, c2 = st.columns(2)
-        with c1: 
-            st.session_state.age = st.number_input(lang['age'], 18, 65, st.session_state.age, key="age_input")
-        with c2: 
-            st.session_state.spouse = st.checkbox(lang['spouse'], value=st.session_state.spouse, key="spouse_chk")
+        with c1: st.session_state.age = st.number_input(lang['age'], 18, 65, st.session_state.age, key="age_input")
+        with c2: st.session_state.spouse = st.checkbox(lang['spouse'], value=st.session_state.spouse, key="spouse_chk")
         
         c3, c4 = st.columns(2)
         with c3: st.session_state.k1 = st.number_input(lang['kids12'], 0, 5, st.session_state.k1, key="k1_input")
@@ -415,33 +290,23 @@ with main_tab_calc:
         
         if st.session_state.spouse:
             st.divider()
-            st.markdown(f"**{lang['sp_header']}**")
+            # AQUÍ ESTÁ LA CLAVE PROTEGIDA CON .get() PARA EVITAR ERRORES
+            st.markdown(f"**{lang.get('sp_header', 'Datos Pareja')}**")
             c_sp1, c_sp2 = st.columns(2)
             with c_sp1: st.session_state.sp_age = st.number_input(lang['sp_age'], 18, 65, st.session_state.sp_age, key="sp_age_in")
             with c_sp2: st.session_state.sp_edu = st.selectbox(lang['sp_edu'], ["PhD", "Master", "Bachelor", "Technical", "Secondary"], index=2, key="sp_edu_in")
         
         st.markdown("###")
         col_e, col_n = st.columns([3, 1])
-        with col_n:
-            st.button(lang['next'], type="primary", on_click=next_step)
+        with col_n: st.button(lang['next'], type="primary", on_click=next_step)
 
     # --- PASO 2: TRABAJO ---
     elif st.session_state.step == 2:
         st.markdown(f"### 💼 {lang['step2']}")
-        
         st.markdown(f"**{lang['job_title']}**")
         
-        def update_search():
-            st.session_state.job_search_term = st.session_state.widget_search
-            
-        st.text_input(
-            "Search", 
-            value=st.session_state.job_search_term, 
-            placeholder=lang['job_place'], 
-            label_visibility="collapsed",
-            key="widget_search",
-            on_change=update_search
-        )
+        def update_search(): st.session_state.job_search_term = st.session_state.widget_search
+        st.text_input("Search", value=st.session_state.job_search_term, placeholder=lang['job_place'], label_visibility="collapsed", key="widget_search", on_change=update_search)
 
         if st.session_state.job_search_term:
             result = find_job_details(st.session_state.job_search_term)
@@ -452,7 +317,6 @@ with main_tab_calc:
                 st.markdown(f"🔗 [{lang['noc_link_text']}](https://noc.esdc.gc.ca/)")
 
         st.divider()
-        
         current_idx = 0
         if st.session_state.teer_sel in lang['teer_opts']:
             current_idx = lang['teer_opts'].index(st.session_state.teer_sel)
@@ -463,10 +327,8 @@ with main_tab_calc:
 
         st.markdown("###")
         col_p, col_e, col_n = st.columns([1, 2, 1])
-        with col_p:
-            st.button(lang['prev'], type="secondary", on_click=prev_step)
-        with col_n:
-            st.button(lang['next'], type="primary", on_click=next_step)
+        with col_p: st.button(lang['prev'], type="secondary", on_click=prev_step)
+        with col_n: st.button(lang['next'], type="primary", on_click=next_step)
 
     # --- PASO 3: IDIOMAS ---
     elif st.session_state.step == 3:
@@ -485,69 +347,48 @@ with main_tab_calc:
 
         st.markdown("###")
         col_p, col_e, col_n = st.columns([1, 2, 1])
-        with col_p:
-            st.button(lang['prev'], type="secondary", on_click=prev_step)
-        with col_n:
-            st.button(lang['next'], type="primary", on_click=next_step)
+        with col_p: st.button(lang['prev'], type="secondary", on_click=prev_step)
+        with col_n: st.button(lang['next'], type="primary", on_click=next_step)
 
-    # --- PASO 4: QUEBEC (FINAL) ---
+    # --- PASO 4: QUEBEC ---
     elif st.session_state.step == 4:
         st.markdown(f"### ⚜️ {lang['step4']}")
-        
         st.info(lang['oev_info'])
         
         vjo_idx = 0
-        if st.session_state.vjo in lang['vjo_opts']:
-            vjo_idx = lang['vjo_opts'].index(st.session_state.vjo)
+        if st.session_state.vjo in lang['vjo_opts']: vjo_idx = lang['vjo_opts'].index(st.session_state.vjo)
         st.session_state.vjo = st.radio(lang['vjo_label'], lang['vjo_opts'], index=vjo_idx, key="vjo_input")
         
         st.divider()
-        
         st.markdown(f"**{lang['dip_qc_label']}**")
         st.caption(lang['dip_qc_help'])
-        
         curr_stud = st.session_state.q_stud_val
         if curr_stud not in lang['yes_no']: curr_stud = lang['yes_no'][0]
         st.session_state.q_stud_val = st.radio("DipQC", lang['yes_no'], index=lang['yes_no'].index(curr_stud), horizontal=True, label_visibility="collapsed", key="q_stud_in")
         
-        st.markdown("---")
+        st.divider()
         st.markdown(f"**{lang['fam_qc_label']}**")
         st.caption(lang['fam_qc_help'])
-        
         curr_fam = st.session_state.q_fam_val
         if curr_fam not in lang['yes_no']: curr_fam = lang['yes_no'][0]
         st.session_state.q_fam_val = st.radio("FamQC", lang['yes_no'], index=lang['yes_no'].index(curr_fam), horizontal=True, label_visibility="collapsed", key="q_fam_in")
         
         st.divider()
-        
         c_city, c_year = st.columns(2)
-        with c_city:
-            st.selectbox(lang['city_label'], lang['city_opts'], key="city_input")
-        with c_year:
-            st.selectbox(lang['arr_year'], range(2025, 1990, -1), key="year_input")
+        with c_city: st.selectbox(lang['city_label'], lang['city_opts'], key="city_input")
+        with c_year: st.selectbox(lang['arr_year'], range(2025, 1990, -1), key="year_input")
 
         st.markdown("###")
         col_p, col_e, col_n = st.columns([1, 1, 2])
-        with col_p:
-            st.button(lang['prev'], type="secondary", on_click=prev_step)
-        with col_n:
-            st.button(lang['calc'], type="primary", on_click=trigger_calculation)
+        with col_p: st.button(lang['prev'], type="secondary", on_click=prev_step)
+        with col_n: st.button(lang['calc'], type="primary", on_click=trigger_calculation)
 
-    # LÓGICA & RESULTADOS
+    # LÓGICA
     if st.session_state.show_results:
-        age = st.session_state.age
-        edu = st.session_state.edu
-        teer = st.session_state.teer_sel
-        exp = st.session_state.exp
-        fr_o = st.session_state.fr_oral
-        fr_w = st.session_state.fr_write
-        en = st.session_state.en_lvl
-        vjo_val = st.session_state.vjo
-        
-        q_stud_str = st.session_state.q_stud_val
-        q_fam_str = st.session_state.q_fam_val
-        is_yes_stud = q_stud_str in ["Oui", "Sí", "Yes"]
-        is_yes_fam = q_fam_str in ["Oui", "Sí", "Yes"]
+        age, edu, teer, exp = st.session_state.age, st.session_state.edu, st.session_state.teer_sel, st.session_state.exp
+        fr_o, fr_w, en, vjo_val = st.session_state.fr_oral, st.session_state.fr_write, st.session_state.en_lvl, st.session_state.vjo
+        is_yes_stud = st.session_state.q_stud_val in ["Oui", "Sí", "Yes"]
+        is_yes_fam = st.session_state.q_fam_val in ["Oui", "Sí", "Yes"]
         
         score = 0
         score_sp = 0 
@@ -569,7 +410,6 @@ with main_tab_calc:
         
         pts_map = {"0":0, "A1":0, "A2":10, "B1":20, "B2":50, "C1":70, "C2":80}
         score += pts_map.get(fr_o,0) * 1.2 + pts_map.get(fr_w,0) * 0.8
-        
         if en == "Advanced": score += 25
         elif en == "Intermediate": score += 15
         
@@ -580,44 +420,26 @@ with main_tab_calc:
         if is_yes_fam: score += 30
         
         if st.session_state.spouse:
-            sp_a = st.session_state.sp_age
-            sp_e = st.session_state.sp_edu
-            sp_f = st.session_state.sp_fr
-            
+            sp_a, sp_e, sp_f = st.session_state.sp_age, st.session_state.sp_edu, st.session_state.sp_fr
             if 18 <= sp_a <= 40: score_sp += 10
             if "Bachelor" in sp_e or "Master" in sp_e or "PhD" in sp_e: score_sp += 10
             elif "College" in sp_e: score_sp += 5
-            
             if sp_f in ["C1", "C2"]: score_sp += 30
             elif sp_f == "B2": score_sp += 20
             elif sp_f in ["A2", "B1"]: score_sp += 10
             score += score_sp
-            
         score += (st.session_state.k1*4) + (st.session_state.k2*2)
 
-        st.markdown(f"""
-        <div class="result-box">
-            <h2>{lang['res_title']}: {int(score)} / 1350</h2>
-        </div>
-        """, unsafe_allow_html=True)
-        
+        st.markdown(f"""<div class="result-box"><h2>{lang['res_title']}: {int(score)} / 1350</h2></div>""", unsafe_allow_html=True)
         with st.expander(lang['details']):
             st.write(f"**Principal:** {int(score - score_sp - (st.session_state.k1*4 + st.session_state.k2*2))} pts")
-            if st.session_state.spouse:
-                st.write(f"**{lang['sp_points']}:** {score_sp} pts")
+            if st.session_state.spouse: st.write(f"**{lang['sp_points']}:** {score_sp} pts")
             st.write(f"**Enfants:** {(st.session_state.k1*4 + st.session_state.k2*2)} pts")
         
-        if score > 580:
-            st.success(lang['advice_good'])
-            st.balloons()
-        else:
-            st.warning(lang['advice_low'])
-            
-        if st.button("🔄 Recalculer / Reiniciar"):
-            reset_calc()
-            st.rerun()
+        if score > 580: st.success(lang['advice_good']); st.balloons()
+        else: st.warning(lang['advice_low'])
+        if st.button("🔄 Recalculer"): reset_calc(); st.rerun()
 
-# PESTAÑA 2: GUÍA
 with main_tab_guide:
     st.markdown(f"### 🗺️ {lang['guide_title']}")
     st.markdown("---")
@@ -629,20 +451,12 @@ with main_tab_guide:
     <div class='step-box'><h4>🍁 {lang['g_step5']}</h4><p>{lang['g_desc5']}</p></div>
     """, unsafe_allow_html=True)
 
-# ==========================================
-# FOOTER
-# ==========================================
 st.markdown("---")
 st.markdown("<div class='footer'>", unsafe_allow_html=True)
-
 fc1, fc2 = st.columns(2)
-with fc1:
-    st.link_button(lang['coffee'], "https://www.buymeacoffee.com/CalculatricePSTQQuebec")
-with fc2:
-    st.link_button(lang['courses'], "https://www.TU_ENLACE_DE_AFILIADO.com") 
-
+with fc1: st.link_button(lang['coffee'], "https://www.buymeacoffee.com/CalculatricePSTQQuebec")
+with fc2: st.link_button(lang['courses'], "https://www.TU_ENLACE_DE_AFILIADO.com") 
 st.markdown("###")
 st.error(f"**{lang['disclaimer_title']}**")
 st.markdown(lang['disclaimer_text'])
-
 st.markdown("</div>", unsafe_allow_html=True)
