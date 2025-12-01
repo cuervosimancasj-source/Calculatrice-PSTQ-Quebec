@@ -81,10 +81,32 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# --- 3. ESTADO Y GESTIÓN ---
-if 'language' not in st.session_state: st.session_state.language = 'fr'
-if 'step' not in st.session_state: st.session_state.step = 1 # 1:Perfil, 2:Trabajo, 3:Idioma, 4:Quebec
-if 'show_results' not in st.session_state: st.session_state.show_results = False
+# --- 3. INICIALIZACIÓN ROBUSTA ---
+default_values = {
+    'language': 'fr',
+    'step': 1,
+    'show_results': False,
+    'age': 30,
+    'spouse': False,
+    'k1': 0,
+    'k2': 0,
+    'sp_age': 30,
+    'sp_edu': 'Secondary',
+    'sp_fr': '0',
+    'teer_sel': '', # Se llenará dinámicamente
+    'edu': 'Secondary',
+    'exp': 3,
+    'fr_oral': 'B2',
+    'fr_write': 'B1',
+    'en_lvl': '0',
+    'vjo': '',
+    'q_stud': False,
+    'q_fam': False
+}
+
+for key, value in default_values.items():
+    if key not in st.session_state:
+        st.session_state[key] = value
 
 def cycle_language():
     if st.session_state.language == 'fr': st.session_state.language = 'es'
@@ -106,7 +128,6 @@ t = {
         'btn_lang': "🌐 Changer la langue",
         'brand': "Calculatrice PSTQ Québec ⚜️",
         'subtitle': "Outil d'analyse pour la Résidence Permanente.",
-        'disclaimer_title': "⚠️ AVIS IMPORTANT",
         'disclaimer_text': "Projet indépendant. PAS avocats/consultants. Résultats estimés.",
         'coffee': "☕ M'offrir un café",
         'courses': "📚 Cours de Français",
@@ -126,7 +147,13 @@ t = {
         'job_title': "Emploi actuel",
         'job_place': "Ex: Ingénieur, Soudeur...",
         'teer_label': "Catégorie TEER",
-        'teer_opts': ["TEER 0,1 (Gestion/Uni)", "TEER 2 (Collégial/Tech)", "TEER 3 (Métiers)", "TEER 4,5 (Manuel)"],
+        # TEER DETALLADO (FR)
+        'teer_opts': [
+            "TEER 0, 1: Université / Gestion / Ingénierie",
+            "TEER 2: Collégial / Technique / Superviseurs",
+            "TEER 3: Métiers / Administration / Intermédiaire",
+            "TEER 4, 5: Manœuvre / Secondaire / Service"
+        ],
         'teer_manual_help': "Si non trouvé, choisissez ci-dessous:",
         'exp_label': "Années d'expérience",
         'lang_info': "**Exigences :** Volet 1 = Niv 7 | Volet 2 = Niv 5 | Conjoint = Niv 4",
@@ -149,7 +176,6 @@ t = {
         'advice_low': "Améliorez le français ou cherchez une OEV.",
         'details': "Détails du score",
         'sp_points': "Points Conjoint",
-        # GUÍA (ESTO FALTABA)
         'guide_title': "Votre Feuille de Route",
         'g_step1': "1. Auto-évaluation", 'g_desc1': "Connaître vos points forts (Langue, VJO).",
         'g_step2': "2. Français", 'g_desc2': "Visez un niveau B2 (7) ou C1.",
@@ -180,7 +206,13 @@ t = {
         'job_title': "Trabajo actual",
         'job_place': "Ej: Ingeniero, Soldador...",
         'teer_label': "Categoría TEER",
-        'teer_opts': ["TEER 0,1 (Gerencia/Uni)", "TEER 2 (Técnico)", "TEER 3 (Oficios)", "TEER 4,5 (Manual)"],
+        # TEER DETALLADO (ES)
+        'teer_opts': [
+            "TEER 0, 1: Universidad / Gerencia / Ingeniería",
+            "TEER 2: College / Técnico / Supervisores",
+            "TEER 3: Oficios / Administración / Intermedio",
+            "TEER 4, 5: Operarios / Secundaria / Manual"
+        ],
         'teer_manual_help': "Si no encuentras, elige abajo:",
         'exp_label': "Años de experiencia",
         'lang_info': "**Requisitos:** Volet 1 = Niv 7 | Volet 2 = Niv 5 | Pareja = Niv 4",
@@ -203,7 +235,6 @@ t = {
         'advice_low': "Mejora el francés o busca VJO.",
         'details': "Detalles",
         'sp_points': "Puntos Pareja",
-        # GUÍA (ESTO FALTABA)
         'guide_title': "Tu Hoja de Ruta",
         'g_step1': "1. Autoevaluación", 'g_desc1': "Conoce tus fortalezas (Idioma, VJO).",
         'g_step2': "2. Francés", 'g_desc2': "Apunta a un nivel B2 (7) o C1.",
@@ -234,7 +265,13 @@ t = {
         'job_title': "Current Job",
         'job_place': "Ex: Engineer, Welder...",
         'teer_label': "TEER Category",
-        'teer_opts': ["TEER 0,1 (Mgmt/Uni)", "TEER 2 (Tech)", "TEER 3 (Trades)", "TEER 4,5 (Manual)"],
+        # TEER DETALLADO (EN)
+        'teer_opts': [
+            "TEER 0, 1: University / Management / Engineering",
+            "TEER 2: College / Technical / Supervisors",
+            "TEER 3: Trades / Admin / Intermediate",
+            "TEER 4, 5: Labourer / High School / Service"
+        ],
         'teer_manual_help': "If not found, select below:",
         'exp_label': "Years Experience",
         'lang_info': "**Reqs:** Volet 1 = Lvl 7 | Volet 2 = Lvl 5 | Spouse = Lvl 4",
@@ -257,8 +294,7 @@ t = {
         'advice_low': "Improve French or find VJO.",
         'details': "Details",
         'sp_points': "Spouse Pts",
-        # GUÍA (ESTO FALTABA)
-        'guide_title': "Your Roadmap",
+        'guide_title': "Roadmap",
         'g_step1': "1. Self-Assessment", 'g_desc1': "Know your strengths.",
         'g_step2': "2. French", 'g_desc2': "Aim for B2 (7) or C1.",
         'g_step3': "3. Arrima", 'g_desc3': "Create free profile.",
@@ -329,20 +365,19 @@ with main_tab_calc:
         with st.form("step1_form"):
             c1, c2 = st.columns(2)
             with c1: 
-                # Guardamos en session_state para persistencia
-                st.session_state.age = st.number_input(lang['age'], 18, 65, st.session_state.get('age', 30))
+                st.session_state.age = st.number_input(lang['age'], 18, 65, st.session_state.age)
             with c2: 
-                st.session_state.spouse = st.checkbox(lang['spouse'], value=st.session_state.get('spouse', False))
+                st.session_state.spouse = st.checkbox(lang['spouse'], value=st.session_state.spouse)
             
             c3, c4 = st.columns(2)
-            with c3: st.session_state.k1 = st.number_input(lang['kids12'], 0, 5, st.session_state.get('k1', 0))
-            with c4: st.session_state.k2 = st.number_input(lang['kids13'], 0, 5, st.session_state.get('k2', 0))
+            with c3: st.session_state.k1 = st.number_input(lang['kids12'], 0, 5, st.session_state.k1)
+            with c4: st.session_state.k2 = st.number_input(lang['kids13'], 0, 5, st.session_state.k2)
             
             if st.session_state.spouse:
                 st.divider()
                 st.markdown(f"**{lang['sp_header']}**")
                 c_sp1, c_sp2 = st.columns(2)
-                with c_sp1: st.session_state.sp_age = st.number_input(lang['sp_age'], 18, 65, st.session_state.get('sp_age', 30))
+                with c_sp1: st.session_state.sp_age = st.number_input(lang['sp_age'], 18, 65, st.session_state.sp_age)
                 with c_sp2: st.session_state.sp_edu = st.selectbox(lang['sp_edu'], ["PhD", "Master", "Bachelor", "Technical", "Secondary"], index=2)
             
             st.markdown("###")
@@ -369,9 +404,17 @@ with main_tab_calc:
                     st.markdown(f"<div class='help-box'>{lang['teer_manual_help']}</div>", unsafe_allow_html=True)
 
             st.divider()
-            st.session_state.teer_sel = st.selectbox(lang['teer_label'], lang['teer_opts'])
+            
+            # USO LAS NUEVAS OPCIONES DETALLADAS
+            current_idx = 0
+            # Intentar mantener la selección previa si existe
+            if st.session_state.teer_sel in lang['teer_opts']:
+                current_idx = lang['teer_opts'].index(st.session_state.teer_sel)
+                
+            st.session_state.teer_sel = st.selectbox(lang['teer_label'], lang['teer_opts'], index=current_idx)
+            
             st.session_state.edu = st.selectbox("Education", ["PhD", "Master", "Bachelor", "College (3y)", "Diploma (1-2y)", "Secondary"], index=2)
-            st.session_state.exp = st.slider(lang['exp_label'], 0, 10, st.session_state.get('exp', 3))
+            st.session_state.exp = st.slider(lang['exp_label'], 0, 10, st.session_state.exp)
 
             st.markdown("###")
             col_p, col_e, col_n = st.columns([1, 2, 1])
@@ -393,14 +436,14 @@ with main_tab_calc:
         
         with st.form("step3_form"):
             c1, c2 = st.columns(2)
-            with c1: st.session_state.fr_oral = st.select_slider(lang['fr_oral'], ["0", "A1", "A2", "B1", "B2", "C1", "C2"], value=st.session_state.get('fr_oral', "B2"))
-            with c2: st.session_state.fr_write = st.select_slider(lang['fr_write'], ["0", "A1", "A2", "B1", "B2", "C1", "C2"], value=st.session_state.get('fr_write', "B1"))
-            st.session_state.en_lvl = st.select_slider(lang['en'], ["0", "Beginner", "Intermediate", "Advanced"], value=st.session_state.get('en_lvl', "0"))
+            with c1: st.session_state.fr_oral = st.select_slider(lang['fr_oral'], ["0", "A1", "A2", "B1", "B2", "C1", "C2"], value=st.session_state.fr_oral)
+            with c2: st.session_state.fr_write = st.select_slider(lang['fr_write'], ["0", "A1", "A2", "B1", "B2", "C1", "C2"], value=st.session_state.fr_write)
+            st.session_state.en_lvl = st.select_slider(lang['en'], ["0", "Beginner", "Intermediate", "Advanced"], value=st.session_state.en_lvl)
 
-            if st.session_state.get('spouse', False):
+            if st.session_state.spouse:
                 st.divider()
                 st.markdown(f"**{lang['sp_fr_title']}**")
-                st.session_state.sp_fr = st.select_slider("Niveau", ["0", "A1", "A2", "B1", "B2", "C1", "C2"], value=st.session_state.get('sp_fr', "0"))
+                st.session_state.sp_fr = st.select_slider("Niveau", ["0", "A1", "A2", "B1", "B2", "C1", "C2"], value=st.session_state.sp_fr)
 
             st.markdown("###")
             col_p, col_e, col_n = st.columns([1, 2, 1])
@@ -428,12 +471,12 @@ with main_tab_calc:
             
             st.markdown(f"**{lang['dip_qc_label']}**")
             st.caption(lang['dip_qc_help'])
-            st.session_state.q_stud = st.checkbox("Oui / Yes / Sí (Diploma)", value=st.session_state.get('q_stud', False))
+            st.session_state.q_stud = st.checkbox("Oui / Yes / Sí (Diploma)", value=st.session_state.q_stud)
             
             st.markdown("---")
             st.markdown(f"**{lang['fam_qc_label']}**")
             st.caption(lang['fam_qc_help'])
-            st.session_state.q_fam = st.checkbox("Oui / Yes / Sí (Famille)", value=st.session_state.get('q_fam', False))
+            st.session_state.q_fam = st.checkbox("Oui / Yes / Sí (Famille)", value=st.session_state.q_fam)
             
             st.divider()
             
@@ -457,49 +500,51 @@ with main_tab_calc:
     # LÓGICA & RESULTADOS
     if st.session_state.show_results:
         # Recuperar variables
-        age = st.session_state.get('age', 30)
-        edu = st.session_state.get('edu', "Secondary")
-        teer = st.session_state.get('teer_sel', "")
-        exp = st.session_state.get('exp', 0)
-        fr_o = st.session_state.get('fr_oral', "0")
-        fr_w = st.session_state.get('fr_write', "0")
-        en = st.session_state.get('en_lvl', "0")
-        vjo_val = st.session_state.get('vjo', "")
+        age = st.session_state.age
+        edu = st.session_state.edu
+        teer = st.session_state.teer_sel
+        exp = st.session_state.exp
+        fr_o = st.session_state.fr_oral
+        fr_w = st.session_state.fr_write
+        en = st.session_state.en_lvl
+        vjo_val = st.session_state.vjo
         
         score = 0
         score_sp = 0 
         
+        # Edad
         if 18 <= age <= 30: score += 130
         elif age <= 45: score += (130 - (age-30)*5)
-        
+        # Edu
         if "PhD" in edu: score += 90
         elif "Master" in edu: score += 75
         elif "Bachelor" in edu: score += 60
         elif "College" in edu: score += 50
         else: score += 30
         
-        if "TEER 0,1" in teer: score += 60 
+        # TEER (Actualizado con textos largos)
+        if "TEER 0, 1" in teer or "TEER 0,1" in teer: score += 60 
         elif "TEER 2" in teer: score += 40
         elif "TEER 3" in teer: score += 20
         
+        # Exp
         score += min(80, int(exp * 10))
-        
+        # Idioma
         pts_map = {"0":0, "A1":0, "A2":10, "B1":20, "B2":50, "C1":70, "C2":80}
         score += pts_map.get(fr_o,0) * 1.2 + pts_map.get(fr_w,0) * 0.8
-        
         if en == "Advanced": score += 25
         elif en == "Intermediate": score += 15
-        
+        # VJO
         if "Hors" in vjo_val or "Outside" in vjo_val or "Fuera" in vjo_val: score += 380
         elif "Grand" in vjo_val or "Greater" in vjo_val or "Gran" in vjo_val: score += 180
-        
-        if st.session_state.get('q_stud'): score += 50
-        if st.session_state.get('q_fam'): score += 30
-        
-        if st.session_state.get('spouse'):
-            sp_a = st.session_state.get('sp_age', 30)
-            sp_e = st.session_state.get('sp_edu', "")
-            sp_f = st.session_state.get('sp_fr', "0")
+        # Quebec
+        if st.session_state.q_stud: score += 50
+        if st.session_state.q_fam: score += 30
+        # Spouse
+        if st.session_state.spouse:
+            sp_a = st.session_state.sp_age
+            sp_e = st.session_state.sp_edu
+            sp_f = st.session_state.sp_fr
             
             if 18 <= sp_a <= 40: score_sp += 10
             if "Bachelor" in sp_e or "Master" in sp_e or "PhD" in sp_e: score_sp += 10
@@ -510,7 +555,7 @@ with main_tab_calc:
             elif sp_f in ["A2", "B1"]: score_sp += 10
             score += score_sp
             
-        score += (st.session_state.get('k1',0)*4) + (st.session_state.get('k2',0)*2)
+        score += (st.session_state.k1*4) + (st.session_state.k2*2)
 
         st.markdown(f"""
         <div class="result-box">
@@ -520,7 +565,7 @@ with main_tab_calc:
         
         with st.expander(lang['details']):
             st.write(f"**Principal:** {int(score - score_sp - (st.session_state.k1*4 + st.session_state.k2*2))} pts")
-            if st.session_state.get('spouse'):
+            if st.session_state.spouse:
                 st.write(f"**{lang['sp_points']}:** {score_sp} pts")
             st.write(f"**Enfants:** {(st.session_state.k1*4 + st.session_state.k2*2)} pts")
         
