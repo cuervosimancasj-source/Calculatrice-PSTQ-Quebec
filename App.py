@@ -7,29 +7,74 @@ st.set_page_config(
     layout="centered"
 )
 
-# --- 2. ESTILOS CSS (CORRECCIÓN BOTONES +/- Y ENLACES AZULES) ---
+# --- 2. ESTILOS CSS (CORRECCIÓN FINAL DE BOTONES) ---
 st.markdown("""
     <style>
-        /* === 0. FORZADO GLOBAL === */
+        /* === 0. FORZADO GLOBAL MODO CLARO === */
         :root { color-scheme: light !important; }
         html, body, [data-testid="stAppViewContainer"] {
             background-color: #f0f2f6 !important;
             color: #000000 !important;
         }
         
-        /* Texto general */
+        /* TEXTO GENERAL NEGRO (Para que se vea en Instagram) */
         .stApp, p, label, h1, h2, h3, h4, h5, h6, div, span, li {
             color: #000000 !important;
         }
         
-        /* Encabezado */
+        /* ENCABEZADO AZUL */
         header[data-testid="stHeader"] { background-color: #003399 !important; }
         h1, h2, h3 { color: #003399 !important; }
 
-        /* === 1. INPUTS Y SELECTORES === */
+        /* === 1. ARREGLO DE BOTONES (LA CLAVE) === */
+        div.stButton > button { width: 100%; border-radius: 8px; font-weight: bold; }
+
+        /* A) BOTÓN PRIMARIO (SIGUIENTE / CALCULAR) - AZUL CON LETRA BLANCA */
+        div.stButton > button[kind="primary"] {
+            background-color: #003399 !important;
+            border: none !important;
+        }
+        /* Forzar texto blanco dentro del botón azul */
+        div.stButton > button[kind="primary"] p, 
+        div.stButton > button[kind="primary"] * { 
+            color: #FFFFFF !important; 
+        }
+        div.stButton > button[kind="primary"]:hover {
+            background-color: #002266 !important;
+        }
+
+        /* B) BOTONES DE ENLACE (COFFEE / CURSOS) - AZUL CON LETRA BLANCA */
+        div.stLinkButton > a {
+            background-color: #003399 !important;
+            border: none !important;
+            border-radius: 8px !important;
+            text-align: center !important;
+            display: block !important;
+            font-weight: bold !important;
+            text-decoration: none !important;
+        }
+        /* Forzar texto blanco dentro del enlace */
+        div.stLinkButton > a, div.stLinkButton > a * {
+            color: #FFFFFF !important;
+        }
+        div.stLinkButton > a:hover {
+            background-color: #002266 !important;
+        }
+
+        /* C) BOTÓN SECUNDARIO (ATRÁS) - BLANCO CON LETRA AZUL */
+        div.stButton > button[kind="secondary"] {
+            background-color: #FFFFFF !important;
+            border: 2px solid #003399 !important;
+        }
+        div.stButton > button[kind="secondary"] p,
+        div.stButton > button[kind="secondary"] * { 
+            color: #003399 !important; 
+        }
+
+        /* === 2. INPUTS Y SELECTORES (NEGRO SOBRE BLANCO) === */
         div[data-baseweb="input"], div[data-baseweb="base-input"], div[data-baseweb="select"] > div {
             background-color: #FFFFFF !important;
-            border: 1px solid #cccccc !important;
+            border: 1px solid #ccc !important;
             color: #000000 !important;
         }
         input {
@@ -43,64 +88,13 @@ st.markdown("""
             -webkit-text-fill-color: #000000 !important;
         }
 
-        /* === 2. CORRECCIÓN BOTONES +/- (NUMÉRICOS) === */
-        /* Estos son los botones pequeños dentro de edad/hijos */
-        div[data-baseweb="input"] button, div[data-baseweb="base-input"] button {
-            background-color: #f0f2f6 !important; /* Fondo Gris Claro */
-            color: #000000 !important; /* Signos +/- en Negro */
-            border-left: 1px solid #ccc !important;
-            border-right: 1px solid #ccc !important;
-        }
-        /* Iconos dentro de los botones +/- */
-        div[data-baseweb="input"] button svg {
-            fill: #000000 !important;
-        }
-
         /* === 3. MENÚ DESPLEGABLE === */
         ul[data-baseweb="menu"] { background-color: #FFFFFF !important; }
         li[data-baseweb="menu-item"] { background-color: #FFFFFF !important; color: #000000 !important; }
         li[data-baseweb="menu-item"] * { color: #000000 !important; }
         li[data-baseweb="menu-item"]:hover, li[aria-selected="true"] { background-color: #e6f0ff !important; }
-        li[data-baseweb="menu-item"]:hover *, li[aria-selected="true"] * { color: #003399 !important; }
 
-        /* === 4. BOTONES === */
-        div.stButton > button { width: 100%; border-radius: 8px; font-weight: bold; }
-        
-        /* BOTÓN DE ACCIÓN (Siguiente/Calcular) - AZUL */
-        div.stButton > button[kind="primary"] {
-            background-color: #003399 !important;
-            color: #FFFFFF !important;
-            border: none !important;
-        }
-        div.stButton > button[kind="primary"] * { color: #FFFFFF !important; }
-        
-        /* BOTÓN SECUNDARIO (Atrás) - BLANCO */
-        div.stButton > button[kind="secondary"] {
-            background-color: #FFFFFF !important;
-            color: #003399 !important;
-            border: 2px solid #003399 !important;
-        }
-        div.stButton > button[kind="secondary"] * { color: #003399 !important; }
-
-        /* === 5. BOTONES DE ENLACE (COFFEE / CURSOS) - AHORA AZULES === */
-        /* Forzamos que los enlaces se vean como botones primarios */
-        div.stLinkButton > a {
-            background-color: #003399 !important;
-            color: #FFFFFF !important;
-            border: none !important;
-            font-weight: bold !important;
-            border-radius: 8px !important;
-            text-align: center !important;
-            display: block !important;
-            padding: 0.5rem 1rem !important;
-            text-decoration: none !important;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2) !important;
-        }
-        div.stLinkButton > a:hover {
-            background-color: #002266 !important;
-        }
-
-        /* === 6. CONTENEDORES === */
+        /* === 4. CAJAS Y TARJETAS === */
         [data-testid="stForm"] {
             background-color: #FFFFFF !important;
             padding: 2rem; 
@@ -108,17 +102,13 @@ st.markdown("""
             border-top: 5px solid #003399;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
-        .info-box { background-color: #e8f4fd; border-left: 5px solid #003399; padding: 15px; border-radius: 5px; margin-bottom: 15px; }
-        .help-box { background-color: #fff3cd; border-left: 5px solid #ffc107; padding: 15px; border-radius: 5px; }
-        .step-box { background-color: white; padding: 15px; border-radius: 10px; border: 1px solid #ddd; margin-bottom: 10px; }
+        .info-box { background-color: #e8f4fd; border-left: 5px solid #003399; padding: 15px; border-radius: 5px; margin-bottom: 15px; color: #000 !important; }
+        .help-box { background-color: #fff3cd; border-left: 5px solid #ffc107; padding: 15px; border-radius: 5px; color: #000 !important; }
         .result-box { background-color: #003399; padding: 20px; border-radius: 10px; text-align: center; margin-top: 20px; }
         .result-box h2 { color: #FFFFFF !important; margin: 0; }
-        .footer { margin-top: 50px; padding: 20px; border-top: 1px solid #ccc; text-align: center; }
         
-        /* Radio buttons y Checkbox */
-        div[role="radiogroup"] label, label[data-baseweb="checkbox"] { color: #000000 !important; }
-        div[data-baseweb="radio"] div, div[data-baseweb="checkbox"] div { background-color: #FFFFFF !important; border-color: #003399 !important; }
-        div[data-baseweb="radio"][aria-checked="true"] div div { background-color: #003399 !important; }
+        /* Radio buttons */
+        div[role="radiogroup"] label { color: #000000 !important; }
 
     </style>
 """, unsafe_allow_html=True)
@@ -139,6 +129,7 @@ for key, value in default_values.items():
 def cycle_language():
     lang_map = {'fr': 'es', 'es': 'en', 'en': 'fr'}
     st.session_state.language = lang_map[st.session_state.language]
+    # Reset TEER al cambiar idioma
     st.session_state.teer_sel = t[st.session_state.language]['teer_opts'][0]
 
 def next_step(): st.session_state.step += 1
@@ -187,7 +178,7 @@ t = {
         'lang_info': "**Exigences :** Volet 1 = Niv 7 | Volet 2 = Niv 5 | Conjoint = Niv 4",
         'fr_oral': "Français Oral (Vous)", 'fr_write': "Français Écrit (Vous)", 'en': "Anglais",
         'sp_fr_title': "Français du Conjoint (Oral)",
-        'oev_info': "**ℹ️ OEV (Offre d'emploi validée) :** Signifie que l'employeur a obtenu une EIMT ou que l'offre est validée par le MIFI. Une simple lettre d'embauche ne suffit pas toujours.",
+        'oev_info': "**ℹ️ OEV (Offre d'emploi validée) :** Signifie que l'employeur a obtenu une EIMT ou que l'offre est validée par le MIFI.",
         'vjo_label': "Avez-vous une Offre Validée (OEV) ?",
         'vjo_opts': ["Non", "Oui, Grand Montréal", "Oui, Hors Montréal (Région)"],
         'dip_qc_label': "Diplôme du Québec ?",
@@ -358,7 +349,7 @@ with col_lang:
     st.button(lang['btn_lang'], on_click=cycle_language, type="secondary", key="top_lang_btn")
 
 # ==========================================
-# APP PRINCIPAL
+# APP PRINCIPAL (WIZARD SIN FORMULARIOS)
 # ==========================================
 main_tab_calc, main_tab_guide = st.tabs(lang['main_tabs'])
 
@@ -369,31 +360,32 @@ with main_tab_calc:
     # --- PASO 1: PERFIL ---
     if st.session_state.step == 1:
         st.markdown(f"### 👤 {lang['step1']}")
-        with st.form("step1_form"):
-            c1, c2 = st.columns(2)
-            with c1: st.session_state.age = st.number_input(lang['age'], 18, 65, st.session_state.age, key="age_input")
-            with c2: st.session_state.spouse = st.checkbox(lang['spouse'], value=st.session_state.spouse, key="spouse_chk")
-            c3, c4 = st.columns(2)
-            with c3: st.session_state.k1 = st.number_input(lang['kids12'], 0, 5, st.session_state.k1, key="k1_input")
-            with c4: st.session_state.k2 = st.number_input(lang['kids13'], 0, 5, st.session_state.k2, key="k2_input")
-            
-            if st.session_state.spouse:
-                st.divider()
-                st.markdown(f"**{lang.get('sp_header', 'Datos Pareja')}**")
-                c_sp1, c_sp2 = st.columns(2)
-                with c_sp1: st.session_state.sp_age = st.number_input(lang['sp_age'], 18, 65, st.session_state.sp_age, key="sp_age_in")
-                with c_sp2: st.session_state.sp_edu = st.selectbox(lang['sp_edu'], ["PhD", "Master", "Bachelor", "Technical", "Secondary"], index=2, key="sp_edu_in")
-            
-            st.markdown("###")
-            col_e, col_n = st.columns([3, 1])
-            with col_n: st.form_submit_button(lang['next'], type="primary", on_click=next_step)
+        c1, c2 = st.columns(2)
+        with c1: st.session_state.age = st.number_input(lang['age'], 18, 65, st.session_state.age, key="age_input")
+        with c2: st.session_state.spouse = st.checkbox(lang['spouse'], value=st.session_state.spouse, key="spouse_chk")
+        c3, c4 = st.columns(2)
+        with c3: st.session_state.k1 = st.number_input(lang['kids12'], 0, 5, st.session_state.k1, key="k1_input")
+        with c4: st.session_state.k2 = st.number_input(lang['kids13'], 0, 5, st.session_state.k2, key="k2_input")
+        
+        if st.session_state.spouse:
+            st.divider()
+            st.markdown(f"**{lang.get('sp_header', 'Datos Pareja')}**")
+            c_sp1, c_sp2 = st.columns(2)
+            with c_sp1: st.session_state.sp_age = st.number_input(lang['sp_age'], 18, 65, st.session_state.sp_age, key="sp_age_in")
+            with c_sp2: st.session_state.sp_edu = st.selectbox(lang['sp_edu'], ["PhD", "Master", "Bachelor", "Technical", "Secondary"], index=2, key="sp_edu_in")
+        
+        st.markdown("###")
+        col_e, col_n = st.columns([3, 1])
+        with col_n: st.button(lang['next'], type="primary", on_click=next_step)
 
     # --- PASO 2: TRABAJO ---
     elif st.session_state.step == 2:
         st.markdown(f"### 💼 {lang['step2']}")
         st.markdown(f"**{lang['job_title']}**")
+        
         def update_search(): st.session_state.job_search_term = st.session_state.widget_search
         st.text_input("Search", value=st.session_state.job_search_term, placeholder=lang['job_place'], label_visibility="collapsed", key="widget_search", on_change=update_search)
+
         if st.session_state.job_search_term:
             result = find_job_details(st.session_state.job_search_term)
             if result:
@@ -403,93 +395,111 @@ with main_tab_calc:
                 st.markdown(f"🔗 [{lang['noc_link_text']}](https://noc.esdc.gc.ca/)")
 
         st.divider()
-        with st.form("step2_form"):
-            current_idx = 0
-            if st.session_state.teer_sel in lang['teer_opts']:
-                current_idx = lang['teer_opts'].index(st.session_state.teer_sel)
-            st.session_state.teer_sel = st.selectbox(lang['teer_label'], lang['teer_opts'], index=current_idx, key="teer_input")
-            st.session_state.edu = st.selectbox("Education", ["PhD", "Master", "Bachelor", "College (3y)", "Diploma (1-2y)", "Secondary"], index=2, key="edu_input")
-            st.session_state.exp = st.slider(lang['exp_label'], 0, 10, st.session_state.exp, key="exp_input")
-            st.markdown("###")
-            col_p, col_e, col_n = st.columns([1, 2, 1])
-            with col_p: st.form_submit_button(lang['prev'], type="secondary", on_click=prev_step)
-            with col_n: st.form_submit_button(lang['next'], type="primary", on_click=next_step)
+        
+        current_idx = 0
+        if st.session_state.teer_sel in lang['teer_opts']:
+            current_idx = lang['teer_opts'].index(st.session_state.teer_sel)
+            
+        st.session_state.teer_sel = st.selectbox(lang['teer_label'], lang['teer_opts'], index=current_idx, key="teer_input")
+        st.session_state.edu = st.selectbox("Education", ["PhD", "Master", "Bachelor", "College (3y)", "Diploma (1-2y)", "Secondary"], index=2, key="edu_input")
+        st.session_state.exp = st.slider(lang['exp_label'], 0, 10, st.session_state.exp, key="exp_input")
+
+        st.markdown("###")
+        col_p, col_e, col_n = st.columns([1, 2, 1])
+        with col_p: st.button(lang['prev'], type="secondary", on_click=prev_step)
+        with col_n: st.button(lang['next'], type="primary", on_click=next_step)
 
     # --- PASO 3: IDIOMAS ---
     elif st.session_state.step == 3:
         st.markdown(f"### 🗣️ {lang['step3']}")
         st.markdown(f"<div class='info-box'>{lang['lang_info']}</div>", unsafe_allow_html=True)
-        with st.form("step3_form"):
-            c1, c2 = st.columns(2)
-            with c1: st.session_state.fr_oral = st.select_slider(lang['fr_oral'], ["0", "A1", "A2", "B1", "B2", "C1", "C2"], value=st.session_state.fr_oral, key="fro_input")
-            with c2: st.session_state.fr_write = st.select_slider(lang['fr_write'], ["0", "A1", "A2", "B1", "B2", "C1", "C2"], value=st.session_state.fr_write, key="frw_input")
-            st.session_state.en_lvl = st.select_slider(lang['en'], ["0", "Beginner", "Intermediate", "Advanced"], value=st.session_state.en_lvl, key="en_input")
-            if st.session_state.spouse:
-                st.divider()
-                st.markdown(f"**{lang['sp_fr_title']}**")
-                st.session_state.sp_fr = st.select_slider("Niveau", ["0", "A1", "A2", "B1", "B2", "C1", "C2"], value=st.session_state.sp_fr, key="spfr_input")
-            st.markdown("###")
-            col_p, col_e, col_n = st.columns([1, 2, 1])
-            with col_p: st.form_submit_button(lang['prev'], type="secondary", on_click=prev_step)
-            with col_n: st.form_submit_button(lang['next'], type="primary", on_click=next_step)
+        c1, c2 = st.columns(2)
+        with c1: st.session_state.fr_oral = st.select_slider(lang['fr_oral'], ["0", "A1", "A2", "B1", "B2", "C1", "C2"], value=st.session_state.fr_oral, key="fro_input")
+        with c2: st.session_state.fr_write = st.select_slider(lang['fr_write'], ["0", "A1", "A2", "B1", "B2", "C1", "C2"], value=st.session_state.fr_write, key="frw_input")
+        st.session_state.en_lvl = st.select_slider(lang['en'], ["0", "Beginner", "Intermediate", "Advanced"], value=st.session_state.en_lvl, key="en_input")
 
-    # --- PASO 4: QUEBEC ---
+        if st.session_state.spouse:
+            st.divider()
+            st.markdown(f"**{lang['sp_fr_title']}**")
+            st.session_state.sp_fr = st.select_slider("Niveau", ["0", "A1", "A2", "B1", "B2", "C1", "C2"], value=st.session_state.sp_fr, key="spfr_input")
+
+        st.markdown("###")
+        col_p, col_e, col_n = st.columns([1, 2, 1])
+        with col_p: st.button(lang['prev'], type="secondary", on_click=prev_step)
+        with col_n: st.button(lang['next'], type="primary", on_click=next_step)
+
+    # --- PASO 4: QUEBEC (FINAL) ---
     elif st.session_state.step == 4:
         st.markdown(f"### ⚜️ {lang['step4']}")
         st.info(lang['oev_info'])
-        with st.form("step4_form"):
-            vjo_idx = 0
-            if st.session_state.vjo in lang['vjo_opts']: vjo_idx = lang['vjo_opts'].index(st.session_state.vjo)
-            st.session_state.vjo = st.radio(lang['vjo_label'], lang['vjo_opts'], index=vjo_idx, key="vjo_input")
-            st.divider()
-            st.markdown(f"**{lang['dip_qc_label']}**")
-            st.caption(lang['dip_qc_help'])
-            curr_stud = st.session_state.q_stud_val
-            if curr_stud not in lang['yes_no']: curr_stud = lang['yes_no'][0]
-            st.session_state.q_stud_val = st.radio("DipQC", lang['yes_no'], index=lang['yes_no'].index(curr_stud), horizontal=True, label_visibility="collapsed", key="q_stud_in")
-            st.markdown("---")
-            st.markdown(f"**{lang['fam_qc_label']}**")
-            st.caption(lang['fam_qc_help'])
-            curr_fam = st.session_state.q_fam_val
-            if curr_fam not in lang['yes_no']: curr_fam = lang['yes_no'][0]
-            st.session_state.q_fam_val = st.radio("FamQC", lang['yes_no'], index=lang['yes_no'].index(curr_fam), horizontal=True, label_visibility="collapsed", key="q_fam_in")
-            st.divider()
-            c_city, c_year = st.columns(2)
-            with c_city: st.selectbox(lang['city_label'], lang['city_opts'], key="city_input")
-            with c_year: st.selectbox(lang['arr_year'], range(2025, 1990, -1), key="year_input")
-            st.markdown("###")
-            col_p, col_e, col_n = st.columns([1, 1, 2])
-            with col_p: st.form_submit_button(lang['prev'], type="secondary", on_click=prev_step)
-            with col_n: st.form_submit_button(lang['calc'], type="primary", on_click=trigger_calculation)
+        
+        vjo_idx = 0
+        if st.session_state.vjo in lang['vjo_opts']: vjo_idx = lang['vjo_opts'].index(st.session_state.vjo)
+        st.session_state.vjo = st.radio(lang['vjo_label'], lang['vjo_opts'], index=vjo_idx, key="vjo_input")
+        
+        st.divider()
+        st.markdown(f"**{lang['dip_qc_label']}**")
+        st.info(lang['dip_qc_help'])
+        curr_stud = st.session_state.q_stud_val
+        if curr_stud not in lang['yes_no']: curr_stud = lang['yes_no'][0]
+        st.session_state.q_stud_val = st.radio("DipQC", lang['yes_no'], index=lang['yes_no'].index(curr_stud), horizontal=True, label_visibility="collapsed", key="q_stud_in")
+        
+        st.divider()
+        st.markdown(f"**{lang['fam_qc_label']}**")
+        st.info(lang['fam_qc_help'])
+        curr_fam = st.session_state.q_fam_val
+        if curr_fam not in lang['yes_no']: curr_fam = lang['yes_no'][0]
+        st.session_state.q_fam_val = st.radio("FamQC", lang['yes_no'], index=lang['yes_no'].index(curr_fam), horizontal=True, label_visibility="collapsed", key="q_fam_in")
+        
+        st.divider()
+        c_city, c_year = st.columns(2)
+        with c_city: st.selectbox(lang['city_label'], lang['city_opts'], key="city_input")
+        with c_year: st.selectbox(lang['arr_year'], range(2025, 1990, -1), key="year_input")
 
-    # LÓGICA
+        st.markdown("###")
+        col_p, col_e, col_n = st.columns([1, 1, 2])
+        with col_p: st.button(lang['prev'], type="secondary", on_click=prev_step)
+        with col_n: st.button(lang['calc'], type="primary", on_click=trigger_calculation)
+
+    # LÓGICA Y RESULTADOS
     if st.session_state.show_results:
         age, edu, teer, exp = st.session_state.age, st.session_state.edu, st.session_state.teer_sel, st.session_state.exp
         fr_o, fr_w, en, vjo_val = st.session_state.fr_oral, st.session_state.fr_write, st.session_state.en_lvl, st.session_state.vjo
-        is_yes_stud = st.session_state.q_stud_val in ["Oui", "Sí", "Yes"]
-        is_yes_fam = st.session_state.q_fam_val in ["Oui", "Sí", "Yes"]
+        q_stud_str = st.session_state.q_stud_val
+        q_fam_str = st.session_state.q_fam_val
+        is_yes_stud = q_stud_str in ["Oui", "Sí", "Yes"]
+        is_yes_fam = q_fam_str in ["Oui", "Sí", "Yes"]
         
         score = 0
         score_sp = 0 
+        
         if 18 <= age <= 30: score += 130
         elif age <= 45: score += (130 - (age-30)*5)
+        
         if "PhD" in edu: score += 90
         elif "Master" in edu: score += 75
         elif "Bachelor" in edu: score += 60
         elif "College" in edu: score += 50
         else: score += 30
+        
         if "TEER 0, 1" in teer or "TEER 0,1" in teer: score += 60 
         elif "TEER 2" in teer: score += 40
         elif "TEER 3" in teer: score += 20
+        
         score += min(80, int(exp * 10))
+        
         pts_map = {"0":0, "A1":0, "A2":10, "B1":20, "B2":50, "C1":70, "C2":80}
         score += pts_map.get(fr_o,0) * 1.2 + pts_map.get(fr_w,0) * 0.8
+        
         if en == "Advanced": score += 25
         elif en == "Intermediate": score += 15
+        
         if "Hors" in vjo_val or "Outside" in vjo_val or "Fuera" in vjo_val: score += 380
         elif "Grand" in vjo_val or "Greater" in vjo_val or "Gran" in vjo_val: score += 180
+        
         if is_yes_stud: score += 50
         if is_yes_fam: score += 30
+        
         if st.session_state.spouse:
             sp_a, sp_e, sp_f = st.session_state.sp_age, st.session_state.sp_edu, st.session_state.sp_fr
             if 18 <= sp_a <= 40: score_sp += 10
@@ -499,6 +509,7 @@ with main_tab_calc:
             elif sp_f == "B2": score_sp += 20
             elif sp_f in ["A2", "B1"]: score_sp += 10
             score += score_sp
+            
         score += (st.session_state.k1*4) + (st.session_state.k2*2)
 
         st.markdown(f"""<div class="result-box"><h2>{lang['res_title']}: {int(score)} / 1350</h2></div>""", unsafe_allow_html=True)
@@ -513,6 +524,7 @@ with main_tab_calc:
 
 with main_tab_guide:
     st.markdown(f"### 🗺️ {lang['guide_title']}")
+    st.markdown("---")
     st.markdown(f"""
     <div class='step-box'><h4>📊 {lang['g_step1']}</h4><p>{lang['g_desc1']}</p></div>
     <div class='step-box'><h4>🗣️ {lang['g_step2']}</h4><p>{lang['g_desc2']}</p></div>
