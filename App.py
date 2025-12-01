@@ -26,23 +26,20 @@ st.markdown("""
         h1, h2, h3 { color: #003399 !important; }
 
         /* === 2. ARREGLO DE CAJAS DE SELECCIÓN (SELECTBOX) === */
-        /* La caja cerrada */
         div[data-baseweb="select"] > div {
             background-color: #FFFFFF !important;
             border: 1px solid #ccc !important;
             color: #000000 !important;
         }
-        /* El texto dentro de la caja */
         div[data-baseweb="select"] span {
             color: #000000 !important;
             -webkit-text-fill-color: #000000 !important;
         }
-        /* El icono de la flecha */
         div[data-baseweb="select"] svg {
             fill: #000000 !important;
         }
 
-        /* === 3. ARREGLO DEL MENÚ DESPLEGABLE (LISTA DE OPCIONES) === */
+        /* === 3. ARREGLO DEL MENÚ DESPLEGABLE === */
         ul[data-baseweb="menu"] {
             background-color: #FFFFFF !important;
         }
@@ -54,7 +51,6 @@ st.markdown("""
             background-color: #e6f0ff !important;
             color: #003399 !important;
         }
-        /* Forzar color a los hijos del item */
         li[data-baseweb="menu-item"] * {
             color: #000000 !important;
         }
@@ -73,7 +69,6 @@ st.markdown("""
         /* === 5. BOTONES === */
         div.stButton > button { width: 100%; border-radius: 8px; font-weight: bold; }
         
-        /* Botón Siguiente/Calcular (Azul) */
         div.stButton > button[kind="primary"] {
             background-color: #003399 !important;
             color: #FFFFFF !important;
@@ -81,7 +76,6 @@ st.markdown("""
         }
         div.stButton > button[kind="primary"] p { color: #FFFFFF !important; }
 
-        /* Botón Anterior/Secundario (Blanco) */
         div.stButton > button[kind="secondary"] {
             background-color: #FFFFFF !important;
             color: #003399 !important;
@@ -99,9 +93,9 @@ st.markdown("""
         }
         
         /* === 7. OTROS ELEMENTOS === */
-        .info-box { background-color: #e8f4fd; border-left: 5px solid #003399; padding: 15px; border-radius: 5px; margin-bottom: 15px; }
-        .help-box { background-color: #fff3cd; border-left: 5px solid #ffc107; padding: 15px; border-radius: 5px; }
-        .step-box { background-color: white; padding: 15px; border-radius: 10px; border: 1px solid #ddd; margin-bottom: 10px; }
+        .info-box { background-color: #e8f4fd; border-left: 5px solid #003399; padding: 15px; border-radius: 5px; margin-bottom: 15px; color: #000 !important; }
+        .help-box { background-color: #fff3cd; border-left: 5px solid #ffc107; padding: 15px; border-radius: 5px; color: #000 !important; }
+        .step-box { background-color: white; padding: 15px; border-radius: 10px; border: 1px solid #ddd; margin-bottom: 10px; color: #000 !important; }
         .result-box { background-color: #003399; padding: 20px; border-radius: 10px; text-align: center; margin-top: 20px; }
         .result-box h2 { color: #FFFFFF !important; margin: 0; }
         .footer { margin-top: 50px; padding: 20px; border-top: 1px solid #ccc; text-align: center; }
@@ -110,7 +104,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# --- 3. INICIALIZACIÓN DE VARIABLES (PARA EVITAR KEYERROR) ---
+# --- 3. INICIALIZACIÓN DE VARIABLES ---
 default_values = {
     'language': 'fr',
     'step': 1,
@@ -122,7 +116,7 @@ default_values = {
     'sp_age': 30,
     'sp_edu': 'Secondary',
     'sp_fr': '0',
-    'teer_sel': 'TEER 0, 1: Université / Gestion / Ingénierie', # Default safe
+    'teer_sel': 'TEER 0, 1: Université / Gestion / Ingénierie',
     'edu': 'Secondary',
     'exp': 3,
     'fr_oral': 'B2',
@@ -151,172 +145,150 @@ def reset_calc():
 def trigger_calculation():
     st.session_state.show_results = True
 
-# --- 4. TRADUCCIONES COMPLETA (SIN ERRORES) ---
+# --- 4. TRADUCCIONES (AQUÍ ESTABA EL ERROR, YA CORREGIDO) ---
 t = {
     'fr': {
         'btn_lang': "🌐 Changer la langue",
         'brand': "Calculatrice PSTQ Québec ⚜️",
         'subtitle': "Outil d'analyse pour la Résidence Permanente (TEER, Volets, Score).",
-        'disclaimer_text': "Projet indépendant. PAS avocats/consultants. Résultats estimés.",
-        'coffee': "☕ M'offrir un café",
+        # ESTAS DOS LÍNEAS FALTABAN EN LA VERSIÓN ANTERIOR:
+        'disclaimer_title': "⚠️ AVIS IMPORTANT",
+        'disclaimer_text': "Ce logiciel est un projet indépendant. Nous ne sommes PAS avocats ni consultants. Nous ne représentons PAS le MIFI.",
+        'coffee': "☕ M'offrir un café (Soutenir)",
         'courses': "📚 Cours de Français",
         'main_tabs': ["🧮 Calculatrice", "ℹ️ Guide"],
         'next': "Suivant ➡", 'prev': "⬅ Retour", 'calc': "CALCULER MON SCORE",
-        # PASOS
-        'step1': "Étape 1 : Profil & Famille",
-        'step2': "Étape 2 : Travail & TEER",
-        'step3': "Étape 3 : Langues",
-        'step4': "Étape 4 : Québec & Offre",
-        # CONTENIDO
-        'age': "Âge du candidat principal",
-        'spouse': "Avez-vous un conjoint ?",
-        'kids12': "Enfants -12 ans", 'kids13': "Enfants +12 ans",
-        'sp_header': "Données du Conjoint",
-        'sp_age': "Âge du conjoint", 'sp_edu': "Éducation du conjoint",
-        'job_title': "Emploi actuel",
-        'job_place': "Ex: Ingénieur, Soudeur...",
-        'teer_label': "Catégorie TEER",
+        'tabs': ["👤 Profil", "💼 Travail", "🗣️ Langues", "⚜️ Québec"],
+        'tab1_header': "Votre Profil & Famille", 'tab1_sub': "Le point de départ de votre projet d'immigration.",
+        'tab2_header': "Votre Expérience Québécoise", 'tab2_sub': "Votre métier est au cœur du programme PSTQ.",
+        'tab3_header': "Vos Compétences Linguistiques", 'tab3_sub': "Le français est la clé du succès au Québec.",
+        'tab4_header': "Facteurs Québec & OEV", 'tab4_sub': "Finalisez votre pointage avec les atouts locaux.",
+        'job_title': "Quel est votre emploi actuel ?",
+        'job_placeholder': "Ex: Ingénieur, Soudeur, Assembleur...",
+        'teer_manual_help': "Si non trouvé, choisissez niveau :",
+        'teer_label': "Catégorie TEER (Niveau)",
+        'teer_guide': "**Aide:** TEER 0,1=Uni/Gestion | TEER 2=Collégial/Technique | TEER 3=Métiers | TEER 4,5=Secondaire/Manuel",
         'teer_opts': [
             "TEER 0, 1: Université / Gestion / Ingénierie",
             "TEER 2: Collégial / Technique / Superviseurs",
             "TEER 3: Métiers / Administration / Intermédiaire",
             "TEER 4, 5: Manœuvre / Secondaire / Service"
         ],
-        'teer_manual_help': "Si non trouvé, choisissez ci-dessous:",
         'exp_label': "Années d'expérience",
-        'lang_info': "**Exigences :** Volet 1 = Niv 7 | Volet 2 = Niv 5 | Conjoint = Niv 4",
-        'fr_oral': "Français Oral (Vous)", 'fr_write': "Français Écrit (Vous)", 'en': "Anglais",
-        'sp_fr_title': "Français du Conjoint (Oral)",
-        # QUEBEC
-        'oev_info': "**ℹ️ OEV (Offre d'emploi validée) :** Signifie que l'employeur a obtenu une EIMT ou que l'offre est validée par le MIFI. Une simple lettre d'embauche ne suffit pas toujours.",
-        'vjo_label': "Avez-vous une Offre Validée (OEV) ?",
-        'vjo_opts': ["Non", "Oui, Grand Montréal", "Oui, Hors Montréal (Région)"],
-        'dip_qc_label': "Diplôme du Québec ?",
-        'dip_qc_help': "AEC, DEP, DEC, Baccalauréat, Maîtrise, Doctorat obtenu au Québec.",
-        'fam_qc_label': "Famille au Québec ?",
-        'fam_qc_help': "Parent, enfant, conjoint, frère/sœur, grand-parent (Citoyen ou Résident Permanent).",
-        'arr_year': "Année d'arrivée au Québec (si applicable)",
-        'city_label': "Ville de résidence (si au Québec)",
-        'city_opts': ["-", "Montréal", "Québec (Ville)", "Laval", "Gatineau", "Longueuil", "Sherbrooke", "Lévis", "Saguenay", "Trois-Rivières", "Terrebonne", "Autre"],
-        # RESULTADOS (AQUÍ ESTABA EL ERROR)
+        'lang_info': "Volet 1=Niv 7 | Volet 2=Niv 5",
+        'age': "Âge", 'spouse': "Conjoint(e) ?", 'kids12': "Enf -12", 'kids13': "Enf +12",
+        'sp_section': "Conjoint (Âge/Études)",
+        'sp_fr_title': "Français du Conjoint",
+        'sp_fr_label': "Niveau Oral du conjoint",
+        'edu': "Niveau d'études", 'vjo': "Offre (OEV)", 'calc': "CALCULER SCORE",
         'res_title': "Résultat Estimé",
         'advice_good': "Excellent ! Profil compétitif.",
         'advice_low': "Améliorez le français ou cherchez une OEV.",
-        'details': "Détails du score",
-        'sp_points': "Points Conjoint",
-        'guide_title': "Votre Feuille de Route",
-        'g_step1': "1. Auto-évaluation", 'g_desc1': "Connaître vos points forts (Langue, VJO).",
-        'g_step2': "2. Français", 'g_desc2': "Visez un niveau B2 (7) ou C1.",
-        'g_step3': "3. Arrima", 'g_desc3': "Créez votre profil gratuitement.",
-        'g_step4': "4. CSQ", 'g_desc4': "Certificat de Sélection du Québec.",
-        'g_step5': "5. Fédéral", 'g_desc5': "Résidence Permanente Canada.",
-        'noc_link_text': "🔎 Chercher sur le site officiel du Canada (CNP)"
+        'details': "Détails",
+        'sp_points': "Pts Conjoint",
+        'guide_title': "Feuille de Route",
+        'g_step1': "1. Auto-évaluation", 'g_desc1': "Vos points forts.",
+        'g_step2': "2. Français", 'g_desc2': "Visez B2 (7).",
+        'g_step3': "3. Arrima", 'g_desc3': "Profil gratuit.",
+        'g_step4': "4. CSQ", 'g_desc4': "Certificat Sélection.",
+        'g_step5': "5. Fédéral", 'g_desc5': "Résidence Permanente.",
+        'noc_link_text': "🔎 Chercher sur le site officiel du Canada (CNP)",
+        'oev_info': "**ℹ️ OEV:** Offre d'emploi validée par le MIFI.",
+        'vjo_label': "Offre Validée (OEV) ?",
+        'vjo_opts': ["Non", "Oui, Grand Montréal", "Oui, Hors Montréal"],
+        'dip_qc_label': "Diplôme du Québec ?", 'dip_qc_help': "AEC, DEC, Bac, etc.",
+        'fam_qc_label': "Famille au Québec ?", 'fam_qc_help': "Résident ou Citoyen.",
+        'city_label': "Ville", 'city_opts': ["-", "Montréal", "Québec", "Laval", "Gatineau", "Sherbrooke", "Autre"],
+        'arr_year': "Année d'arrivée"
     },
     'es': {
-        'btn_lang': "🌐 Cambiar Idioma",
+        'btn_lang': "🌐 Cambiar el idioma",
         'brand': "Calculatrice PSTQ ⚜️",
-        'subtitle': "Herramienta de análisis para Residencia Permanente.",
-        'disclaimer_text': "Proyecto independiente. NO abogados. Resultados estimados.",
-        'coffee': "☕ Invítame un café",
-        'courses': "📚 Cursos de Francés",
+        'subtitle': "Análisis Residencia Permanente (Arrima).",
+        # ESTAS DOS LÍNEAS FALTABAN:
+        'disclaimer_title': "⚠️ AVISO LEGAL",
+        'disclaimer_text': "Proyecto independiente. NO abogados/asesores. NO Gobierno (MIFI).",
+        'coffee': "☕ Café (Apoyo)",
+        'courses': "📚 Cursos Francés",
         'main_tabs': ["🧮 Calculadora", "ℹ️ Guía"],
         'next': "Siguiente ➡", 'prev': "⬅ Atrás", 'calc': "CALCULAR PUNTAJE",
-        # PASOS
-        'step1': "Paso 1: Perfil y Familia",
-        'step2': "Paso 2: Trabajo y TEER",
-        'step3': "Paso 3: Idiomas",
-        'step4': "Paso 4: Quebec y Oferta",
-        # CONTENIDO
-        'age': "Edad del candidato",
-        'spouse': "¿Tienes pareja?",
-        'kids12': "Hijos -12 años", 'kids13': "Hijos +12 años",
-        'sp_header': "Datos de la Pareja",
-        'sp_age': "Edad pareja", 'sp_edu': "Educación pareja",
-        'job_title': "Trabajo actual",
-        'job_place': "Ej: Ingeniero, Soldador...",
-        'teer_label': "Categoría TEER",
+        'tabs': ["👤 Perfil", "💼 Trabajo", "🗣️ Idiomas", "⚜️ Quebec"],
+        'tab1_header': "Tu Perfil y Familia", 'tab1_sub': "El punto de partida de tu proyecto de inmigración.",
+        'tab2_header': "Tu Experiencia Quebequense", 'tab2_sub': "Tu oficio es el corazón del programa PSTQ.",
+        'tab3_header': "Tus Competencias Lingüísticas", 'tab3_sub': "El francés es la llave del éxito en Quebec.",
+        'tab4_header': "Factores Quebec y VJO", 'tab4_sub': "Finaliza tu puntaje con los activos locales.",
+        'job_title': "¿Cuál es tu trabajo?",
+        'job_placeholder': "Ej: Ingeniero, Soldador...",
+        'teer_manual_help': "Si no aparece, elige nivel:",
+        'teer_label': "Categoría TEER (Nivel)",
+        'teer_guide': "**Ayuda:** TEER 0,1=Uni/Gerencia | TEER 2=Técnico | TEER 3=Oficios | TEER 4,5=Manual",
         'teer_opts': [
             "TEER 0, 1: Universidad / Gerencia / Ingeniería",
             "TEER 2: College / Técnico / Supervisores",
             "TEER 3: Oficios / Administración / Intermedio",
             "TEER 4, 5: Operarios / Secundaria / Manual"
         ],
-        'teer_manual_help': "Si no encuentras, elige abajo:",
         'exp_label': "Años de experiencia",
-        'lang_info': "**Requisitos:** Volet 1 = Niv 7 | Volet 2 = Niv 5 | Pareja = Niv 4",
-        'fr_oral': "Francés Oral (Tú)", 'fr_write': "Francés Escrito (Tú)", 'en': "Inglés",
-        'sp_fr_title': "Francés de la Pareja (Oral)",
-        # QUEBEC
-        'oev_info': "**ℹ️ VJO (Oferta Validada):** Significa que el empleador obtuvo una LMIA/EIMT o aprobación del MIFI. Una carta simple de trabajo no siempre cuenta.",
-        'vjo_label': "¿Tienes Oferta Validada (VJO)?",
-        'vjo_opts': ["No", "Sí, Gran Montreal", "Sí, Fuera de Montreal (Región)"],
-        'dip_qc_label': "¿Diploma de Quebec?",
-        'dip_qc_help': "AEC, DEP, DEC, Bachelor, Maestría, Doctorado obtenido en una institución de Quebec.",
-        'fam_qc_label': "¿Familia en Quebec?",
-        'fam_qc_help': "Padres, hijos, cónyuge, hermanos, abuelos (Que sean Residentes o Ciudadanos).",
-        'arr_year': "Año de llegada a Quebec (si aplica)",
-        'city_label': "Ciudad de residencia (si estás en Quebec)",
-        'city_opts': ["-", "Montréal", "Québec (Ville)", "Laval", "Gatineau", "Longueuil", "Sherbrooke", "Lévis", "Saguenay", "Trois-Rivières", "Terrebonne", "Otra"],
-        # RESULTADOS (AQUÍ ESTABA EL ERROR)
+        'lang_info': "Volet 1=Niv 7 | Volet 2=Niv 5",
+        'age': "Edad", 'spouse': "Pareja ?", 'kids12': "Hijos -12", 'kids13': "Hijos +12",
+        'sp_section': "Pareja (Edad/Estudios)",
+        'sp_fr_title': "Francés Pareja",
+        'sp_fr_label': "Nivel Oral",
+        'edu': "Nivel estudios", 'vjo': "Oferta (VJO)", 'calc': "CALCULAR PUNTAJE",
         'res_title': "Resultado",
         'advice_good': "¡Excelente! Competitivo.",
         'advice_low': "Mejora el francés o busca VJO.",
         'details': "Detalles",
-        'sp_points': "Puntos Pareja",
-        'guide_title': "Tu Hoja de Ruta",
-        'g_step1': "1. Autoevaluación", 'g_desc1': "Conoce tus fortalezas (Idioma, VJO).",
-        'g_step2': "2. Francés", 'g_desc2': "Apunta a un nivel B2 (7) o C1.",
-        'g_step3': "3. Arrima", 'g_desc3': "Crea tu perfil gratis.",
-        'g_step4': "4. CSQ", 'g_desc4': "Certificado de Selección de Quebec.",
-        'g_step5': "5. Federal", 'g_desc5': "Residencia Permanente Canadá.",
-        'noc_link_text': "🔎 Buscar en sitio oficial Canadá (NOC)"
+        'sp_points': "Pts Pareja",
+        'guide_title': "Hoja de Ruta",
+        'g_step1': "1. Autoevaluación", 'g_desc1': "Tus fortalezas.",
+        'g_step2': "2. Francés", 'g_desc2': "Apunta a B2 (7).",
+        'g_step3': "3. Arrima", 'g_desc3': "Perfil gratis.",
+        'g_step4': "4. CSQ", 'g_desc4': "Certificado Selección.",
+        'g_step5': "5. Federal", 'g_desc5': "Residencia Permanente.",
+        'noc_link_text': "🔎 Buscar en sitio oficial Canadá (NOC)",
+        'oev_info': "**ℹ️ VJO:** Oferta Validada por el MIFI.",
+        'vjo_label': "¿Oferta Validada (VJO)?",
+        'vjo_opts': ["No", "Sí, Gran Montreal", "Sí, Fuera de Montreal"],
+        'dip_qc_label': "¿Diploma de Quebec?", 'dip_qc_help': "AEC, DEC, Bachelor, etc.",
+        'fam_qc_label': "¿Familia en Quebec?", 'fam_qc_help': "Residente o Ciudadano.",
+        'city_label': "Ciudad", 'city_opts': ["-", "Montréal", "Québec", "Laval", "Gatineau", "Sherbrooke", "Otra"],
+        'arr_year': "Año llegada"
     },
     'en': {
         'btn_lang': "🌐 Change Language",
         'brand': "Calculatrice PSTQ ⚜️",
-        'subtitle': "Residency Analysis Tool.",
-        'disclaimer_text': "Independent. NOT lawyers. Estimated results.",
-        'coffee': "☕ Support",
+        'subtitle': "Residency Analysis Tool (Arrima).",
+        # ESTAS DOS LÍNEAS FALTABAN:
+        'disclaimer_title': "⚠️ DISCLAIMER",
+        'disclaimer_text': "Independent. NOT lawyers. NOT Government (MIFI).",
+        'coffee': "☕ Coffee (Support)",
         'courses': "📚 French Courses",
         'main_tabs': ["🧮 Calculator", "ℹ️ Guide"],
         'next': "Next ➡", 'prev': "⬅ Back", 'calc': "CALCULATE SCORE",
-        # STEPS
-        'step1': "Step 1: Profile & Family",
-        'step2': "Step 2: Work & TEER",
-        'step3': "Step 3: Languages",
-        'step4': "Step 4: Quebec & Offer",
-        # CONTENT
-        'age': "Age",
-        'spouse': "Have a spouse?",
-        'kids12': "Kids -12", 'kids13': "Kids +12",
-        'sp_header': "Spouse Data",
-        'sp_age': "Spouse Age", 'sp_edu': "Spouse Edu",
-        'job_title': "Current Job",
-        'job_place': "Ex: Engineer, Welder...",
+        'tabs': ["👤 Profile", "💼 Work", "🗣️ Language", "⚜️ Quebec"],
+        'tab1_header': "Your Profile & Family", 'tab1_sub': "The starting point of your immigration project.",
+        'tab2_header': "Your Quebec Experience", 'tab2_sub': "Your trade is at the heart of the PSTQ program.",
+        'tab3_header': "Your Language Skills", 'tab3_sub': "French is the key to success in Quebec.",
+        'tab4_header': "Quebec Factors & VJO", 'tab4_sub': "Finalize your score with local assets.",
+        'job_title': "Current job?",
+        'job_placeholder': "Ex: Engineer, Welder...",
+        'teer_manual_help': "If not found, select level:",
         'teer_label': "TEER Category",
+        'teer_guide': "**Help:** TEER 0,1=Uni/Mgmt | TEER 2=Tech | TEER 3=Trades | TEER 4,5=Manual",
         'teer_opts': [
             "TEER 0, 1: University / Management / Engineering",
             "TEER 2: College / Technical / Supervisors",
             "TEER 3: Trades / Admin / Intermediate",
             "TEER 4, 5: Labourer / High School / Service"
         ],
-        'teer_manual_help': "If not found, select below:",
-        'exp_label': "Years Experience",
-        'lang_info': "**Reqs:** Volet 1 = Lvl 7 | Volet 2 = Lvl 5 | Spouse = Lvl 4",
-        'fr_oral': "French Oral (You)", 'fr_write': "French Written (You)", 'en': "English",
-        'sp_fr_title': "Spouse's French (Oral)",
-        # QUEBEC
-        'oev_info': "**ℹ️ VJO (Validated Offer):** Means employer got LMIA or MIFI approval. A simple job letter is usually not enough.",
-        'vjo_label': "Validated Job Offer (VJO)?",
-        'vjo_opts': ["No", "Yes, Greater Montreal", "Yes, Outside Montreal (Regions)"],
-        'dip_qc_label': "Quebec Diploma?",
-        'dip_qc_help': "AEC, DEP, DEC, Bachelor, Master, PhD from a Quebec institution.",
-        'fam_qc_label': "Family in Quebec?",
-        'fam_qc_help': "Parent, child, spouse, sibling, grandparent (PR or Citizen).",
-        'arr_year': "Arrival Year in Quebec (if applicable)",
-        'city_label': "City of residence",
-        'city_opts': ["-", "Montréal", "Québec (Ville)", "Laval", "Gatineau", "Longueuil", "Sherbrooke", "Lévis", "Saguenay", "Trois-Rivières", "Terrebonne", "Other"],
-        # RESULTS (AQUÍ ESTABA EL ERROR)
+        'exp_label': "Years experience",
+        'lang_info': "Volet 1=Lvl 7 | Volet 2=Lvl 5",
+        'age': "Age", 'spouse': "Spouse ?", 'kids12': "Kids -12", 'kids13': "Kids +12",
+        'sp_section': "Spouse (Age/Edu)",
+        'sp_fr_title': "Spouse French",
+        'sp_fr_label': "Oral Level",
+        'edu': "Education", 'vjo': "Offer (VJO)", 'calc': "CALCULATE SCORE",
         'res_title': "Result",
         'advice_good': "Excellent! Competitive.",
         'advice_low': "Improve French or find VJO.",
@@ -324,23 +296,31 @@ t = {
         'sp_points': "Spouse Pts",
         'guide_title': "Roadmap",
         'g_step1': "1. Self-Assess", 'g_desc1': "Know strengths.",
-        'g_step2': "2. French", 'g_desc2': "Aim for B2 (7) or C1.",
+        'g_step2': "2. French", 'g_desc2': "Aim B2 (7).",
         'g_step3': "3. Arrima", 'g_desc3': "Free profile.",
         'g_step4': "4. CSQ", 'g_desc4': "Selection Cert.",
         'g_step5': "5. Federal", 'g_desc5': "Residency.",
-        'noc_link_text': "🔎 Search on official Canada site (NOC)"
+        'noc_link_text': "🔎 Search on official Canada site (NOC)",
+        'oev_info': "**ℹ️ VJO:** Validated Job Offer.",
+        'vjo_label': "Validated Job Offer?",
+        'vjo_opts': ["No", "Yes, Greater Montreal", "Yes, Outside Montreal"],
+        'dip_qc_label': "Quebec Diploma?", 'dip_qc_help': "AEC, DEC, etc.",
+        'fam_qc_label': "Family in Quebec?", 'fam_qc_help': "PR or Citizen.",
+        'city_label': "City", 'city_opts': ["-", "Montréal", "Québec", "Laval", "Gatineau", "Sherbrooke", "Other"],
+        'arr_year': "Arrival Year"
     }
 }
 lang = t[st.session_state.language]
 
 # --- 5. DATA JOBS ---
 jobs_db = {
-    "ingenie": {"code": "213xx", "teer": "1", "volet": "Volet 1"},
-    "engineer": {"code": "213xx", "teer": "1", "volet": "Volet 1"},
+    "ingenie": {"code": "21300", "teer": "1", "volet": "Volet 1"},
+    "engineer": {"code": "21300", "teer": "1", "volet": "Volet 1"},
     "software": {"code": "21220", "teer": "1", "volet": "Volet 1"},
     "web": {"code": "21222", "teer": "1", "volet": "Volet 1"},
     "infirmier": {"code": "31301", "teer": "1", "volet": "Volet 1"},
     "nurse": {"code": "31301", "teer": "1", "volet": "Volet 1"},
+    "architect": {"code": "21200", "teer": "1", "volet": "Volet 1"},
     "administra": {"code": "13100", "teer": "3", "volet": "Volet 2"},
     "technicien": {"code": "22300", "teer": "2", "volet": "Volet 1/2"},
     "soud": {"code": "72106", "teer": "2", "volet": "Volet 1/2"},
@@ -382,7 +362,7 @@ main_tab_calc, main_tab_guide = st.tabs(lang['main_tabs'])
 # --- PESTAÑA CALCULADORA (WIZARD MODE) ---
 with main_tab_calc:
     
-    # BARRA DE PROGRESO DEL WIZARD
+    # BARRA DE PROGRESO
     progress = (st.session_state.step / 4)
     st.progress(progress)
 
@@ -390,13 +370,13 @@ with main_tab_calc:
     # PASO 1: PERFIL
     # ------------------------------------
     if st.session_state.step == 1:
-        st.markdown(f"### 👤 {lang['step1']}")
+        st.markdown(f"### 👤 {lang['tab1_header']} ⚜️")
+        st.markdown(f"<span class='deco-sub'>{lang['tab1_sub']}</span>", unsafe_allow_html=True)
+        
         with st.form("step1_form"):
             c1, c2 = st.columns(2)
-            with c1: 
-                st.session_state.age = st.number_input(lang['age'], 18, 65, st.session_state.age)
-            with c2: 
-                st.session_state.spouse = st.checkbox(lang['spouse'], value=st.session_state.spouse)
+            with c1: st.session_state.age = st.number_input(lang['age'], 18, 65, st.session_state.age)
+            with c2: st.session_state.spouse = st.checkbox(lang['spouse'], value=st.session_state.spouse)
             
             c3, c4 = st.columns(2)
             with c3: st.session_state.k1 = st.number_input(lang['kids12'], 0, 5, st.session_state.k1)
@@ -410,7 +390,6 @@ with main_tab_calc:
                 with c_sp2: st.session_state.sp_edu = st.selectbox(lang['sp_edu'], ["PhD", "Master", "Bachelor", "Technical", "Secondary"], index=2)
             
             st.markdown("###")
-            # Botón Siguiente
             col_e, col_n = st.columns([3, 1])
             with col_n:
                 if st.form_submit_button(lang['next'], type="primary"):
@@ -421,7 +400,9 @@ with main_tab_calc:
     # PASO 2: TRABAJO
     # ------------------------------------
     elif st.session_state.step == 2:
-        st.markdown(f"### 💼 {lang['step2']}")
+        st.markdown(f"### 💼 {lang['tab2_header']} ⚜️")
+        st.markdown(f"<span class='deco-sub'>{lang['tab2_sub']}</span>", unsafe_allow_html=True)
+        
         with st.form("step2_form"):
             st.markdown(f"**{lang['job_title']}**")
             job_query = st.text_input("Search", placeholder=lang['job_place'], label_visibility="collapsed")
@@ -435,7 +416,6 @@ with main_tab_calc:
 
             st.divider()
             
-            # Recuperar índice si ya hay selección
             current_idx = 0
             if st.session_state.teer_sel in lang['teer_opts']:
                 current_idx = lang['teer_opts'].index(st.session_state.teer_sel)
@@ -460,7 +440,8 @@ with main_tab_calc:
     # PASO 3: IDIOMAS
     # ------------------------------------
     elif st.session_state.step == 3:
-        st.markdown(f"### 🗣️ {lang['step3']}")
+        st.markdown(f"### 🗣️ {lang['tab3_header']} ⚜️")
+        st.markdown(f"<span class='deco-sub'>{lang['tab3_sub']}</span>", unsafe_allow_html=True)
         st.markdown(f"<div class='info-box'>{lang['lang_info']}</div>", unsafe_allow_html=True)
         
         with st.form("step3_form"):
@@ -489,12 +470,12 @@ with main_tab_calc:
     # PASO 4: QUEBEC (FINAL)
     # ------------------------------------
     elif st.session_state.step == 4:
-        st.markdown(f"### ⚜️ {lang['step4']}")
+        st.markdown(f"### ⚜️ {lang['tab4_header']}")
+        st.markdown(f"<span class='deco-sub'>{lang['tab4_sub']}</span>", unsafe_allow_html=True)
         
         st.info(lang['oev_info'])
         
         with st.form("step4_form"):
-            # Recuperar índice si ya hay selección
             vjo_idx = 0
             if st.session_state.vjo in lang['vjo_opts']:
                 vjo_idx = lang['vjo_opts'].index(st.session_state.vjo)
@@ -532,7 +513,6 @@ with main_tab_calc:
 
     # LÓGICA & RESULTADOS
     if st.session_state.show_results:
-        # Recuperar variables
         age = st.session_state.age
         edu = st.session_state.edu
         teer = st.session_state.teer_sel
@@ -545,34 +525,34 @@ with main_tab_calc:
         score = 0
         score_sp = 0 
         
-        # Edad
         if 18 <= age <= 30: score += 130
         elif age <= 45: score += (130 - (age-30)*5)
-        # Edu
+        
         if "PhD" in edu: score += 90
         elif "Master" in edu: score += 75
         elif "Bachelor" in edu: score += 60
         elif "College" in edu: score += 50
         else: score += 30
-        # TEER
+        
+        # Mapeo TEER
         if "TEER 0, 1" in teer or "TEER 0,1" in teer: score += 60 
         elif "TEER 2" in teer: score += 40
         elif "TEER 3" in teer: score += 20
-        # Exp
+        
         score += min(80, int(exp * 10))
-        # Idioma
+        
         pts_map = {"0":0, "A1":0, "A2":10, "B1":20, "B2":50, "C1":70, "C2":80}
         score += pts_map.get(fr_o,0) * 1.2 + pts_map.get(fr_w,0) * 0.8
         
         if en == "Advanced": score += 25
         elif en == "Intermediate": score += 15
-        # VJO
+        
         if "Hors" in vjo_val or "Outside" in vjo_val or "Fuera" in vjo_val: score += 380
         elif "Grand" in vjo_val or "Greater" in vjo_val or "Gran" in vjo_val: score += 180
-        # Quebec
+        
         if st.session_state.q_stud: score += 50
         if st.session_state.q_fam: score += 30
-        # Spouse
+        
         if st.session_state.spouse:
             sp_a = st.session_state.sp_age
             sp_e = st.session_state.sp_edu
