@@ -7,35 +7,70 @@ st.set_page_config(
     layout="centered"
 )
 
-# --- 2. ESTILOS CSS (ESTILO WIZARD + MÓVIL BLINDADO) ---
+# --- 2. ESTILOS CSS (CORRECCIÓN VISUAL DEFINITIVA) ---
 st.markdown("""
     <style>
-        /* === 0. INSTRUCCIÓN MAESTRA === */
-        :root { color-scheme: light; }
+        /* === 0. INSTRUCCIÓN MAESTRA PARA MÓVIL === */
+        :root {
+            color-scheme: light; 
+        }
         
-        /* === 1. FONDO Y TEXTOS === */
-        [data-testid="stAppViewContainer"] { background-color: #f0f2f6 !important; }
-        .stApp, p, label, h1, h2, h3, h4, h5, h6, div, span, li { color: #000000 !important; }
+        /* === 1. FONDO Y TEXTOS GENERALES === */
+        [data-testid="stAppViewContainer"] {
+            background-color: #f0f2f6 !important;
+        }
+        .stApp, p, label, h1, h2, h3, h4, h5, h6, div, span, li {
+            color: #000000 !important;
+        }
         header[data-testid="stHeader"] { background-color: #003399 !important; }
         h1, h2, h3 { color: #003399 !important; }
 
-        /* === 2. INPUTS Y SELECTORES (CONTRASTE ALTO) === */
-        div[data-baseweb="select"] > div, 
-        div[data-baseweb="input"] > div,
-        div[data-baseweb="base-input"] {
+        /* === 2. ARREGLO DE CAJAS DE SELECCIÓN (SELECTBOX) === */
+        /* La caja cerrada */
+        div[data-baseweb="select"] > div {
             background-color: #FFFFFF !important;
             border: 1px solid #ccc !important;
             color: #000000 !important;
         }
-        input { color: #000000 !important; -webkit-text-fill-color: #000000 !important; }
-        div[data-baseweb="select"] * { color: #000000 !important; }
-        
-        /* Menú desplegable */
-        ul[data-baseweb="menu"] { background-color: #FFFFFF !important; }
-        li[data-baseweb="menu-item"] { background-color: #FFFFFF !important; color: #000000 !important; }
-        li[data-baseweb="menu-item"]:hover { background-color: #e6f0ff !important; color: #003399 !important; }
+        /* El texto dentro de la caja */
+        div[data-baseweb="select"] span {
+            color: #000000 !important;
+            -webkit-text-fill-color: #000000 !important;
+        }
+        /* El icono de la flecha */
+        div[data-baseweb="select"] svg {
+            fill: #000000 !important;
+        }
 
-        /* === 3. BOTONES DE NAVEGACIÓN === */
+        /* === 3. ARREGLO DEL MENÚ DESPLEGABLE (LISTA DE OPCIONES) === */
+        ul[data-baseweb="menu"] {
+            background-color: #FFFFFF !important;
+        }
+        li[data-baseweb="menu-item"] {
+            background-color: #FFFFFF !important;
+            color: #000000 !important;
+        }
+        li[data-baseweb="menu-item"]:hover, li[aria-selected="true"] {
+            background-color: #e6f0ff !important;
+            color: #003399 !important;
+        }
+        /* Forzar color a los hijos del item */
+        li[data-baseweb="menu-item"] * {
+            color: #000000 !important;
+        }
+
+        /* === 4. INPUTS DE TEXTO === */
+        div[data-baseweb="input"] > div {
+            background-color: #FFFFFF !important;
+            border: 1px solid #ccc !important;
+        }
+        input {
+            color: #000000 !important;
+            -webkit-text-fill-color: #000000 !important;
+            background-color: #FFFFFF !important;
+        }
+
+        /* === 5. BOTONES === */
         div.stButton > button { width: 100%; border-radius: 8px; font-weight: bold; }
         
         /* Botón Siguiente/Calcular (Azul) */
@@ -43,9 +78,7 @@ st.markdown("""
             background-color: #003399 !important;
             color: #FFFFFF !important;
             border: none !important;
-            padding: 10px 20px;
         }
-        div.stButton > button[kind="primary"]:hover { background-color: #002266 !important; }
         div.stButton > button[kind="primary"] p { color: #FFFFFF !important; }
 
         /* Botón Anterior/Secundario (Blanco) */
@@ -56,32 +89,28 @@ st.markdown("""
         }
         div.stButton > button[kind="secondary"] p { color: #003399 !important; }
 
-        /* === 4. TARJETA PRINCIPAL === */
+        /* === 6. TARJETA PRINCIPAL === */
         [data-testid="stForm"] {
             background-color: #FFFFFF !important;
-            padding: 2rem; 
+            padding: 1.5rem; 
             border-radius: 15px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1); 
             border-top: 5px solid #003399;
         }
         
-        /* Cajas Informativas */
-        .info-box { background-color: #e8f4fd; border-left: 5px solid #003399; padding: 15px; border-radius: 5px; color: #000 !important; margin-bottom: 15px;}
-        .help-box { background-color: #fff3cd; border-left: 5px solid #ffc107; padding: 15px; border-radius: 5px; color: #000 !important; }
-        .step-box { background-color: white; padding: 15px; border-radius: 10px; border: 1px solid #ddd; margin-bottom: 10px; color: #000 !important; }
-        
-        /* Resultado */
+        /* === 7. OTROS ELEMENTOS === */
+        .info-box { background-color: #e8f4fd; border-left: 5px solid #003399; padding: 15px; border-radius: 5px; margin-bottom: 15px; }
+        .help-box { background-color: #fff3cd; border-left: 5px solid #ffc107; padding: 15px; border-radius: 5px; }
+        .step-box { background-color: white; padding: 15px; border-radius: 10px; border: 1px solid #ddd; margin-bottom: 10px; }
         .result-box { background-color: #003399; padding: 20px; border-radius: 10px; text-align: center; margin-top: 20px; }
         .result-box h2 { color: #FFFFFF !important; margin: 0; }
-
-        /* Footer */
         .footer { margin-top: 50px; padding: 20px; border-top: 1px solid #ccc; text-align: center; }
         .deco-sub { font-style: italic; margin-bottom: 15px; display: block; color: #666666 !important; }
 
     </style>
 """, unsafe_allow_html=True)
 
-# --- 3. INICIALIZACIÓN ROBUSTA ---
+# --- 3. INICIALIZACIÓN DE VARIABLES (PARA EVITAR KEYERROR) ---
 default_values = {
     'language': 'fr',
     'step': 1,
@@ -93,7 +122,7 @@ default_values = {
     'sp_age': 30,
     'sp_edu': 'Secondary',
     'sp_fr': '0',
-    'teer_sel': '', # Se llenará dinámicamente
+    'teer_sel': 'TEER 0, 1: Université / Gestion / Ingénierie', # Default safe
     'edu': 'Secondary',
     'exp': 3,
     'fr_oral': 'B2',
@@ -122,12 +151,12 @@ def reset_calc():
 def trigger_calculation():
     st.session_state.show_results = True
 
-# --- 4. TRADUCCIONES ---
+# --- 4. TRADUCCIONES COMPLETA (SIN ERRORES) ---
 t = {
     'fr': {
         'btn_lang': "🌐 Changer la langue",
         'brand': "Calculatrice PSTQ Québec ⚜️",
-        'subtitle': "Outil d'analyse pour la Résidence Permanente.",
+        'subtitle': "Outil d'analyse pour la Résidence Permanente (TEER, Volets, Score).",
         'disclaimer_text': "Projet indépendant. PAS avocats/consultants. Résultats estimés.",
         'coffee': "☕ M'offrir un café",
         'courses': "📚 Cours de Français",
@@ -147,7 +176,6 @@ t = {
         'job_title': "Emploi actuel",
         'job_place': "Ex: Ingénieur, Soudeur...",
         'teer_label': "Catégorie TEER",
-        # TEER DETALLADO (FR)
         'teer_opts': [
             "TEER 0, 1: Université / Gestion / Ingénierie",
             "TEER 2: Collégial / Technique / Superviseurs",
@@ -170,7 +198,7 @@ t = {
         'arr_year': "Année d'arrivée au Québec (si applicable)",
         'city_label': "Ville de résidence (si au Québec)",
         'city_opts': ["-", "Montréal", "Québec (Ville)", "Laval", "Gatineau", "Longueuil", "Sherbrooke", "Lévis", "Saguenay", "Trois-Rivières", "Terrebonne", "Autre"],
-        # RESULTADOS
+        # RESULTADOS (AQUÍ ESTABA EL ERROR)
         'res_title': "Résultat Estimé",
         'advice_good': "Excellent ! Profil compétitif.",
         'advice_low': "Améliorez le français ou cherchez une OEV.",
@@ -181,7 +209,8 @@ t = {
         'g_step2': "2. Français", 'g_desc2': "Visez un niveau B2 (7) ou C1.",
         'g_step3': "3. Arrima", 'g_desc3': "Créez votre profil gratuitement.",
         'g_step4': "4. CSQ", 'g_desc4': "Certificat de Sélection du Québec.",
-        'g_step5': "5. Fédéral", 'g_desc5': "Résidence Permanente Canada."
+        'g_step5': "5. Fédéral", 'g_desc5': "Résidence Permanente Canada.",
+        'noc_link_text': "🔎 Chercher sur le site officiel du Canada (CNP)"
     },
     'es': {
         'btn_lang': "🌐 Cambiar Idioma",
@@ -206,7 +235,6 @@ t = {
         'job_title': "Trabajo actual",
         'job_place': "Ej: Ingeniero, Soldador...",
         'teer_label': "Categoría TEER",
-        # TEER DETALLADO (ES)
         'teer_opts': [
             "TEER 0, 1: Universidad / Gerencia / Ingeniería",
             "TEER 2: College / Técnico / Supervisores",
@@ -229,7 +257,7 @@ t = {
         'arr_year': "Año de llegada a Quebec (si aplica)",
         'city_label': "Ciudad de residencia (si estás en Quebec)",
         'city_opts': ["-", "Montréal", "Québec (Ville)", "Laval", "Gatineau", "Longueuil", "Sherbrooke", "Lévis", "Saguenay", "Trois-Rivières", "Terrebonne", "Otra"],
-        # RESULTADOS
+        # RESULTADOS (AQUÍ ESTABA EL ERROR)
         'res_title': "Resultado",
         'advice_good': "¡Excelente! Competitivo.",
         'advice_low': "Mejora el francés o busca VJO.",
@@ -240,7 +268,8 @@ t = {
         'g_step2': "2. Francés", 'g_desc2': "Apunta a un nivel B2 (7) o C1.",
         'g_step3': "3. Arrima", 'g_desc3': "Crea tu perfil gratis.",
         'g_step4': "4. CSQ", 'g_desc4': "Certificado de Selección de Quebec.",
-        'g_step5': "5. Federal", 'g_desc5': "Residencia Permanente Canadá."
+        'g_step5': "5. Federal", 'g_desc5': "Residencia Permanente Canadá.",
+        'noc_link_text': "🔎 Buscar en sitio oficial Canadá (NOC)"
     },
     'en': {
         'btn_lang': "🌐 Change Language",
@@ -265,7 +294,6 @@ t = {
         'job_title': "Current Job",
         'job_place': "Ex: Engineer, Welder...",
         'teer_label': "TEER Category",
-        # TEER DETALLADO (EN)
         'teer_opts': [
             "TEER 0, 1: University / Management / Engineering",
             "TEER 2: College / Technical / Supervisors",
@@ -288,18 +316,19 @@ t = {
         'arr_year': "Arrival Year in Quebec (if applicable)",
         'city_label': "City of residence",
         'city_opts': ["-", "Montréal", "Québec (Ville)", "Laval", "Gatineau", "Longueuil", "Sherbrooke", "Lévis", "Saguenay", "Trois-Rivières", "Terrebonne", "Other"],
-        # RESULTS
+        # RESULTS (AQUÍ ESTABA EL ERROR)
         'res_title': "Result",
         'advice_good': "Excellent! Competitive.",
         'advice_low': "Improve French or find VJO.",
         'details': "Details",
         'sp_points': "Spouse Pts",
         'guide_title': "Roadmap",
-        'g_step1': "1. Self-Assessment", 'g_desc1': "Know your strengths.",
+        'g_step1': "1. Self-Assess", 'g_desc1': "Know strengths.",
         'g_step2': "2. French", 'g_desc2': "Aim for B2 (7) or C1.",
-        'g_step3': "3. Arrima", 'g_desc3': "Create free profile.",
-        'g_step4': "4. CSQ", 'g_desc4': "Quebec Selection Certificate.",
-        'g_step5': "5. Federal", 'g_desc5': "Permanent Residency Canada."
+        'g_step3': "3. Arrima", 'g_desc3': "Free profile.",
+        'g_step4': "4. CSQ", 'g_desc4': "Selection Cert.",
+        'g_step5': "5. Federal", 'g_desc5': "Residency.",
+        'noc_link_text': "🔎 Search on official Canada site (NOC)"
     }
 }
 lang = t[st.session_state.language]
@@ -402,12 +431,12 @@ with main_tab_calc:
                     st.success(f"✅ Code: {result['code']} | TEER: {result['teer']} | {result['volet']}")
                 else:
                     st.markdown(f"<div class='help-box'>{lang['teer_manual_help']}</div>", unsafe_allow_html=True)
+                    st.markdown(f"🔗 [{lang['noc_link_text']}](https://noc.esdc.gc.ca/)")
 
             st.divider()
             
-            # USO LAS NUEVAS OPCIONES DETALLADAS
+            # Recuperar índice si ya hay selección
             current_idx = 0
-            # Intentar mantener la selección previa si existe
             if st.session_state.teer_sel in lang['teer_opts']:
                 current_idx = lang['teer_opts'].index(st.session_state.teer_sel)
                 
@@ -465,7 +494,11 @@ with main_tab_calc:
         st.info(lang['oev_info'])
         
         with st.form("step4_form"):
-            st.session_state.vjo = st.radio(lang['vjo_label'], lang['vjo_opts'])
+            # Recuperar índice si ya hay selección
+            vjo_idx = 0
+            if st.session_state.vjo in lang['vjo_opts']:
+                vjo_idx = lang['vjo_opts'].index(st.session_state.vjo)
+            st.session_state.vjo = st.radio(lang['vjo_label'], lang['vjo_opts'], index=vjo_idx)
             
             st.divider()
             
@@ -521,17 +554,16 @@ with main_tab_calc:
         elif "Bachelor" in edu: score += 60
         elif "College" in edu: score += 50
         else: score += 30
-        
-        # TEER (Actualizado con textos largos)
+        # TEER
         if "TEER 0, 1" in teer or "TEER 0,1" in teer: score += 60 
         elif "TEER 2" in teer: score += 40
         elif "TEER 3" in teer: score += 20
-        
         # Exp
         score += min(80, int(exp * 10))
         # Idioma
         pts_map = {"0":0, "A1":0, "A2":10, "B1":20, "B2":50, "C1":70, "C2":80}
         score += pts_map.get(fr_o,0) * 1.2 + pts_map.get(fr_w,0) * 0.8
+        
         if en == "Advanced": score += 25
         elif en == "Intermediate": score += 15
         # VJO
