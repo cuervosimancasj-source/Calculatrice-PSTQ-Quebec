@@ -7,26 +7,60 @@ st.set_page_config(
     layout="centered"
 )
 
-# --- 2. ESTILOS CSS (BLINDAJE TOTAL) ---
+# --- 2. ESTILOS CSS (CORRECCIÓN TOTAL DE COLORES Y BOTONES) ---
 st.markdown("""
     <style>
-        /* === 0. FORZAR TEMA CLARO === */
+        /* === 0. FORZADO GLOBAL MODO CLARO === */
         :root { color-scheme: light !important; }
         html, body, [data-testid="stAppViewContainer"] {
             background-color: #f0f2f6 !important;
             color: #000000 !important;
         }
         
-        /* Texto general negro */
+        /* TEXTO GENERAL NEGRO */
         .stApp, p, label, h1, h2, h3, h4, h5, h6, div, span, li {
             color: #000000 !important;
         }
         
-        /* Encabezado Azul */
+        /* ENCABEZADO AZUL */
         header[data-testid="stHeader"] { background-color: #003399 !important; }
         h1, h2, h3 { color: #003399 !important; }
 
-        /* === 1. INPUTS Y SELECTORES === */
+        /* === 1. ARREGLO DE BOTONES (Siguiente, Calcular, Links) === */
+        div.stButton > button { width: 100%; border-radius: 8px; font-weight: bold; }
+
+        /* Botón Primario (AZUL) */
+        div.stButton > button[kind="primary"] {
+            background-color: #003399 !important;
+            border: none !important;
+            color: #FFFFFF !important;
+        }
+        /* Forzar texto blanco dentro del botón azul */
+        div.stButton > button[kind="primary"] p, 
+        div.stButton > button[kind="primary"] * { 
+            color: #FFFFFF !important; 
+        }
+
+        /* Botones de Enlace (AZUL) */
+        div.stLinkButton > a {
+            background-color: #003399 !important;
+            border: none !important;
+            color: #FFFFFF !important;
+            font-weight: bold !important;
+        }
+        div.stLinkButton > a * { color: #FFFFFF !important; }
+
+        /* Botón Secundario (BLANCO) */
+        div.stButton > button[kind="secondary"] {
+            background-color: #FFFFFF !important;
+            border: 2px solid #003399 !important;
+            color: #003399 !important;
+        }
+        div.stButton > button[kind="secondary"] * { 
+            color: #003399 !important; 
+        }
+
+        /* === 2. INPUTS Y SELECTORES (NEGRO SOBRE BLANCO) === */
         div[data-baseweb="input"], div[data-baseweb="base-input"], div[data-baseweb="select"] > div {
             background-color: #FFFFFF !important;
             border: 1px solid #cccccc !important;
@@ -42,53 +76,22 @@ st.markdown("""
             color: #000000 !important;
             -webkit-text-fill-color: #000000 !important;
         }
-
-        /* === 2. CORRECCIÓN BOTONES +/- (NUMÉRICOS) === */
-        div[data-baseweb="input"] button, div[data-baseweb="base-input"] button {
-            background-color: #f0f2f6 !important; /* Fondo gris claro */
-            color: #000000 !important; /* Icono negro */
-            border-left: 1px solid #ccc !important;
+        
+        /* === 3. CORRECCIÓN BOTONES +/- (NUMÉRICOS) === */
+        /* Estos son los botones pequeños dentro de edad/hijos */
+        button[tabindex="-1"] {
+            background-color: #e0e0e0 !important; /* Gris claro */
+            color: #000000 !important;
         }
-        div[data-baseweb="input"] button svg, div[data-baseweb="base-input"] button svg {
+        button[tabindex="-1"] svg {
             fill: #000000 !important;
         }
 
-        /* === 3. MENÚ DESPLEGABLE === */
+        /* === 4. MENÚ DESPLEGABLE === */
         ul[data-baseweb="menu"] { background-color: #FFFFFF !important; }
         li[data-baseweb="menu-item"] { background-color: #FFFFFF !important; color: #000000 !important; }
         li[data-baseweb="menu-item"] * { color: #000000 !important; }
         li[data-baseweb="menu-item"]:hover, li[aria-selected="true"] { background-color: #e6f0ff !important; }
-
-        /* === 4. BOTONES === */
-        div.stButton > button { width: 100%; border-radius: 8px; font-weight: bold; }
-        
-        /* Primario (Azul) */
-        div.stButton > button[kind="primary"] {
-            background-color: #003399 !important;
-            color: #FFFFFF !important;
-            border: none !important;
-        }
-        div.stButton > button[kind="primary"] * { color: #FFFFFF !important; }
-
-        /* Secundario (Blanco) */
-        div.stButton > button[kind="secondary"] {
-            background-color: #FFFFFF !important;
-            color: #003399 !important;
-            border: 2px solid #003399 !important;
-        }
-        div.stButton > button[kind="secondary"] * { color: #003399 !important; }
-        
-        /* Botones de Enlace (Azules) */
-        div.stLinkButton > a {
-            background-color: #003399 !important;
-            color: #FFFFFF !important;
-            border: none !important;
-            border-radius: 8px !important;
-            text-align: center !important;
-            font-weight: bold !important;
-            text-decoration: none !important;
-        }
-        div.stLinkButton > a * { color: #FFFFFF !important; }
 
         /* === 5. CONTENEDORES === */
         [data-testid="stForm"] {
@@ -98,19 +101,15 @@ st.markdown("""
             border-top: 5px solid #003399;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
-        
-        .info-box { background-color: #e8f4fd; border-left: 5px solid #003399; padding: 15px; border-radius: 5px; margin-bottom: 15px; }
-        .help-box { background-color: #fff3cd; border-left: 5px solid #ffc107; padding: 15px; border-radius: 5px; margin-bottom: 15px; }
-        .step-box { background-color: white; padding: 15px; border-radius: 10px; border: 1px solid #ddd; margin-bottom: 10px; }
-        
+        .info-box { background-color: #e8f4fd; border-left: 5px solid #003399; padding: 15px; border-radius: 5px; margin-bottom: 15px; color: #000 !important; }
+        .help-box { background-color: #fff3cd; border-left: 5px solid #ffc107; padding: 15px; border-radius: 5px; color: #000 !important; }
         .result-box { background-color: #003399; padding: 20px; border-radius: 10px; text-align: center; margin-top: 20px; }
         .result-box h2 { color: #FFFFFF !important; margin: 0; }
-        
         .footer { margin-top: 50px; padding: 20px; border-top: 1px solid #ccc; text-align: center; }
         .deco-sub { font-style: italic; margin-bottom: 15px; display: block; color: #666666 !important; font-size: 0.9em; }
         
-        /* Checkbox y Radio */
-        label[data-baseweb="checkbox"], label[data-baseweb="radio"] { color: #000000 !important; }
+        /* Radio buttons */
+        div[role="radiogroup"] label { color: #000000 !important; }
 
     </style>
 """, unsafe_allow_html=True)
@@ -131,6 +130,7 @@ for key, value in default_values.items():
 def cycle_language():
     lang_map = {'fr': 'es', 'es': 'en', 'en': 'fr'}
     st.session_state.language = lang_map[st.session_state.language]
+    # Reset TEER al cambiar idioma para cargar texto correcto
     st.session_state.teer_sel = t[st.session_state.language]['teer_opts'][0]
 
 def next_step(): st.session_state.step += 1
@@ -143,15 +143,16 @@ def reset_calc():
 
 def trigger_calculation(): st.session_state.show_results = True
 
-# --- 4. TRADUCCIONES (CON SUBTÍTULOS RESTAURADOS) ---
+# --- 4. TRADUCCIONES COMPLETA (AHORA SÍ) ---
 t = {
     'fr': {
         'btn_lang': "🌐 Changer la langue",
         'brand': "Calculatrice PSTQ Québec ⚜️",
-        'subtitle': "Outil d'analyse pour la Résidence Permanente.",
+        'subtitle': "Outil d'analyse pour la Résidence Permanente (TEER, Volets, Score).",
         'disclaimer_title': "⚠️ AVIS IMPORTANT",
         'disclaimer_text': "Ce logiciel est un projet indépendant. Nous ne sommes PAS avocats ni consultants.",
-        'coffee': "☕ M'offrir un café", 'courses': "📚 Cours de Français",
+        'coffee': "☕ M'offrir un café",
+        'courses': "📚 Cours de Français",
         'main_tabs': ["🧮 Calculatrice", "ℹ️ Guide"],
         'next': "Suivant ➡", 'prev': "⬅ Retour", 'calc': "CALCULER MON SCORE",
         'yes_no': ["Non", "Oui"],
@@ -159,7 +160,7 @@ t = {
         'step2': "Étape 2 : Travail & TEER",
         'step3': "Étape 3 : Langues",
         'step4': "Étape 4 : Québec & Offre",
-        # SUBTÍTULOS RESTAURADOS
+        # SUBTÍTULOS
         'tab1_sub': "Le point de départ de votre projet d'immigration.",
         'tab2_sub': "Votre métier est au cœur du programme PSTQ.",
         'tab3_sub': "Le français est la clé du succès au Québec.",
@@ -184,7 +185,8 @@ t = {
         'lang_info': "**Exigences :** Volet 1 = Niv 7 | Volet 2 = Niv 5 | Conjoint = Niv 4",
         'fr_oral': "Français Oral (Vous)", 'fr_write': "Français Écrit (Vous)", 'en': "Anglais",
         'sp_fr_title': "Français du Conjoint (Oral)",
-        'oev_info': "**ℹ️ OEV (Offre validée) :** EIMT ou validée par le MIFI.",
+        'sp_fr_label': "Niveau Oral",
+        'oev_info': "**ℹ️ OEV (Offre d'emploi validée) :** Signifie que l'employeur a obtenu une EIMT ou que l'offre est validée par le MIFI.",
         'vjo_label': "Avez-vous une Offre Validée (OEV) ?",
         'vjo_opts': ["Non", "Oui, Grand Montréal", "Oui, Hors Montréal (Région)"],
         'dip_qc_label': "Diplôme du Québec ?",
@@ -197,7 +199,8 @@ t = {
         'res_title': "Résultat Estimé",
         'advice_good': "Excellent ! Profil compétitif.",
         'advice_low': "Améliorez le français ou cherchez une OEV.",
-        'details': "Détails du score", 'sp_points': "Points Conjoint",
+        'details': "Détails du score",
+        'sp_points': "Points Conjoint",
         'guide_title': "Votre Feuille de Route",
         'g_step1': "1. Auto-évaluation", 'g_desc1': "Vos points forts.",
         'g_step2': "2. Français", 'g_desc2': "Visez B2 (7).",
@@ -209,7 +212,7 @@ t = {
     'es': {
         'btn_lang': "🌐 Cambiar Idioma",
         'brand': "Calculatrice PSTQ ⚜️",
-        'subtitle': "Análisis Residencia Permanente.",
+        'subtitle': "Análisis Residencia Permanente (Arrima).",
         'disclaimer_title': "⚠️ AVISO LEGAL",
         'disclaimer_text': "Proyecto independiente. NO abogados. Resultados estimados.",
         'coffee': "☕ Invítame un café",
@@ -221,7 +224,7 @@ t = {
         'step2': "Paso 2: Trabajo y TEER",
         'step3': "Paso 3: Idiomas",
         'step4': "Paso 4: Quebec y Oferta",
-        # SUBTÍTULOS RESTAURADOS
+        # SUBTÍTULOS (AGREGADOS)
         'tab1_sub': "El punto de partida de tu proyecto de inmigración.",
         'tab2_sub': "Tu oficio es el corazón del programa PSTQ.",
         'tab3_sub': "El francés es la llave del éxito en Quebec.",
@@ -246,11 +249,14 @@ t = {
         'lang_info': "**Requisitos:** Volet 1 = Niv 7 | Volet 2 = Niv 5 | Pareja = Niv 4",
         'fr_oral': "Francés Oral (Tú)", 'fr_write': "Francés Escrito (Tú)", 'en': "Inglés",
         'sp_fr_title': "Francés de la Pareja (Oral)",
+        'sp_fr_label': "Nivel Oral",
         'oev_info': "**ℹ️ VJO (Oferta Validada):** Con LMIA o aprobada por MIFI.",
         'vjo_label': "¿Tienes Oferta Validada (VJO)?",
         'vjo_opts': ["No", "Sí, Gran Montreal", "Sí, Fuera de Montreal"],
-        'dip_qc_label': "¿Diploma de Quebec?", 'dip_qc_help': "AEC, DEC, Bachelor, etc.",
-        'fam_qc_label': "¿Familia en Quebec?", 'fam_qc_help': "Residente o Ciudadano.",
+        'dip_qc_label': "¿Diploma de Quebec?",
+        'dip_qc_help': "AEC, DEC, Bachelor, etc.",
+        'fam_qc_label': "¿Familia en Quebec?",
+        'fam_qc_help': "Residente o Ciudadano.",
         'arr_year': "Año llegada", 'city_label': "Ciudad", 'city_opts': ["-", "Montréal", "Québec", "Laval", "Gatineau", "Otra"],
         'res_title': "Resultado", 'advice_good': "¡Excelente! Competitivo.", 'advice_low': "Mejora el francés.",
         'details': "Detalles", 'sp_points': "Puntos Pareja",
@@ -266,6 +272,7 @@ t = {
         'btn_lang': "🌐 Change Language",
         'brand': "Calculatrice PSTQ ⚜️",
         'subtitle': "Residency Analysis Tool.",
+        'disclaimer_title': "⚠️ DISCLAIMER",
         'disclaimer_text': "Independent. NOT lawyers. Estimated results.",
         'coffee': "☕ Support",
         'courses': "📚 French Courses",
@@ -276,7 +283,7 @@ t = {
         'step2': "Step 2: Work & TEER",
         'step3': "Step 3: Languages",
         'step4': "Step 4: Quebec & Offer",
-        # SUBTÍTULOS RESTAURADOS
+        # SUBTÍTULOS (AGREGADOS)
         'tab1_sub': "The starting point of your immigration project.",
         'tab2_sub': "Your trade is at the heart of the PSTQ program.",
         'tab3_sub': "French is the key to success in Quebec.",
@@ -301,6 +308,7 @@ t = {
         'lang_info': "**Reqs:** Volet 1 = Lvl 7 | Volet 2 = Lvl 5 | Spouse = Lvl 4",
         'fr_oral': "French Oral (You)", 'fr_write': "French Written (You)", 'en': "English",
         'sp_fr_title': "Spouse's French (Oral)",
+        'sp_fr_label': "Oral Level",
         'oev_info': "**ℹ️ VJO:** Validated Offer (LMIA/MIFI).",
         'vjo_label': "Validated Job Offer?",
         'vjo_opts': ["No", "Yes, Greater Montreal", "Yes, Outside Montreal"],
@@ -364,18 +372,22 @@ with col_lang:
     st.button(lang['btn_lang'], on_click=cycle_language, type="secondary", key="top_lang_btn")
 
 # ==========================================
-# APP PRINCIPAL (WIZARD SIN FORMULARIOS)
+# APP PRINCIPAL
 # ==========================================
 main_tab_calc, main_tab_guide = st.tabs(lang['main_tabs'])
 
+# --- PESTAÑA CALCULADORA (WIZARD MODE) ---
 with main_tab_calc:
+    
     progress = (st.session_state.step / 4)
     st.progress(progress)
 
-    # --- PASO 1: PERFIL ---
+    # ------------------------------------
+    # PASO 1: PERFIL
+    # ------------------------------------
     if st.session_state.step == 1:
         st.markdown(f"### 👤 {lang['step1']}")
-        # SUBTÍTULO RESTAURADO
+        # AQUÍ YA NO DARÁ ERROR PORQUE LA CLAVE EXISTE EN TODOS LOS IDIOMAS
         st.markdown(f"<span class='deco-sub'>{lang['tab1_sub']}</span>", unsafe_allow_html=True)
         
         c1, c2 = st.columns(2)
@@ -399,15 +411,27 @@ with main_tab_calc:
         col_e, col_n = st.columns([3, 1])
         with col_n: st.button(lang['next'], type="primary", on_click=next_step)
 
-    # --- PASO 2: TRABAJO ---
+    # ------------------------------------
+    # PASO 2: TRABAJO
+    # ------------------------------------
     elif st.session_state.step == 2:
         st.markdown(f"### 💼 {lang['step2']}")
         st.markdown(f"<span class='deco-sub'>{lang['tab2_sub']}</span>", unsafe_allow_html=True)
-
-        st.markdown(f"**{lang['job_title']}**")
-        def update_search(): st.session_state.job_search_term = st.session_state.widget_search
-        st.text_input("Search", value=st.session_state.job_search_term, placeholder=lang['job_place'], label_visibility="collapsed", key="widget_search", on_change=update_search)
         
+        st.markdown(f"**{lang['job_title']}**")
+        
+        def update_search():
+            st.session_state.job_search_term = st.session_state.widget_search
+            
+        st.text_input(
+            "Search", 
+            value=st.session_state.job_search_term, 
+            placeholder=lang['job_place'], 
+            label_visibility="collapsed",
+            key="widget_search",
+            on_change=update_search
+        )
+
         if st.session_state.job_search_term:
             result = find_job_details(st.session_state.job_search_term)
             if result:
@@ -417,6 +441,7 @@ with main_tab_calc:
                 st.markdown(f"🔗 [{lang['noc_link_text']}](https://noc.esdc.gc.ca/)")
 
         st.divider()
+        
         current_idx = 0
         if st.session_state.teer_sel in lang['teer_opts']:
             current_idx = lang['teer_opts'].index(st.session_state.teer_sel)
@@ -430,7 +455,9 @@ with main_tab_calc:
         with col_p: st.button(lang['prev'], type="secondary", on_click=prev_step)
         with col_n: st.button(lang['next'], type="primary", on_click=next_step)
 
-    # --- PASO 3: IDIOMAS ---
+    # ------------------------------------
+    # PASO 3: IDIOMAS
+    # ------------------------------------
     elif st.session_state.step == 3:
         st.markdown(f"### 🗣️ {lang['step3']}")
         st.markdown(f"<span class='deco-sub'>{lang['tab3_sub']}</span>", unsafe_allow_html=True)
@@ -444,51 +471,70 @@ with main_tab_calc:
         if st.session_state.spouse:
             st.divider()
             st.markdown(f"**{lang['sp_fr_title']}**")
-            st.session_state.sp_fr = st.select_slider("Niveau", ["0", "A1", "A2", "B1", "B2", "C1", "C2"], value=st.session_state.sp_fr, key="spfr_input")
+            st.session_state.sp_fr = st.select_slider(lang['sp_fr_label'], options=["0", "A1", "A2", "B1", "B2", "C1", "C2"], value=st.session_state.sp_fr, key="spfr_input")
 
         st.markdown("###")
         col_p, col_e, col_n = st.columns([1, 2, 1])
         with col_p: st.button(lang['prev'], type="secondary", on_click=prev_step)
         with col_n: st.button(lang['next'], type="primary", on_click=next_step)
 
-    # --- PASO 4: QUEBEC ---
+    # ------------------------------------
+    # PASO 4: QUEBEC (FINAL)
+    # ------------------------------------
     elif st.session_state.step == 4:
         st.markdown(f"### ⚜️ {lang['step4']}")
         st.markdown(f"<span class='deco-sub'>{lang['tab4_sub']}</span>", unsafe_allow_html=True)
+        
         st.info(lang['oev_info'])
         
         vjo_idx = 0
-        if st.session_state.vjo in lang['vjo_opts']: vjo_idx = lang['vjo_opts'].index(st.session_state.vjo)
+        if st.session_state.vjo in lang['vjo_opts']:
+            vjo_idx = lang['vjo_opts'].index(st.session_state.vjo)
         st.session_state.vjo = st.radio(lang['vjo_label'], lang['vjo_opts'], index=vjo_idx, key="vjo_input")
         
         st.divider()
+        
         st.markdown(f"**{lang['dip_qc_label']}**")
-        st.info(lang['dip_qc_help'])
+        st.caption(lang['dip_qc_help'])
+        
         curr_stud = st.session_state.q_stud_val
         if curr_stud not in lang['yes_no']: curr_stud = lang['yes_no'][0]
         st.session_state.q_stud_val = st.radio("DipQC", lang['yes_no'], index=lang['yes_no'].index(curr_stud), horizontal=True, label_visibility="collapsed", key="q_stud_in")
         
-        st.divider()
+        st.markdown("---")
         st.markdown(f"**{lang['fam_qc_label']}**")
-        st.info(lang['fam_qc_help'])
+        st.caption(lang['fam_qc_help'])
+        
         curr_fam = st.session_state.q_fam_val
         if curr_fam not in lang['yes_no']: curr_fam = lang['yes_no'][0]
         st.session_state.q_fam_val = st.radio("FamQC", lang['yes_no'], index=lang['yes_no'].index(curr_fam), horizontal=True, label_visibility="collapsed", key="q_fam_in")
         
         st.divider()
+        
         c_city, c_year = st.columns(2)
-        with c_city: st.selectbox(lang['city_label'], lang['city_opts'], key="city_input")
-        with c_year: st.selectbox(lang['arr_year'], range(2025, 1990, -1), key="year_input")
+        with c_city:
+            st.selectbox(lang['city_label'], lang['city_opts'], key="city_input")
+        with c_year:
+            st.selectbox(lang['arr_year'], range(2025, 1990, -1), key="year_input")
 
         st.markdown("###")
         col_p, col_e, col_n = st.columns([1, 1, 2])
-        with col_p: st.button(lang['prev'], type="secondary", on_click=prev_step)
-        with col_n: st.button(lang['calc'], type="primary", on_click=trigger_calculation)
+        with col_p:
+            st.button(lang['prev'], type="secondary", on_click=prev_step)
+        with col_n:
+            st.button(lang['calc'], type="primary", on_click=trigger_calculation)
 
-    # LÓGICA
+    # LÓGICA & RESULTADOS
     if st.session_state.show_results:
-        age, edu, teer, exp = st.session_state.age, st.session_state.edu, st.session_state.teer_sel, st.session_state.exp
-        fr_o, fr_w, en, vjo_val = st.session_state.fr_oral, st.session_state.fr_write, st.session_state.en_lvl, st.session_state.vjo
+        age = st.session_state.age
+        edu = st.session_state.edu
+        teer = st.session_state.teer_sel
+        exp = st.session_state.exp
+        fr_o = st.session_state.fr_oral
+        fr_w = st.session_state.fr_write
+        en = st.session_state.en_lvl
+        vjo_val = st.session_state.vjo
+        
         q_stud_str = st.session_state.q_stud_val
         q_fam_str = st.session_state.q_fam_val
         is_yes_stud = q_stud_str in ["Oui", "Sí", "Yes"]
@@ -496,49 +542,73 @@ with main_tab_calc:
         
         score = 0
         score_sp = 0 
+        
         if 18 <= age <= 30: score += 130
         elif age <= 45: score += (130 - (age-30)*5)
+        
         if "PhD" in edu: score += 90
         elif "Master" in edu: score += 75
         elif "Bachelor" in edu: score += 60
         elif "College" in edu: score += 50
         else: score += 30
         
-        # Lógica robusta TEER
         if "TEER 0, 1" in teer or "TEER 0,1" in teer: score += 60 
         elif "TEER 2" in teer: score += 40
         elif "TEER 3" in teer: score += 20
         
         score += min(80, int(exp * 10))
+        
         pts_map = {"0":0, "A1":0, "A2":10, "B1":20, "B2":50, "C1":70, "C2":80}
         score += pts_map.get(fr_o,0) * 1.2 + pts_map.get(fr_w,0) * 0.8
+        
         if en == "Advanced": score += 25
         elif en == "Intermediate": score += 15
+        
         if "Hors" in vjo_val or "Outside" in vjo_val or "Fuera" in vjo_val: score += 380
         elif "Grand" in vjo_val or "Greater" in vjo_val or "Gran" in vjo_val: score += 180
+        
         if is_yes_stud: score += 50
         if is_yes_fam: score += 30
+        
         if st.session_state.spouse:
-            sp_a, sp_e, sp_f = st.session_state.sp_age, st.session_state.sp_edu, st.session_state.sp_fr
+            sp_a = st.session_state.sp_age
+            sp_e = st.session_state.sp_edu
+            sp_f = st.session_state.sp_fr
+            
             if 18 <= sp_a <= 40: score_sp += 10
             if "Bachelor" in sp_e or "Master" in sp_e or "PhD" in sp_e: score_sp += 10
             elif "College" in sp_e: score_sp += 5
+            
             if sp_f in ["C1", "C2"]: score_sp += 30
             elif sp_f == "B2": score_sp += 20
             elif sp_f in ["A2", "B1"]: score_sp += 10
             score += score_sp
+            
         score += (st.session_state.k1*4) + (st.session_state.k2*2)
 
-        st.markdown(f"""<div class="result-box"><h2>{lang['res_title']}: {int(score)} / 1350</h2></div>""", unsafe_allow_html=True)
+        st.markdown(f"""
+        <div class="result-box">
+            <h2>{lang['res_title']}: {int(score)} / 1350</h2>
+        </div>
+        """, unsafe_allow_html=True)
+        
         with st.expander(lang['details']):
             st.write(f"**Principal:** {int(score - score_sp - (st.session_state.k1*4 + st.session_state.k2*2))} pts")
-            if st.session_state.spouse: st.write(f"**{lang['sp_points']}:** {score_sp} pts")
+            if st.session_state.spouse:
+                st.write(f"**{lang['sp_points']}:** {score_sp} pts")
             st.write(f"**Enfants:** {(st.session_state.k1*4 + st.session_state.k2*2)} pts")
         
-        if score > 580: st.success(lang['advice_good']); st.balloons()
-        else: st.warning(lang['advice_low'])
-        if st.button("🔄 Recalculer"): reset_calc(); st.rerun()
+        if score > 580:
+            st.success(lang['advice_good'])
+            st.balloons()
+        else:
+            st.warning(lang['advice_low'])
+            
+        if st.button("🔄 Recalculer / Reiniciar"):
+            reset_calc()
+            st.rerun()
 
+# PESTAÑA 2: GUÍA
 with main_tab_guide:
     st.markdown(f"### 🗺️ {lang['guide_title']}")
     st.markdown("---")
@@ -550,12 +620,20 @@ with main_tab_guide:
     <div class='step-box'><h4>🍁 {lang['g_step5']}</h4><p>{lang['g_desc5']}</p></div>
     """, unsafe_allow_html=True)
 
+# ==========================================
+# FOOTER
+# ==========================================
 st.markdown("---")
 st.markdown("<div class='footer'>", unsafe_allow_html=True)
+
 fc1, fc2 = st.columns(2)
-with fc1: st.link_button(lang['coffee'], "https://www.buymeacoffee.com/CalculatricePSTQQuebec")
-with fc2: st.link_button(lang['courses'], "https://www.TU_ENLACE_DE_AFILIADO.com") 
+with fc1:
+    st.link_button(lang['coffee'], "https://www.buymeacoffee.com/CalculatricePSTQQuebec")
+with fc2:
+    st.link_button(lang['courses'], "https://www.TU_ENLACE_DE_AFILIADO.com") 
+
 st.markdown("###")
 st.error(f"**{lang['disclaimer_title']}**")
 st.markdown(lang['disclaimer_text'])
+
 st.markdown("</div>", unsafe_allow_html=True)
