@@ -1,4 +1,5 @@
 import streamlit as st
+from datetime import date
 
 # --- 1. CONFIGURACIÓN DE PÁGINA ---
 st.set_page_config(
@@ -7,118 +8,89 @@ st.set_page_config(
     layout="centered"
 )
 
-# --- 2. ESTILOS CSS (MODO NUCLEAR V2 - TARGETING ESPECÍFICO) ---
+# --- 2. ESTILOS CSS (MODO "NUCLEAR" ANTI-DARK MODE) ---
 st.markdown("""
     <style>
-        /* 1. FORZAR MODO CLARO AL NAVEGADOR */
-        :root {
-            color-scheme: light only !important;
-        }
+        /* === 0. FORZADO GLOBAL === */
+        :root { color-scheme: light !important; }
         html, body, [data-testid="stAppViewContainer"] {
             background-color: #f0f2f6 !important;
             color: #000000 !important;
         }
         
-        /* 2. TEXTOS GENERALES EN NEGRO */
-        .stApp, p, label, h1, h2, h3, h4, h5, h6, span, div {
+        /* Texto general negro */
+        .stApp, p, label, h1, h2, h3, h4, h5, h6, div, span, li {
             color: #000000 !important;
         }
+        
+        /* Encabezado Azul */
         header[data-testid="stHeader"] { background-color: #003399 !important; }
         h1, h2, h3 { color: #003399 !important; }
 
-        /* 3. INPUTS (CAJAS DE TEXTO) */
+        /* === 1. INPUTS Y SELECTORES === */
+        div[data-baseweb="select"] > div, 
+        div[data-baseweb="input"] > div,
+        div[data-baseweb="base-input"] {
+            background-color: #FFFFFF !important;
+            border: 1px solid #cccccc !important;
+            color: #000000 !important;
+        }
         input {
             color: #000000 !important;
             -webkit-text-fill-color: #000000 !important;
             background-color: #FFFFFF !important;
             opacity: 1 !important;
         }
-        div[data-baseweb="input"], div[data-baseweb="base-input"] {
-            background-color: #FFFFFF !important;
-            border: 1px solid #ccc !important;
-        }
-
-        /* 4. SELECTBOX (CAJA CERRADA) */
-        div[data-baseweb="select"] > div {
-            background-color: #FFFFFF !important;
-            color: #000000 !important;
-        }
         div[data-baseweb="select"] span {
             color: #000000 !important;
             -webkit-text-fill-color: #000000 !important;
         }
-        div[data-baseweb="select"] svg {
+        
+        /* Iconos (flechitas/calendario) */
+        div[data-baseweb="select"] svg, div[data-baseweb="input"] svg {
             fill: #000000 !important;
         }
 
-        /* 5. MENÚ DESPLEGABLE (LA LISTA QUE SE ABRE) - CORRECCIÓN INSTAGRAM */
-        
-        /* El contenedor flotante */
-        div[data-baseweb="popover"], div[data-baseweb="popover"] > div {
+        /* === 2. MENÚ DESPLEGABLE Y CALENDARIO === */
+        ul[data-baseweb="menu"], div[data-baseweb="calendar"] {
             background-color: #FFFFFF !important;
         }
-        
-        /* La lista en sí */
-        ul[data-baseweb="menu"], ul[role="listbox"] {
-            background-color: #FFFFFF !important;
-        }
-        
-        /* Cada opción de la lista */
-        li[data-baseweb="menu-item"], li[role="option"] {
+        li[data-baseweb="menu-item"] {
             background-color: #FFFFFF !important;
             color: #000000 !important;
         }
-        
-        /* El texto DENTRO de cada opción */
-        li[data-baseweb="menu-item"] div, li[role="option"] div {
+        li[data-baseweb="menu-item"] * {
             color: #000000 !important;
-            -webkit-text-fill-color: #000000 !important;
         }
-        
-        /* Cuando seleccionas o pasas el dedo (Hover) */
         li[data-baseweb="menu-item"]:hover, li[aria-selected="true"] {
             background-color: #e6f0ff !important;
         }
-        li[data-baseweb="menu-item"]:hover div, li[aria-selected="true"] div {
-            color: #003399 !important;
-        }
-
-        /* 6. BOTONES */
+        
+        /* === 3. BOTONES === */
         div.stButton > button { width: 100%; border-radius: 8px; font-weight: bold; }
         
-        /* Botón Azul (Primario) */
         div.stButton > button[kind="primary"] {
             background-color: #003399 !important;
+            color: #FFFFFF !important;
             border: none !important;
-            color: #FFFFFF !important;
         }
-        div.stButton > button[kind="primary"] p, div.stButton > button[kind="primary"] * {
-            color: #FFFFFF !important;
-            -webkit-text-fill-color: #FFFFFF !important;
-        }
-        
-        /* Botones de Enlace (Azules) */
-        div.stLinkButton > a {
-            background-color: #003399 !important;
-            border: none !important;
-            color: #FFFFFF !important;
-        }
-        div.stLinkButton > a * {
-            color: #FFFFFF !important;
-            -webkit-text-fill-color: #FFFFFF !important;
-        }
+        div.stButton > button[kind="primary"] * { color: #FFFFFF !important; }
 
-        /* Botón Blanco (Secundario) */
         div.stButton > button[kind="secondary"] {
             background-color: #FFFFFF !important;
+            color: #003399 !important;
             border: 2px solid #003399 !important;
-            color: #003399 !important;
         }
-        div.stButton > button[kind="secondary"] p, div.stButton > button[kind="secondary"] * {
-            color: #003399 !important;
+        div.stButton > button[kind="secondary"] * { color: #003399 !important; }
+        
+        /* Botones +/- numéricos */
+        button[tabindex="-1"] {
+            background-color: #e0e0e0 !important; 
+            color: #000000 !important;
+            border-color: #ccc !important;
         }
 
-        /* 7. CONTENEDORES Y EXTRAS */
+        /* === 4. CONTENEDORES === */
         [data-testid="stForm"] {
             background-color: #FFFFFF !important;
             padding: 2rem; 
@@ -126,32 +98,36 @@ st.markdown("""
             border-top: 5px solid #003399;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
-        
-        .info-box { background-color: #e8f4fd; border-left: 5px solid #003399; padding: 15px; border-radius: 5px; margin-bottom: 15px; }
-        .info-box * { color: #000000 !important; }
-        
+        .info-box { background-color: #e8f4fd; border-left: 5px solid #003399; padding: 15px; border-radius: 5px; margin-bottom: 15px; color: #000 !important; }
+        .help-box { background-color: #fff3cd; border-left: 5px solid #ffc107; padding: 15px; border-radius: 5px; color: #000 !important; }
         .result-box { background-color: #003399; padding: 20px; border-radius: 10px; text-align: center; margin-top: 20px; }
         .result-box h2 { color: #FFFFFF !important; margin: 0; }
-        
         .footer { margin-top: 50px; padding: 20px; border-top: 1px solid #ccc; text-align: center; }
         .deco-sub { font-style: italic; margin-bottom: 15px; display: block; color: #666666 !important; font-size: 0.9em; }
         
-        /* Botones +/- numéricos */
-        button[tabindex="-1"] { background-color: #e0e0e0 !important; color: #000000 !important; border: 1px solid #ccc !important;}
-        button[tabindex="-1"] svg { fill: #000000 !important; }
+        /* Radio/Check */
+        label[data-baseweb="radio"], label[data-baseweb="checkbox"] { color: #000000 !important; }
+        div[data-baseweb="radio"] div, div[data-baseweb="checkbox"] div { background-color: #FFFFFF !important; border-color: #003399 !important; }
+        div[data-baseweb="radio"][aria-checked="true"] div div { background-color: #003399 !important; }
 
     </style>
 """, unsafe_allow_html=True)
 
-# --- 3. INICIALIZACIÓN DE VARIABLES ---
+# --- 3. INICIALIZACIÓN ---
 default_values = {
     'language': 'fr', 'step': 1, 'show_results': False,
     'age': 30, 'spouse': False, 'k1': 0, 'k2': 0,
     'sp_age': 30, 'sp_edu': 'Secondary', 'sp_fr': '0',
-    'teer_sel': '', 'edu': 'Secondary', 'exp': 3,
+    'teer_sel': 'TEER 0, 1: Université / Gestion / Ingénierie',
+    'edu': 'Secondary', 'exp': 3,
     'fr_oral': 'B2', 'fr_write': 'B1', 'en_lvl': '0',
     'vjo': '', 'q_stud_val': 'Non', 'q_fam_val': 'Non',
-    'job_search_term': ''
+    'job_search_term': '',
+    # NUEVAS VARIABLES
+    'current_loc': 'Étranger', 
+    'origin_country': '', 
+    'dest_city': '-',
+    'arrival_date': date.today()
 }
 for key, value in default_values.items():
     if key not in st.session_state: st.session_state[key] = value
@@ -159,8 +135,9 @@ for key, value in default_values.items():
 def cycle_language():
     lang_map = {'fr': 'es', 'es': 'en', 'en': 'fr'}
     st.session_state.language = lang_map[st.session_state.language]
-    # Asegurar que el TEER tiene un valor válido al cambiar idioma
     st.session_state.teer_sel = t[st.session_state.language]['teer_opts'][0]
+    # Resetear ubicación al cambiar idioma para que coincida con opciones
+    st.session_state.current_loc = t[st.session_state.language]['loc_opts'][2]
 
 def next_step(): st.session_state.step += 1
 def prev_step(): st.session_state.step -= 1
@@ -168,8 +145,6 @@ def reset_calc():
     st.session_state.step = 1
     st.session_state.show_results = False
     st.session_state.job_search_term = ''
-    st.session_state.teer_sel = t[st.session_state.language]['teer_opts'][0]
-
 def trigger_calculation(): st.session_state.show_results = True
 
 # --- 4. TRADUCCIONES ---
@@ -179,9 +154,8 @@ t = {
         'brand': "Calculatrice PSTQ Québec ⚜️",
         'subtitle': "Outil d'analyse pour la Résidence Permanente (TEER, Volets, Score).",
         'disclaimer_title': "⚠️ AVIS IMPORTANT",
-        'disclaimer_text': "Ce logiciel est un projet indépendant. Nous ne sommes PAS avocats ni consultants. Nous ne représentons PAS le MIFI.",
-        'coffee': "☕ M'offrir un café",
-        'courses': "📚 Cours de Français",
+        'disclaimer_text': "Ce logiciel est un projet indépendant. Nous ne sommes PAS avocats ni consultants.",
+        'coffee': "☕ M'offrir un café", 'courses': "📚 Cours de Français",
         'main_tabs': ["🧮 Calculatrice", "ℹ️ Guide"],
         'next': "Suivant ➡", 'prev': "⬅ Retour", 'calc': "CALCULER MON SCORE",
         'yes_no': ["Non", "Oui"],
@@ -193,6 +167,14 @@ t = {
         'tab2_sub': "Votre métier est au cœur du programme PSTQ.",
         'tab3_sub': "Le français est la clé du succès au Québec.",
         'tab4_sub': "Finalisez votre pointage avec les atouts locaux.",
+        
+        # NUEVAS PREGUNTAS DE UBICACIÓN
+        'loc_label': "Où êtes-vous actuellement ?",
+        'loc_opts': ["Au Québec", "Canada (Autre province)", "À l'étranger"],
+        'country_label': "Pays de résidence",
+        'dest_city_label': "Ville de destination au Québec",
+        'arrival_label': "Date d'arrivée prévue",
+        
         'age': "Âge du candidat principal",
         'spouse': "Avez-vous un conjoint ?",
         'kids12': "Enfants -12 ans", 'kids13': "Enfants +12 ans",
@@ -222,12 +204,11 @@ t = {
         'fam_qc_help': "Parent, enfant, conjoint, frère/sœur, grand-parent (Citoyen ou Résident).",
         'arr_year': "Année d'arrivée",
         'city_label': "Ville de résidence",
-        'city_opts': ["-", "Montréal", "Québec", "Laval", "Gatineau", "Sherbrooke", "Autre"],
+        'city_opts': ["-", "Montréal", "Québec (Ville)", "Laval", "Gatineau", "Sherbrooke", "Trois-Rivières", "Saguenay", "Autre"],
         'res_title': "Résultat Estimé",
         'advice_good': "Excellent ! Profil compétitif.",
         'advice_low': "Améliorez le français ou cherchez une OEV.",
-        'details': "Détails du score",
-        'sp_points': "Points Conjoint",
+        'details': "Détails du score", 'sp_points': "Points Conjoint",
         'guide_title': "Votre Feuille de Route",
         'g_step1': "1. Auto-évaluation", 'g_desc1': "Vos points forts.",
         'g_step2': "2. Français", 'g_desc2': "Visez B2 (7).",
@@ -255,6 +236,14 @@ t = {
         'tab2_sub': "Tu oficio es el corazón del programa PSTQ.",
         'tab3_sub': "El francés es la llave del éxito en Quebec.",
         'tab4_sub': "Finaliza tu puntaje con los activos locales.",
+        
+        # NUEVAS PREGUNTAS
+        'loc_label': "¿Dónde te encuentras hoy?",
+        'loc_opts': ["En Quebec", "Canadá (Otra provincia)", "En el extranjero"],
+        'country_label': "País de residencia",
+        'dest_city_label': "Ciudad de destino en Quebec",
+        'arrival_label': "Fecha estimada de llegada",
+
         'age': "Edad del candidato",
         'spouse': "¿Tienes pareja?",
         'kids12': "Hijos -12 años", 'kids13': "Hijos +12 años",
@@ -278,11 +267,10 @@ t = {
         'oev_info': "**ℹ️ VJO (Oferta Validada):** Con LMIA o aprobada por MIFI.",
         'vjo_label': "¿Tienes Oferta Validada (VJO)?",
         'vjo_opts': ["No", "Sí, Gran Montreal", "Sí, Fuera de Montreal"],
-        'dip_qc_label': "¿Diploma de Quebec?",
-        'dip_qc_help': "AEC, DEC, Bachelor, etc.",
-        'fam_qc_label': "¿Familia en Quebec?",
-        'fam_qc_help': "Residente o Ciudadano.",
-        'arr_year': "Año llegada", 'city_label': "Ciudad", 'city_opts': ["-", "Montréal", "Québec", "Laval", "Gatineau", "Otra"],
+        'dip_qc_label': "¿Diploma de Quebec?", 'dip_qc_help': "AEC, DEC, Bachelor, etc.",
+        'fam_qc_label': "¿Familia en Quebec?", 'fam_qc_help': "Residente o Ciudadano.",
+        'arr_year': "Año llegada", 'city_label': "Ciudad", 
+        'city_opts': ["-", "Montréal", "Québec (Ville)", "Laval", "Gatineau", "Sherbrooke", "Trois-Rivières", "Saguenay", "Otra"],
         'res_title': "Resultado", 'advice_good': "¡Excelente! Competitivo.", 'advice_low': "Mejora el francés.",
         'details': "Detalles", 'sp_points': "Puntos Pareja",
         'guide_title': "Tu Hoja de Ruta",
@@ -297,7 +285,6 @@ t = {
         'btn_lang': "🌐 Change Language",
         'brand': "Calculatrice PSTQ ⚜️",
         'subtitle': "Residency Analysis Tool.",
-        'disclaimer_title': "⚠️ DISCLAIMER",
         'disclaimer_text': "Independent. NOT lawyers. Estimated results.",
         'coffee': "☕ Support",
         'courses': "📚 French Courses",
@@ -312,6 +299,14 @@ t = {
         'tab2_sub': "Your trade is at the heart of the PSTQ program.",
         'tab3_sub': "French is the key to success in Quebec.",
         'tab4_sub': "Finalize your score with local assets.",
+        
+        # NEW QUESTIONS
+        'loc_label': "Where are you today?",
+        'loc_opts': ["In Quebec", "Canada (Other prov.)", "Abroad"],
+        'country_label': "Country of Residence",
+        'dest_city_label': "Destination City in Quebec",
+        'arrival_label': "Estimated Arrival Date",
+
         'age': "Age",
         'spouse': "Have a spouse?",
         'kids12': "Kids -12", 'kids13': "Kids +12",
@@ -337,7 +332,8 @@ t = {
         'vjo_opts': ["No", "Yes, Greater Montreal", "Yes, Outside Montreal"],
         'dip_qc_label': "Quebec Diploma?", 'dip_qc_help': "AEC, DEC, etc.",
         'fam_qc_label': "Family in Quebec?", 'fam_qc_help': "PR or Citizen.",
-        'arr_year': "Arrival Year", 'city_label': "City", 'city_opts': ["-", "Montréal", "Québec", "Laval", "Gatineau", "Other"],
+        'arr_year': "Arrival Year", 
+        'city_label': "City", 'city_opts': ["-", "Montréal", "Québec", "Laval", "Gatineau", "Sherbrooke", "Other"],
         'res_title': "Result", 'advice_good': "Excellent!", 'advice_low': "Improve French.",
         'details': "Details", 'sp_points': "Spouse Pts",
         'guide_title': "Roadmap",
@@ -345,7 +341,7 @@ t = {
         'g_step2': "2. French", 'g_desc2': "Aim B2 (7).",
         'g_step3': "3. Arrima", 'g_desc3': "Free profile.",
         'g_step4': "4. CSQ", 'g_desc4': "Selection Cert.",
-        'g_step5': "5. Federal", 'g_desc5': "Residency.",
+        'g_step5': "5. Federal", 'g_desc5': "PR Canada.",
         'noc_link_text': "🔎 Search on official Canada site (NOC)"
     }
 }
@@ -353,8 +349,8 @@ lang = t[st.session_state.language]
 
 # --- 5. DATA JOBS ---
 jobs_db = {
-    "ingenie": {"code": "213xx", "teer": "1", "volet": "Volet 1"},
-    "engineer": {"code": "213xx", "teer": "1", "volet": "Volet 1"},
+    "ingenie": {"code": "21300", "teer": "1", "volet": "Volet 1"},
+    "engineer": {"code": "21300", "teer": "1", "volet": "Volet 1"},
     "software": {"code": "21220", "teer": "1", "volet": "Volet 1"},
     "web": {"code": "21222", "teer": "1", "volet": "Volet 1"},
     "infirmier": {"code": "31301", "teer": "1", "volet": "Volet 1"},
@@ -410,6 +406,30 @@ with main_tab_calc:
         st.markdown(f"### 👤 {lang['step1']}")
         st.markdown(f"<span class='deco-sub'>{lang['tab1_sub']}</span>", unsafe_allow_html=True)
         
+        # NUEVO: UBICACIÓN Y DESTINO
+        st.markdown(f"**{lang['loc_label']}**")
+        loc_idx = 0
+        if st.session_state.current_loc in lang['loc_opts']:
+            loc_idx = lang['loc_opts'].index(st.session_state.current_loc)
+        st.session_state.current_loc = st.radio("Loc", lang['loc_opts'], index=loc_idx, label_visibility="collapsed")
+        
+        # Si es extranjero -> País, si es Canadá -> Provincia (Simplificado a texto libre)
+        if "Canad" in st.session_state.current_loc or "tranger" in st.session_state.current_loc or "abroad" in st.session_state.current_loc or "extranjero" in st.session_state.current_loc:
+             st.session_state.origin_country = st.text_input(lang['country_label'], value=st.session_state.origin_country, placeholder="Ej: Colombia, France...")
+        
+        st.divider()
+        
+        c_dest, c_date = st.columns(2)
+        with c_dest:
+            # Ciudad Destino
+            dest_idx = 0
+            if st.session_state.dest_city in lang['city_opts']: dest_idx = lang['city_opts'].index(st.session_state.dest_city)
+            st.session_state.dest_city = st.selectbox(lang['dest_city_label'], lang['city_opts'], index=dest_idx)
+        with c_date:
+            st.session_state.arrival_date = st.date_input(lang['arrival_label'], value=st.session_state.arrival_date)
+            
+        st.divider()
+
         c1, c2 = st.columns(2)
         with c1: 
             st.session_state.age = st.number_input(lang['age'], 18, 65, st.session_state.age, key="age_input")
@@ -422,7 +442,7 @@ with main_tab_calc:
         
         if st.session_state.spouse:
             st.divider()
-            st.markdown(f"**{lang.get('sp_header', 'Datos Pareja')}**")
+            st.markdown(f"**{lang['sp_header']}**")
             c_sp1, c_sp2 = st.columns(2)
             with c_sp1: st.session_state.sp_age = st.number_input(lang['sp_age'], 18, 65, st.session_state.sp_age, key="sp_age_in")
             with c_sp2: st.session_state.sp_edu = st.selectbox(lang['sp_edu'], ["PhD", "Master", "Bachelor", "Technical", "Secondary"], index=2, key="sp_edu_in")
@@ -480,7 +500,7 @@ with main_tab_calc:
         if st.session_state.spouse:
             st.divider()
             st.markdown(f"**{lang['sp_fr_title']}**")
-            st.session_state.sp_fr = st.select_slider("Niveau", ["0", "A1", "A2", "B1", "B2", "C1", "C2"], value=st.session_state.sp_fr, key="spfr_input")
+            st.session_state.sp_fr = st.select_slider(lang['sp_fr_label'], options=["0", "A1", "A2", "B1", "B2", "C1", "C2"], value=st.session_state.sp_fr, key="spfr_input")
 
         st.markdown("###")
         col_p, col_e, col_n = st.columns([1, 2, 1])
@@ -518,13 +538,8 @@ with main_tab_calc:
         st.session_state.q_fam_val = st.radio("FamQC", lang['yes_no'], index=lang['yes_no'].index(curr_fam), horizontal=True, label_visibility="collapsed", key="q_fam_in")
         
         st.divider()
+        # Quité la pregunta de ciudad aquí porque ya está en la Pestaña 1
         
-        c_city, c_year = st.columns(2)
-        with c_city:
-            st.selectbox(lang['city_label'], lang['city_opts'], key="city_input")
-        with c_year:
-            st.selectbox(lang['arr_year'], range(2025, 1990, -1), key="year_input")
-
         st.markdown("###")
         col_p, col_e, col_n = st.columns([1, 1, 2])
         with col_p:
@@ -578,6 +593,12 @@ with main_tab_calc:
         if is_yes_stud: score += 50
         if is_yes_fam: score += 30
         
+        # BONUS: Si está en Quebec actualmente (Pestaña 1), podríamos asumir "Estancia"
+        if "Quebec" in st.session_state.current_loc or "Québec" in st.session_state.current_loc:
+            # Lógica simple: Si ya vive aquí, probablemente tenga historial de estancia
+            # Sumamos un bono pequeño de seguridad si no marcó diploma (ejemplo)
+            pass 
+
         if st.session_state.spouse:
             sp_a = st.session_state.sp_age
             sp_e = st.session_state.sp_edu
