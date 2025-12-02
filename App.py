@@ -8,36 +8,69 @@ st.set_page_config(
     layout="centered"
 )
 
-# --- 2. ESTILOS CSS (VUELTA A LO SEGURO + HEADER CORREGIDO) ---
+# --- 2. ESTILOS CSS (VARIABLES DE TEMA + HACKS ANTI-INVERSIÓN) ---
 st.markdown("""
     <style>
-        /* === 0. REGLA DE ORO: FORZAR MODO CLARO === */
+        /* === 0. FORZADO DE VARIABLES DE TEMA (ROOT) === */
+        /* Esto engaña a Streamlit para que use colores claros siempre */
         :root {
+            --primary-color: #003399;
+            --background-color: #f4f7f6;
+            --secondary-background-color: #ffffff;
+            --text-color: #000000;
+            --font: sans-serif;
             color-scheme: light only !important;
         }
+
+        /* === 1. BODY Y CONTENEDORES === */
         html, body, [data-testid="stAppViewContainer"] {
             background-color: #f4f7f6 !important;
             color: #000000 !important;
+            forced-color-adjust: none !important; /* Evita que el navegador cambie colores */
         }
-
-        /* === 1. HEADER BLINDADO (TEXTO BLANCO) === */
-        /* Esta regla es nueva y específica para proteger el título */
-        .pro-header h1, .pro-header p, .pro-header div {
-            color: #FFFFFF !important;
-            -webkit-text-fill-color: #FFFFFF !important;
-        }
-        header[data-testid="stHeader"] { background-color: #003399 !important; }
-
-        /* === 2. TEXTOS GENERALES (NEGRO) === */
-        .stApp p, .stApp label, .stApp h2, .stApp h3, .stApp li, .stApp div {
+        
+        /* Texto general */
+        .stApp, p, label, h2, h3, h4, h5, h6, div, span, li {
             color: #000000 !important;
         }
-        /* Excepción para textos dentro del header y botones primarios */
-        .pro-header *, button[kind="primary"] * {
+        
+        /* === 2. HEADER CON TRUCO DE SOMBRA (PARA QUE NO SE PONGA NEGRO) === */
+        header[data-testid="stHeader"] { background-color: #003399 !important; }
+        
+        .pro-header {
+            background-color: #003399 !important;
+            padding: 15px 20px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            /* Truco para evitar inversión de color */
+            -webkit-print-color-adjust: exact; 
+            forced-color-adjust: none;
+        }
+        
+        .pro-header h1 {
             color: #FFFFFF !important;
+            /* Truco: Sombra del mismo color para evitar que Instagram lo invierta */
+            text-shadow: 0px 0px 0px #FFFFFF !important; 
+            -webkit-text-fill-color: #FFFFFF !important;
+            margin: 0;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 800;
+            flex-grow: 1;
+        }
+        
+        .pro-header p {
+            color: #e0e0e0 !important;
+            text-shadow: 0px 0px 0px #e0e0e0 !important;
         }
 
-        /* === 3. INPUTS Y SELECTORES (SOLUCIÓN DE AYER) === */
+        .flag-icon { height: 40px; border: 1px solid white; border-radius: 4px; }
+
+        /* === 3. INPUTS Y SELECTORES === */
         div[data-baseweb="select"] > div, 
         div[data-baseweb="input"] > div,
         div[data-baseweb="base-input"] {
@@ -45,50 +78,43 @@ st.markdown("""
             border: 1px solid #cccccc !important;
             color: #000000 !important;
         }
+        
         input {
             color: #000000 !important;
             -webkit-text-fill-color: #000000 !important;
             background-color: #FFFFFF !important;
             opacity: 1 !important;
+            caret-color: #000000 !important;
         }
+        
         div[data-baseweb="select"] span {
             color: #000000 !important;
             -webkit-text-fill-color: #000000 !important;
         }
+        
+        div[data-baseweb="select"] svg { fill: #000000 !important; }
 
         /* === 4. MENÚS DESPLEGABLES === */
         ul[data-baseweb="menu"] { background-color: #FFFFFF !important; }
         li[data-baseweb="menu-item"] { background-color: #FFFFFF !important; color: #000000 !important; }
-        li[data-baseweb="menu-item"] * { color: #000000 !important; }
-        li[data-baseweb="menu-item"]:hover, li[aria-selected="true"] {
-            background-color: #e6f0ff !important;
-        }
+        li[data-baseweb="menu-item"] * { color: #000000 !important; -webkit-text-fill-color: #000000 !important; }
+        li[data-baseweb="menu-item"]:hover, li[aria-selected="true"] { background-color: #e6f0ff !important; }
 
-        /* === 5. BOTONES === */
-        div.stButton > button { width: 100%; border-radius: 8px; font-weight: bold; height: 45px; }
+        /* === 5. BOTONES (CON TRUCO DE SOMBRA PARA EL BLANCO) === */
+        div.stButton > button { width: 100%; border-radius: 8px; font-weight: bold; }
         
-        /* Primario (Azul + Blanco) */
+        /* Primario (Azul) */
         div.stButton > button[kind="primary"] {
             background-color: #003399 !important;
-            border: none !important;
             color: #FFFFFF !important;
+            border: none !important;
         }
         div.stButton > button[kind="primary"] * { 
-            color: #FFFFFF !important; 
-            -webkit-text-fill-color: #FFFFFF !important;
+            color: #FFFFFF !important;
+            text-shadow: 0px 0px 0px #FFFFFF !important; /* Truco */
         }
 
-        /* Secundario (Blanco + Azul) */
-        div.stButton > button[kind="secondary"] {
-            background-color: #FFFFFF !important;
-            color: #003399 !important;
-            border: 2px solid #003399 !important;
-        }
-        div.stButton > button[kind="secondary"] * { 
-            color: #003399 !important; 
-        }
-        
-        /* Enlaces (Azul + Blanco) */
+        /* Enlaces (Azul) */
         div.stLinkButton > a {
             background-color: #003399 !important;
             color: #FFFFFF !important;
@@ -98,11 +124,21 @@ st.markdown("""
             text-decoration: none !important;
         }
         div.stLinkButton > a * { 
-            color: #FFFFFF !important; 
-            -webkit-text-fill-color: #FFFFFF !important;
+            color: #FFFFFF !important;
+            text-shadow: 0px 0px 0px #FFFFFF !important; /* Truco */
         }
 
-        /* === 6. EXTRAS === */
+        /* Secundario (Blanco) */
+        div.stButton > button[kind="secondary"] {
+            background-color: #FFFFFF !important;
+            color: #003399 !important;
+            border: 2px solid #003399 !important;
+        }
+        div.stButton > button[kind="secondary"] * { 
+            color: #003399 !important; 
+        }
+
+        /* === 6. CONTENEDORES === */
         [data-testid="stForm"] {
             background-color: #FFFFFF !important;
             padding: 2rem; 
@@ -110,35 +146,18 @@ st.markdown("""
             border-top: 5px solid #003399;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
-        
         .info-box { background-color: #e8f4fd; border-left: 5px solid #003399; padding: 15px; border-radius: 5px; margin-bottom: 15px; }
+        .help-box { background-color: #fff3cd; border-left: 5px solid #ffc107; padding: 15px; border-radius: 5px; margin-bottom: 15px; }
         .result-box { background-color: #003399; padding: 20px; border-radius: 10px; text-align: center; margin-top: 20px; }
-        .result-box h2 { color: #FFFFFF !important; margin: 0; }
-        
-        /* Header Pro */
-        .pro-header {
-            background-color: #003399;
-            padding: 15px 20px;
-            border-radius: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-        }
-        .pro-header h1 {
-            color: #FFFFFF !important; /* Blanco forzado */
-            margin: 0;
-            text-align: center;
-            font-size: 1.5rem;
-            flex-grow: 1;
-        }
-        .flag-icon { height: 40px; border: 1px solid white; border-radius: 4px; }
+        .result-box h2 { color: #FFFFFF !important; margin: 0; text-shadow: 0px 0px 0px #FFFFFF !important; }
         .footer { margin-top: 50px; padding: 20px; border-top: 1px solid #ccc; text-align: center; }
-        .deco-sub { font-style: italic; margin-bottom: 15px; display: block; font-size: 0.9em; color: #666 !important; }
+        .deco-sub { font-style: italic; margin-bottom: 15px; display: block; color: #666666 !important; font-size: 0.9em; }
         
         /* Botones +/- */
         button[tabindex="-1"] { background-color: #e0e0e0 !important; color: #000 !important; border: 1px solid #ccc !important; }
+        button[tabindex="-1"] span { color: #000 !important; -webkit-text-fill-color: #000000 !important; }
+
+        div[role="radiogroup"] label { color: #000000 !important; }
 
     </style>
 """, unsafe_allow_html=True)
@@ -221,7 +240,7 @@ t = {
         'fr_oral': "Français Oral (Vous)", 'fr_write': "Français Écrit (Vous)", 'en': "Anglais",
         'sp_fr_title': "Français du Conjoint (Oral)",
         'sp_fr_label': "Niveau Oral",
-        'oev_info': "**ℹ️ OEV (Offre d'emploi validée) :** Signifie que l'employeur a obtenu une EIMT ou que l'offre est validée par le MIFI.",
+        'oev_info': "**ℹ️ OEV (Offre d'emploi validée) :** Signifie que l'employeur a obtenu une EIMT ou que l'offre est validée par le MIFI. Une simple lettre d'embauche ne suffit pas toujours.",
         'vjo_label': "Avez-vous une Offre Validée (OEV) ?",
         'vjo_opts': ["Non", "Oui, Grand Montréal", "Oui, Hors Montréal (Région)"],
         'dip_qc_label': "Diplôme du Québec ?",
@@ -252,10 +271,10 @@ t = {
         'subtitle': "Simulación de puntaje para Residencia Permanente Quebec",
         'disclaimer_title': "⚠️ AVISO LEGAL",
         'disclaimer_text': "Proyecto independiente. NO abogados. Resultados estimados.",
-        'coffee': "☕ Apoyar proyecto",
+        'coffee': "☕ Invítame un café",
         'courses': "📚 Cursos de Francés",
         'main_tabs': ["🧮 Calculadora", "ℹ️ Guía"],
-        'next': "Siguiente ➡", 'prev': "⬅ Atrás", 'calc': "CALCULAR PUNTAJE",
+        'next': "Siguiente ➡", 'prev': "⬅ Atrás", 'calc': "VER MI PUNTAJE",
         'yes_no': ["No", "Sí"],
         'step1': "Paso 1: Perfil y Familia",
         'step2': "Paso 2: Trabajo y TEER",
@@ -324,10 +343,10 @@ t = {
         'main_tabs': ["🧮 Calculator", "ℹ️ Guide"],
         'next': "Next ➡", 'prev': "⬅ Back", 'calc': "CALCULATE SCORE",
         'yes_no': ["No", "Yes"],
-        'step1': "Step 1: Profile & Family",
-        'step2': "Step 2: Work & TEER",
+        'step1': "Step 1: Profile",
+        'step2': "Step 2: Work",
         'step3': "Step 3: Languages",
-        'step4': "Step 4: Quebec & Offer",
+        'step4': "Step 4: Quebec",
         'tab1_sub': "The starting point of your immigration journey.",
         'tab2_sub': "Your trade is the core of the PSTQ program.",
         'tab3_sub': "French is the key to success in Quebec.",
@@ -591,7 +610,6 @@ with main_tab_calc:
         age = st.session_state.age
         edu = st.session_state.edu
         teer = st.session_state.teer_sel
-        
         # CÁLCULO EXPERIENCIA TOTAL
         exp_months = st.session_state.exp_qc + st.session_state.exp_ca + st.session_state.exp_foreign
         exp_calc = min(60, exp_months) # Tope 5 años
