@@ -7,123 +7,118 @@ st.set_page_config(
     layout="centered"
 )
 
-# --- 2. ESTILOS CSS (PARCHE "NUCLEAR" PARA MENÚ DESPLEGABLE) ---
+# --- 2. ESTILOS CSS (MODO NUCLEAR V2 - TARGETING ESPECÍFICO) ---
 st.markdown("""
     <style>
-        /* === 0. FORZADO GLOBAL MODO CLARO === */
-        :root { color-scheme: light !important; }
+        /* 1. FORZAR MODO CLARO AL NAVEGADOR */
+        :root {
+            color-scheme: light only !important;
+        }
         html, body, [data-testid="stAppViewContainer"] {
             background-color: #f0f2f6 !important;
             color: #000000 !important;
         }
         
-        /* TEXTO GENERAL NEGRO */
-        .stApp, p, label, h1, h2, h3, h4, h5, h6, div, span, li {
+        /* 2. TEXTOS GENERALES EN NEGRO */
+        .stApp, p, label, h1, h2, h3, h4, h5, h6, span, div {
             color: #000000 !important;
         }
-        
-        /* ENCABEZADO AZUL */
         header[data-testid="stHeader"] { background-color: #003399 !important; }
         h1, h2, h3 { color: #003399 !important; }
 
-        /* === 1. INPUTS Y SELECTORES (CAJA CERRADA) === */
-        div[data-baseweb="select"] > div, 
-        div[data-baseweb="input"] > div,
-        div[data-baseweb="base-input"] {
-            background-color: #FFFFFF !important;
-            border: 1px solid #cccccc !important;
-            color: #000000 !important;
-        }
-        /* Texto dentro del input */
+        /* 3. INPUTS (CAJAS DE TEXTO) */
         input {
             color: #000000 !important;
             -webkit-text-fill-color: #000000 !important;
             background-color: #FFFFFF !important;
             opacity: 1 !important;
         }
-        /* Texto dentro del selector cerrado */
+        div[data-baseweb="input"], div[data-baseweb="base-input"] {
+            background-color: #FFFFFF !important;
+            border: 1px solid #ccc !important;
+        }
+
+        /* 4. SELECTBOX (CAJA CERRADA) */
+        div[data-baseweb="select"] > div {
+            background-color: #FFFFFF !important;
+            color: #000000 !important;
+        }
         div[data-baseweb="select"] span {
             color: #000000 !important;
             -webkit-text-fill-color: #000000 !important;
         }
-
-        /* === 2. EL PARCHE DEFINITIVO PARA EL MENÚ DESPLEGABLE (INSTAGRAM FIX) === */
-        
-        /* El contenedor flotante (Popover) que Instagram intenta poner negro */
-        div[data-baseweb="popover"], 
-        div[data-baseweb="popover"] > div,
-        div[data-baseweb="popover"] > div > div {
-            background-color: #FFFFFF !important;
+        div[data-baseweb="select"] svg {
+            fill: #000000 !important;
         }
 
-        /* La lista de opciones (ul) */
-        ul[data-baseweb="menu"] {
+        /* 5. MENÚ DESPLEGABLE (LA LISTA QUE SE ABRE) - CORRECCIÓN INSTAGRAM */
+        
+        /* El contenedor flotante */
+        div[data-baseweb="popover"], div[data-baseweb="popover"] > div {
             background-color: #FFFFFF !important;
         }
         
-        /* Cada opción (li) */
-        li[data-baseweb="menu-item"] {
+        /* La lista en sí */
+        ul[data-baseweb="menu"], ul[role="listbox"] {
+            background-color: #FFFFFF !important;
+        }
+        
+        /* Cada opción de la lista */
+        li[data-baseweb="menu-item"], li[role="option"] {
             background-color: #FFFFFF !important;
             color: #000000 !important;
         }
         
-        /* FORZAR COLOR NEGRO A CADA LETRA DENTRO DE LA OPCIÓN */
-        /* Esto evita que Instagram pinte las letras de blanco */
-        li[data-baseweb="menu-item"] div, 
-        li[data-baseweb="menu-item"] span,
-        li[data-baseweb="menu-item"] p {
+        /* El texto DENTRO de cada opción */
+        li[data-baseweb="menu-item"] div, li[role="option"] div {
             color: #000000 !important;
             -webkit-text-fill-color: #000000 !important;
         }
         
-        /* Al pasar el mouse o seleccionar (Hover) */
+        /* Cuando seleccionas o pasas el dedo (Hover) */
         li[data-baseweb="menu-item"]:hover, li[aria-selected="true"] {
             background-color: #e6f0ff !important;
         }
-        /* Texto azul al seleccionar */
-        li[data-baseweb="menu-item"]:hover *, li[aria-selected="true"] * {
+        li[data-baseweb="menu-item"]:hover div, li[aria-selected="true"] div {
             color: #003399 !important;
-            -webkit-text-fill-color: #003399 !important;
         }
 
-        /* === 3. BOTONES === */
+        /* 6. BOTONES */
         div.stButton > button { width: 100%; border-radius: 8px; font-weight: bold; }
         
-        /* Primario (Azul) */
+        /* Botón Azul (Primario) */
         div.stButton > button[kind="primary"] {
             background-color: #003399 !important;
-            color: #FFFFFF !important;
             border: none !important;
+            color: #FFFFFF !important;
         }
-        div.stButton > button[kind="primary"] * { color: #FFFFFF !important; -webkit-text-fill-color: #FFFFFF !important; }
-
-        /* Secundario (Blanco) */
-        div.stButton > button[kind="secondary"] {
-            background-color: #FFFFFF !important;
-            color: #003399 !important;
-            border: 2px solid #003399 !important;
+        div.stButton > button[kind="primary"] p, div.stButton > button[kind="primary"] * {
+            color: #FFFFFF !important;
+            -webkit-text-fill-color: #FFFFFF !important;
         }
-        div.stButton > button[kind="secondary"] * { color: #003399 !important; -webkit-text-fill-color: #003399 !important; }
         
         /* Botones de Enlace (Azules) */
         div.stLinkButton > a {
             background-color: #003399 !important;
-            color: #FFFFFF !important;
             border: none !important;
+            color: #FFFFFF !important;
         }
-        div.stLinkButton > a * { color: #FFFFFF !important; -webkit-text-fill-color: #FFFFFF !important; }
-
-        /* Botones +/- (Numéricos) */
-        button[tabindex="-1"] {
-            background-color: #e0e0e0 !important; 
-            color: #000000 !important;
-            border-color: #ccc !important;
-        }
-        button[tabindex="-1"] svg {
-            fill: #000000 !important;
+        div.stLinkButton > a * {
+            color: #FFFFFF !important;
+            -webkit-text-fill-color: #FFFFFF !important;
         }
 
-        /* === 4. CONTENEDORES === */
+        /* Botón Blanco (Secundario) */
+        div.stButton > button[kind="secondary"] {
+            background-color: #FFFFFF !important;
+            border: 2px solid #003399 !important;
+            color: #003399 !important;
+        }
+        div.stButton > button[kind="secondary"] p, div.stButton > button[kind="secondary"] * {
+            color: #003399 !important;
+        }
+
+        /* 7. CONTENEDORES Y EXTRAS */
         [data-testid="stForm"] {
             background-color: #FFFFFF !important;
             padding: 2rem; 
@@ -132,23 +127,23 @@ st.markdown("""
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
         
-        .info-box { background-color: #e8f4fd; border-left: 5px solid #003399; padding: 15px; border-radius: 5px; color: #000 !important; margin-bottom: 15px;}
-        .help-box { background-color: #fff3cd; border-left: 5px solid #ffc107; padding: 15px; border-radius: 5px; color: #000 !important; }
-        .step-box { background-color: white; padding: 15px; border-radius: 10px; border: 1px solid #ddd; margin-bottom: 10px; color: #000 !important; }
+        .info-box { background-color: #e8f4fd; border-left: 5px solid #003399; padding: 15px; border-radius: 5px; margin-bottom: 15px; }
+        .info-box * { color: #000000 !important; }
+        
         .result-box { background-color: #003399; padding: 20px; border-radius: 10px; text-align: center; margin-top: 20px; }
         .result-box h2 { color: #FFFFFF !important; margin: 0; }
+        
         .footer { margin-top: 50px; padding: 20px; border-top: 1px solid #ccc; text-align: center; }
         .deco-sub { font-style: italic; margin-bottom: 15px; display: block; color: #666666 !important; font-size: 0.9em; }
         
-        /* Radio/Check */
-        label[data-baseweb="radio"], label[data-baseweb="checkbox"] { color: #000000 !important; }
-        div[data-baseweb="radio"] div, div[data-baseweb="checkbox"] div { background-color: #FFFFFF !important; border-color: #003399 !important; }
-        div[data-baseweb="radio"][aria-checked="true"] div div { background-color: #003399 !important; }
+        /* Botones +/- numéricos */
+        button[tabindex="-1"] { background-color: #e0e0e0 !important; color: #000000 !important; border: 1px solid #ccc !important;}
+        button[tabindex="-1"] svg { fill: #000000 !important; }
 
     </style>
 """, unsafe_allow_html=True)
 
-# --- 3. INICIALIZACIÓN ---
+# --- 3. INICIALIZACIÓN DE VARIABLES ---
 default_values = {
     'language': 'fr', 'step': 1, 'show_results': False,
     'age': 30, 'spouse': False, 'k1': 0, 'k2': 0,
@@ -164,6 +159,7 @@ for key, value in default_values.items():
 def cycle_language():
     lang_map = {'fr': 'es', 'es': 'en', 'en': 'fr'}
     st.session_state.language = lang_map[st.session_state.language]
+    # Asegurar que el TEER tiene un valor válido al cambiar idioma
     st.session_state.teer_sel = t[st.session_state.language]['teer_opts'][0]
 
 def next_step(): st.session_state.step += 1
@@ -217,7 +213,7 @@ t = {
         'fr_oral': "Français Oral (Vous)", 'fr_write': "Français Écrit (Vous)", 'en': "Anglais",
         'sp_fr_title': "Français du Conjoint (Oral)",
         'sp_fr_label': "Niveau Oral",
-        'oev_info': "**ℹ️ OEV (Offre d'emploi validée) :** Signifie que l'employeur a obtenu une EIMT ou que l'offre est validée par le MIFI. Une simple lettre d'embauche ne suffit pas toujours.",
+        'oev_info': "**ℹ️ OEV (Offre d'emploi validée) :** Signifie que l'employeur a obtenu une EIMT ou que l'offre est validée par le MIFI.",
         'vjo_label': "Avez-vous une Offre Validée (OEV) ?",
         'vjo_opts': ["Non", "Oui, Grand Montréal", "Oui, Hors Montréal (Région)"],
         'dip_qc_label': "Diplôme du Québec ?",
@@ -426,7 +422,7 @@ with main_tab_calc:
         
         if st.session_state.spouse:
             st.divider()
-            st.markdown(f"**{lang['sp_header']}**")
+            st.markdown(f"**{lang.get('sp_header', 'Datos Pareja')}**")
             c_sp1, c_sp2 = st.columns(2)
             with c_sp1: st.session_state.sp_age = st.number_input(lang['sp_age'], 18, 65, st.session_state.sp_age, key="sp_age_in")
             with c_sp2: st.session_state.sp_edu = st.selectbox(lang['sp_edu'], ["PhD", "Master", "Bachelor", "Technical", "Secondary"], index=2, key="sp_edu_in")
@@ -484,14 +480,14 @@ with main_tab_calc:
         if st.session_state.spouse:
             st.divider()
             st.markdown(f"**{lang['sp_fr_title']}**")
-            st.session_state.sp_fr = st.select_slider(lang['sp_fr_label'], options=["0", "A1", "A2", "B1", "B2", "C1", "C2"], value=st.session_state.sp_fr, key="spfr_input")
+            st.session_state.sp_fr = st.select_slider("Niveau", ["0", "A1", "A2", "B1", "B2", "C1", "C2"], value=st.session_state.sp_fr, key="spfr_input")
 
         st.markdown("###")
         col_p, col_e, col_n = st.columns([1, 2, 1])
         with col_p: st.button(lang['prev'], type="secondary", on_click=prev_step)
         with col_n: st.button(lang['next'], type="primary", on_click=next_step)
 
-    # --- PASO 4: QUEBEC ---
+    # --- PASO 4: QUEBEC (FINAL) ---
     elif st.session_state.step == 4:
         st.markdown(f"### ⚜️ {lang['step4']}")
         st.markdown(f"<span class='deco-sub'>{lang['tab4_sub']}</span>", unsafe_allow_html=True)
@@ -536,7 +532,7 @@ with main_tab_calc:
         with col_n:
             st.button(lang['calc'], type="primary", on_click=trigger_calculation)
 
-    # LÓGICA Y RESULTADOS
+    # LÓGICA & RESULTADOS
     if st.session_state.show_results:
         age = st.session_state.age
         edu = st.session_state.edu
