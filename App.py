@@ -8,7 +8,7 @@ st.set_page_config(
     layout="centered"
 )
 
-# --- 2. ESTILOS CSS (MODO "NUCLEAR" PARA INSTAGRAM) ---
+# --- 2. ESTILOS CSS (BLINDAJE TOTAL INSTAGRAM V51) ---
 st.markdown("""
     <style>
         /* === 0. FORZADO GLOBAL === */
@@ -17,13 +17,50 @@ st.markdown("""
             background-color: #f4f7f6 !important;
             color: #000000 !important;
         }
-        .stApp, p, label, h1, h2, h3, h4, h5, h6, div, span, li {
+        
+        /* Asegurar texto base negro */
+        .stApp, p, label, h2, h3, h4, h5, h6, div, span, li {
             color: #000000 !important;
         }
-        header[data-testid="stHeader"] { background-color: #003399 !important; }
         h1, h2, h3 { color: #003399 !important; }
+        header[data-testid="stHeader"] { background-color: #003399 !important; }
 
-        /* === 1. INPUTS Y SELECTORES === */
+        /* === 1. HEADER PROFESIONAL (CORREGIDO) === */
+        .pro-header {
+            background-color: #003399;
+            padding: 12px 15px; /* Menos padding */
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start; /* Banderas arriba */
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        /* Contenedor del texto central para bajarlo un poco */
+        .header-text {
+            text-align: center;
+            flex-grow: 1;
+            margin-top: 4px; /* Ajuste visual respecto a las banderas */
+        }
+        /* TEXTO BLANCO NUCLEAR PARA INSTAGRAM */
+        .pro-header h1, .pro-header p {
+            color: #FFFFFF !important;
+            -webkit-text-fill-color: #FFFFFF !important; /* Fuerza bruta */
+            margin: 0;
+        }
+        .pro-header h1 { font-size: 1.4rem; font-weight: 800; letter-spacing: 0.5px; }
+        .pro-header p { font-size: 0.85rem; opacity: 0.9; font-weight: 400; }
+        
+        /* BANDERAS MÁS PEQUEÑAS */
+        .flag-icon {
+            height: 32px; /* Más pequeñas */
+            width: auto;
+            border: 2px solid #FFFFFF;
+            border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        /* === 2. INPUTS, FECHAS Y SELECTORES (BLINDAJE ANTI-DARK MODE) === */
         div[data-baseweb="select"] > div, 
         div[data-baseweb="input"] > div,
         div[data-baseweb="base-input"] {
@@ -31,74 +68,63 @@ st.markdown("""
             border: 1px solid #cccccc !important;
             color: #000000 !important;
         }
-        input {
+
+        /* FUERZA BRUTA PARA INPUTS Y FECHAS EN INSTAGRAM */
+        input, input[type="text"], input[type="number"], input[type="date"] {
             color: #000000 !important;
-            -webkit-text-fill-color: #000000 !important;
+            -webkit-text-fill-color: #000000 !important; /* CRÍTICO */
             background-color: #FFFFFF !important;
             opacity: 1 !important;
-        }
-        div[data-baseweb="select"] span {
-            color: #000000 !important;
-            -webkit-text-fill-color: #000000 !important;
+            caret-color: #000000 !important; /* Cursor negro */
         }
 
-        /* === 2. MENÚ DESPLEGABLE === */
-        ul[data-baseweb="menu"] { background-color: #FFFFFF !important; }
-        li[data-baseweb="menu-item"] { background-color: #FFFFFF !important; color: #000000 !important; }
-        li[data-baseweb="menu-item"] * { color: #000000 !important; }
-        li[data-baseweb="menu-item"]:hover, li[aria-selected="true"] { background-color: #e6f0ff !important; }
+        /* FUERZA BRUTA PARA MENÚS DESPLEGABLES (TEER, CIUDAD, ETC) */
+        ul[data-baseweb="menu"] {
+            background-color: #FFFFFF !important;
+        }
+        /* Asegura que las opciones sean negras sobre blanco */
+        li[data-baseweb="menu-item"], 
+        li[data-baseweb="menu-item"] div,
+        li[data-baseweb="menu-item"] span {
+             background-color: #FFFFFF !important;
+             color: #000000 !important;
+             -webkit-text-fill-color: #000000 !important; /* CRÍTICO */
+        }
+        /* Hover azul claro */
+        li[data-baseweb="menu-item"]:hover, li[aria-selected="true"] {
+            background-color: #e6f0ff !important;
+        }
 
-        /* === 3. BOTONES === */
-        div.stButton > button { width: 100%; border-radius: 8px; font-weight: bold; }
+        /* === 3. BOTONES Y EXTRAS === */
+        div.stButton > button { width: 100%; border-radius: 8px; font-weight: bold; height: 45px; }
+        /* Primario */
         div.stButton > button[kind="primary"] {
-            background-color: #003399 !important;
-            color: #FFFFFF !important;
-            border: none !important;
+            background-color: #003399 !important; color: #FFFFFF !important; border: none !important;
         }
-        div.stButton > button[kind="primary"] * { color: #FFFFFF !important; }
+        div.stButton > button[kind="primary"] * { color: #FFFFFF !important; -webkit-text-fill-color: #FFFFFF !important; }
+        /* Secundario */
         div.stButton > button[kind="secondary"] {
-            background-color: #FFFFFF !important;
-            color: #003399 !important;
-            border: 2px solid #003399 !important;
+            background-color: #FFFFFF !important; color: #003399 !important; border: 2px solid #003399 !important;
         }
-        div.stButton > button[kind="secondary"] * { color: #003399 !important; }
+        div.stButton > button[kind="secondary"] * { color: #003399 !important; -webkit-text-fill-color: #003399 !important; }
 
-        /* === 4. CONTENEDORES === */
         [data-testid="stForm"] {
-            background-color: #FFFFFF !important;
-            padding: 2rem; 
-            border-radius: 15px;
-            border-top: 5px solid #003399;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            background-color: #FFFFFF !important; padding: 2rem; border-radius: 15px;
+            border-top: 5px solid #003399; box-shadow: 0 4px 15px rgba(0,0,0,0.08);
         }
         .info-box { background-color: #e8f4fd; border-left: 5px solid #003399; padding: 15px; border-radius: 5px; margin-bottom: 15px; }
-        .result-box { background-color: #003399; padding: 20px; border-radius: 10px; text-align: center; margin-top: 20px; }
-        .result-box h2 { color: #FFFFFF !important; margin: 0; }
+        .result-box { 
+            background: linear-gradient(135deg, #003399 0%, #0044cc 100%); 
+            padding: 25px; border-radius: 12px; text-align: center; margin-top: 20px; 
+            color: white !important; box-shadow: 0 5px 15px rgba(0,51,153,0.3);
+        }
+        .result-box h2 { color: #FFFFFF !important; margin: 0; -webkit-text-fill-color: #FFFFFF !important; }
         .footer { margin-top: 50px; padding: 20px; border-top: 1px solid #ccc; text-align: center; }
         .deco-sub { font-style: italic; margin-bottom: 15px; display: block; color: #666666 !important; font-size: 0.9em; }
         
         /* Botones +/- */
-        button[tabindex="-1"] { background-color: #e0e0e0 !important; color: #000 !important; border: 1px solid #ccc !important; }
-        button[tabindex="-1"] span { color: #000 !important; }
-
-        /* Header Pro */
-        .pro-header {
-            background-color: #003399;
-            padding: 15px 20px;
-            border-radius: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        .pro-header h1 {
-            color: #FFFFFF !important;
-            margin: 0;
-            text-align: center;
-            font-size: 1.5rem;
-            flex-grow: 1;
-        }
-        .flag-icon { height: 40px; border: 1px solid white; border-radius: 4px; }
+        button[tabindex="-1"] { background-color: #f0f0f0 !important; color: #000 !important; border: 1px solid #ccc !important; }
+        button[tabindex="-1"] span { color: #000 !important; -webkit-text-fill-color: #000000 !important; }
 
     </style>
 """, unsafe_allow_html=True)
@@ -167,9 +193,9 @@ t = {
         'age': "Âge du candidat principal",
         'spouse': "Avez-vous un conjoint ?",
         'kids12': "Enfants -12 ans", 'kids13': "Enfants +12 ans",
-        'sp_header': "Données du Conjoint",
-        'sp_age': "Âge du conjoint", 'sp_edu': "Éducation du conjoint",
-        'job_title': "Quel est votre emploi actuel ?",
+        'sp_header': "Informations du Conjoint",
+        'sp_age': "Âge du conjoint", 'sp_edu': "Niveau d'études du conjoint",
+        'job_title': "Quel est votre métier principal ?",
         'job_place': "Ex: Ingénieur, Soudeur (Appuyez sur Entrée)",
         'teer_label': "Catégorie TEER",
         'teer_opts': [
@@ -213,7 +239,7 @@ t = {
     },
     'es': {
         'btn_lang': "🌐 Cambiar Idioma",
-        'brand': "Calculatrice PSTQ",
+        'brand': "Calculadora PSTQ",
         'subtitle': "Análisis Residencia Permanente (Arrima).",
         'disclaimer_title': "⚠️ AVISO LEGAL",
         'disclaimer_text': "Proyecto independiente. NO abogados. Resultados estimados.",
@@ -383,14 +409,14 @@ def find_job_details(keyword):
     return None
 
 # ==========================================
-# HEADER
+# HEADER CORREGIDO (TEXTO BLANCO + BANDERAS ALTAS)
 # ==========================================
 st.markdown(f"""
 <div class="pro-header">
     <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Flag_of_Quebec.svg/128px-Flag_of_Quebec.svg.png" class="flag-icon">
-    <div>
+    <div class="header-text">
         <h1>{lang['brand']}</h1>
-        <p style="color:#e0e0e0; margin:0; font-size:0.9rem;">{lang['subtitle']}</p>
+        <p>{lang['subtitle']}</p>
     </div>
     <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Flag_of_Quebec.svg/128px-Flag_of_Quebec.svg.png" class="flag-icon">
 </div>
