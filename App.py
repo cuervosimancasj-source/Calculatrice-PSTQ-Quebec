@@ -8,100 +8,80 @@ st.set_page_config(
     layout="centered"
 )
 
-# --- 2. ESTILOS CSS (VARIABLES DE TEMA + HACKS ANTI-INVERSIÓN) ---
+# --- 2. ESTILOS CSS (ESTRATEGIA DE CAMUFLAJE DE COLORES) ---
 st.markdown("""
     <style>
-        /* === 0. FORZADO DE VARIABLES DE TEMA (ROOT) === */
-        /* Esto engaña a Streamlit para que use colores claros siempre */
+        /* === 0. FORZADO DE MODO CLARO (CON COLORES "CASI" PUROS) === */
         :root {
-            --primary-color: #003399;
-            --background-color: #f4f7f6;
-            --secondary-background-color: #ffffff;
-            --text-color: #000000;
-            --font: sans-serif;
             color-scheme: light only !important;
         }
-
-        /* === 1. BODY Y CONTENEDORES === */
+        
+        /* Fondo Gris Suave (No blanco puro) */
         html, body, [data-testid="stAppViewContainer"] {
             background-color: #f4f7f6 !important;
-            color: #000000 !important;
-            forced-color-adjust: none !important; /* Evita que el navegador cambie colores */
+            color: #111111 !important; /* Casi negro */
         }
         
-        /* Texto general */
+        /* Texto base "Casi Negro" */
         .stApp, p, label, h2, h3, h4, h5, h6, div, span, li {
-            color: #000000 !important;
+            color: #111111 !important;
         }
-        
-        /* === 2. HEADER CON TRUCO DE SOMBRA (PARA QUE NO SE PONGA NEGRO) === */
+        h1 { color: #FFFFFF !important; }
         header[data-testid="stHeader"] { background-color: #003399 !important; }
-        
-        .pro-header {
-            background-color: #003399 !important;
-            padding: 15px 20px;
-            border-radius: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-            /* Truco para evitar inversión de color */
-            -webkit-print-color-adjust: exact; 
-            forced-color-adjust: none;
-        }
-        
-        .pro-header h1 {
-            color: #FFFFFF !important;
-            /* Truco: Sombra del mismo color para evitar que Instagram lo invierta */
-            text-shadow: 0px 0px 0px #FFFFFF !important; 
-            -webkit-text-fill-color: #FFFFFF !important;
-            margin: 0;
-            text-align: center;
-            font-size: 1.5rem;
-            font-weight: 800;
-            flex-grow: 1;
-        }
-        
-        .pro-header p {
-            color: #e0e0e0 !important;
-            text-shadow: 0px 0px 0px #e0e0e0 !important;
-        }
 
-        .flag-icon { height: 40px; border: 1px solid white; border-radius: 4px; }
-
-        /* === 3. INPUTS Y SELECTORES === */
+        /* === 1. INPUTS Y SELECTORES (USANDO #FAFAFA EN VEZ DE WHITE) === */
         div[data-baseweb="select"] > div, 
         div[data-baseweb="input"] > div,
         div[data-baseweb="base-input"] {
-            background-color: #FFFFFF !important;
+            background-color: #FAFAFA !important; /* Truco para Instagram */
             border: 1px solid #cccccc !important;
-            color: #000000 !important;
+            color: #111111 !important;
         }
         
         input {
-            color: #000000 !important;
-            -webkit-text-fill-color: #000000 !important;
-            background-color: #FFFFFF !important;
-            opacity: 1 !important;
+            color: #111111 !important;
+            -webkit-text-fill-color: #111111 !important;
+            background-color: #FAFAFA !important;
             caret-color: #000000 !important;
         }
         
+        /* Texto seleccionado */
         div[data-baseweb="select"] span {
-            color: #000000 !important;
-            -webkit-text-fill-color: #000000 !important;
+            color: #111111 !important;
+            -webkit-text-fill-color: #111111 !important;
+        }
+        div[data-baseweb="select"] svg { fill: #111111 !important; }
+
+        /* === 2. MENÚ DESPLEGABLE (LA CLAVE) === */
+        
+        /* Contenedor de la lista */
+        ul[data-baseweb="menu"] {
+            background-color: #FAFAFA !important; /* Casi blanco */
         }
         
-        div[data-baseweb="select"] svg { fill: #000000 !important; }
+        /* Opciones individuales */
+        li[data-baseweb="menu-item"] {
+            background-color: #FAFAFA !important;
+            color: #111111 !important;
+        }
+        
+        /* Texto dentro de las opciones */
+        li[data-baseweb="menu-item"] * {
+            color: #111111 !important;
+            -webkit-text-fill-color: #111111 !important;
+        }
+        
+        /* Hover / Selección */
+        li[data-baseweb="menu-item"]:hover, li[aria-selected="true"] {
+            background-color: #e6f0ff !important;
+        }
+        li[data-baseweb="menu-item"]:hover *, li[aria-selected="true"] * {
+            color: #003399 !important;
+            -webkit-text-fill-color: #003399 !important;
+        }
 
-        /* === 4. MENÚS DESPLEGABLES === */
-        ul[data-baseweb="menu"] { background-color: #FFFFFF !important; }
-        li[data-baseweb="menu-item"] { background-color: #FFFFFF !important; color: #000000 !important; }
-        li[data-baseweb="menu-item"] * { color: #000000 !important; -webkit-text-fill-color: #000000 !important; }
-        li[data-baseweb="menu-item"]:hover, li[aria-selected="true"] { background-color: #e6f0ff !important; }
-
-        /* === 5. BOTONES (CON TRUCO DE SOMBRA PARA EL BLANCO) === */
-        div.stButton > button { width: 100%; border-radius: 8px; font-weight: bold; }
+        /* === 3. BOTONES === */
+        div.stButton > button { width: 100%; border-radius: 8px; font-weight: bold; height: 45px; }
         
         /* Primario (Azul) */
         div.stButton > button[kind="primary"] {
@@ -110,10 +90,21 @@ st.markdown("""
             border: none !important;
         }
         div.stButton > button[kind="primary"] * { 
-            color: #FFFFFF !important;
-            text-shadow: 0px 0px 0px #FFFFFF !important; /* Truco */
+            color: #FFFFFF !important; 
+            -webkit-text-fill-color: #FFFFFF !important;
         }
 
+        /* Secundario (Blanco Sucio) */
+        div.stButton > button[kind="secondary"] {
+            background-color: #FAFAFA !important;
+            color: #003399 !important;
+            border: 2px solid #003399 !important;
+        }
+        div.stButton > button[kind="secondary"] * { 
+            color: #003399 !important; 
+            -webkit-text-fill-color: #003399 !important;
+        }
+        
         /* Enlaces (Azul) */
         div.stLinkButton > a {
             background-color: #003399 !important;
@@ -124,40 +115,55 @@ st.markdown("""
             text-decoration: none !important;
         }
         div.stLinkButton > a * { 
-            color: #FFFFFF !important;
-            text-shadow: 0px 0px 0px #FFFFFF !important; /* Truco */
+            color: #FFFFFF !important; 
+            -webkit-text-fill-color: #FFFFFF !important;
         }
 
-        /* Secundario (Blanco) */
-        div.stButton > button[kind="secondary"] {
-            background-color: #FFFFFF !important;
-            color: #003399 !important;
-            border: 2px solid #003399 !important;
-        }
-        div.stButton > button[kind="secondary"] * { 
-            color: #003399 !important; 
-        }
-
-        /* === 6. CONTENEDORES === */
+        /* === 4. EXTRAS === */
         [data-testid="stForm"] {
-            background-color: #FFFFFF !important;
+            background-color: #FAFAFA !important; /* Casi blanco */
             padding: 2rem; 
             border-radius: 15px;
             border-top: 5px solid #003399;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
+        
         .info-box { background-color: #e8f4fd; border-left: 5px solid #003399; padding: 15px; border-radius: 5px; margin-bottom: 15px; }
         .help-box { background-color: #fff3cd; border-left: 5px solid #ffc107; padding: 15px; border-radius: 5px; margin-bottom: 15px; }
+        
         .result-box { background-color: #003399; padding: 20px; border-radius: 10px; text-align: center; margin-top: 20px; }
-        .result-box h2 { color: #FFFFFF !important; margin: 0; text-shadow: 0px 0px 0px #FFFFFF !important; }
+        .result-box h2 { color: #FFFFFF !important; margin: 0; -webkit-text-fill-color: #FFFFFF !important; }
+        
         .footer { margin-top: 50px; padding: 20px; border-top: 1px solid #ccc; text-align: center; }
         .deco-sub { font-style: italic; margin-bottom: 15px; display: block; color: #666666 !important; font-size: 0.9em; }
         
-        /* Botones +/- */
-        button[tabindex="-1"] { background-color: #e0e0e0 !important; color: #000 !important; border: 1px solid #ccc !important; }
-        button[tabindex="-1"] span { color: #000 !important; -webkit-text-fill-color: #000000 !important; }
+        /* Botones +/- (Numéricos) */
+        button[tabindex="-1"] { background-color: #dcdcdc !important; color: #111 !important; border: 1px solid #bbb !important; }
+        button[tabindex="-1"] span { color: #111 !important; -webkit-text-fill-color: #111111 !important; }
+        
+        /* Radio Labels */
+        div[role="radiogroup"] label { color: #111111 !important; }
 
-        div[role="radiogroup"] label { color: #000000 !important; }
+        /* Header Pro */
+        .pro-header {
+            background-color: #003399;
+            padding: 15px 20px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        .pro-header h1 {
+            color: #FFFFFF !important;
+            -webkit-text-fill-color: #FFFFFF !important;
+            margin: 0;
+            text-align: center;
+            font-size: 1.5rem;
+            flex-grow: 1;
+        }
+        .flag-icon { height: 40px; border: 1px solid white; border-radius: 4px; }
 
     </style>
 """, unsafe_allow_html=True)
@@ -257,8 +263,8 @@ t = {
         'g_step1': "1. Auto-évaluation", 'g_desc1': "Vos points forts.",
         'g_step2': "2. Français", 'g_desc2': "Visez B2 (7).",
         'g_step3': "3. Arrima", 'g_desc3': "Profil gratuit.",
-        'g_step4': "4. CSQ", 'g_desc4': "Certificat Sélection.",
-        'g_step5': "5. Fédéral", 'g_desc5': "Résidence Permanente.",
+        'g_step4': "4. CSQ", 'g_desc4': "Certificat de Sélection du Québec.",
+        'g_step5': "5. Fédéral", 'g_desc5': "Résidence Permanente Canada.",
         'noc_link_text': "🔎 Chercher sur le site officiel du Canada (CNP)",
         'exp_title': "Expérience de travail (5 dernières années)",
         'exp_qc_label': "Mois au Québec",
@@ -271,7 +277,7 @@ t = {
         'subtitle': "Simulación de puntaje para Residencia Permanente Quebec",
         'disclaimer_title': "⚠️ AVISO LEGAL",
         'disclaimer_text': "Proyecto independiente. NO abogados. Resultados estimados.",
-        'coffee': "☕ Invítame un café",
+        'coffee': "☕ Apoyar proyecto",
         'courses': "📚 Cursos de Francés",
         'main_tabs': ["🧮 Calculadora", "ℹ️ Guía"],
         'next': "Siguiente ➡", 'prev': "⬅ Atrás", 'calc': "VER MI PUNTAJE",
@@ -310,7 +316,7 @@ t = {
         'fr_oral': "Francés Oral (Tú)", 'fr_write': "Francés Escrito (Tú)", 'en': "Inglés",
         'sp_fr_title': "Francés de la Pareja (Oral)",
         'sp_fr_label': "Nivel Oral",
-        'oev_info': "**ℹ️ VJO (Oferta Validada):** Con LMIA o aprobada por MIFI.",
+        'oev_info': "**ℹ️ VJO (Oferta Validada):** Con LMIA o aprobada por MIFI. Una carta de trabajo simple no es VJO.",
         'vjo_label': "¿Tienes Oferta Validada (VJO)?",
         'vjo_opts': ["No", "Sí, Gran Montreal", "Sí, Fuera de Montreal"],
         'dip_qc_label': "¿Diploma de Quebec?",
