@@ -8,32 +8,73 @@ st.set_page_config(
     layout="centered"
 )
 
-# --- 2. ESTILOS CSS (CORRECCIÓN TOTAL: TEXTOS Y BOTONES +/-) ---
+# --- 2. ESTILOS CSS (PREMIUM + BLINDAJE MÓVIL) ---
 st.markdown("""
     <style>
-        /* === 0. FORZAR MODO CLARO === */
+        /* === 0. FORZADO GLOBAL === */
         :root { color-scheme: light !important; }
         html, body, [data-testid="stAppViewContainer"] {
-            background-color: #f0f2f6 !important;
+            background-color: #f4f7f6 !important; /* Fondo Gris Premium */
             color: #000000 !important;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
-        /* Textos Generales en Negro */
-        .stApp, p, label, h1, h2, h3, h4, h5, h6, div, span, li {
-            color: #000000 !important;
-        }
-        
-        /* Encabezado Azul */
-        header[data-testid="stHeader"] { background-color: #003399 !important; }
-        h1, h2, h3 { color: #003399 !important; }
+        /* Ocultar header default */
+        header[data-testid="stHeader"] { visibility: hidden; }
 
-        /* === 1. INPUTS Y SELECTORES === */
+        /* === 1. HEADER PROFESIONAL (CON BANDERAS) === */
+        .pro-header {
+            background-color: #003399;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            border: 1px solid #002266;
+        }
+        .pro-header h1 {
+            color: #FFFFFF !important;
+            margin: 0;
+            text-align: center;
+            font-size: 1.6rem;
+            font-weight: 800;
+            flex-grow: 1;
+            letter-spacing: 1px;
+        }
+        .pro-header p {
+            color: #e0e0e0 !important;
+            margin: 0;
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: 400;
+        }
+        .flag-icon {
+            height: 45px;
+            width: auto;
+            border: 2px solid white;
+            border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        /* === 2. TARJETA DEL FORMULARIO (ESTILO APP) === */
+        [data-testid="stForm"] {
+            background-color: #FFFFFF !important;
+            padding: 2rem; 
+            border-radius: 16px;
+            border-top: 6px solid #003399; /* Línea superior azul */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08); /* Sombra suave */
+        }
+
+        /* === 3. INPUTS Y SELECTORES (BLINDADOS PARA MÓVIL) === */
         div[data-baseweb="select"] > div, 
         div[data-baseweb="input"] > div,
         div[data-baseweb="base-input"] {
             background-color: #FFFFFF !important;
-            border: 1px solid #cccccc !important;
+            border: 1px solid #ced4da !important;
             color: #000000 !important;
+            border-radius: 8px !important;
         }
         input {
             color: #000000 !important;
@@ -46,70 +87,71 @@ st.markdown("""
             -webkit-text-fill-color: #000000 !important;
         }
 
-        /* === 2. CORRECCIÓN BOTONES +/- (LOS QUE SALÍAN NEGROS) === */
-        /* Forzamos fondo gris claro y texto negro para los botones spin */
-        div[data-baseweb="input"] button, 
-        div[data-baseweb="base-input"] button {
-            background-color: #e0e0e0 !important; 
-            color: #000000 !important;
-            border-left: 1px solid #ccc !important;
-        }
-        div[data-baseweb="input"] button svg,
-        div[data-baseweb="base-input"] button svg {
-            fill: #000000 !important;
-        }
-
-        /* === 3. MENÚ DESPLEGABLE === */
+        /* === 4. MENÚ DESPLEGABLE === */
         ul[data-baseweb="menu"] { background-color: #FFFFFF !important; }
         li[data-baseweb="menu-item"] { background-color: #FFFFFF !important; color: #000000 !important; }
         li[data-baseweb="menu-item"] * { color: #000000 !important; }
         li[data-baseweb="menu-item"]:hover, li[aria-selected="true"] { background-color: #e6f0ff !important; }
 
-        /* === 4. BOTONES DE ACCIÓN === */
-        div.stButton > button { width: 100%; border-radius: 8px; font-weight: bold; }
+        /* === 5. BOTONES === */
+        div.stButton > button { width: 100%; border-radius: 8px; font-weight: bold; height: 45px; transition: 0.3s; }
         
-        /* Primario (Azul) */
+        /* Primario */
         div.stButton > button[kind="primary"] {
             background-color: #003399 !important;
             color: #FFFFFF !important;
             border: none !important;
+            box-shadow: 0 4px 6px rgba(0, 51, 153, 0.2);
         }
         div.stButton > button[kind="primary"] * { color: #FFFFFF !important; }
-        
-        /* Enlaces (Azul) */
-        div.stLinkButton > a {
-            background-color: #003399 !important;
-            color: #FFFFFF !important;
-            border: none !important;
-        }
-        div.stLinkButton > a * { color: #FFFFFF !important; }
+        div.stButton > button[kind="primary"]:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0, 51, 153, 0.3); }
 
-        /* Secundario (Blanco) */
+        /* Secundario */
         div.stButton > button[kind="secondary"] {
             background-color: #FFFFFF !important;
             color: #003399 !important;
             border: 2px solid #003399 !important;
         }
         div.stButton > button[kind="secondary"] * { color: #003399 !important; }
-
-        /* === 5. CONTENEDORES === */
-        [data-testid="stForm"] {
-            background-color: #FFFFFF !important;
-            padding: 2rem; 
-            border-radius: 15px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            border-top: 5px solid #003399;
+        
+        /* Enlaces (Azules) */
+        div.stLinkButton > a {
+            background-color: #003399 !important;
+            color: #FFFFFF !important;
+            border: none !important;
+            border-radius: 8px !important;
+            text-align: center !important;
+            font-weight: bold !important;
+            text-decoration: none !important;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
         }
+        div.stLinkButton > a * { color: #FFFFFF !important; }
+
+        /* === 6. EXTRAS === */
+        .info-box { background-color: #e8f4fd; border-left: 5px solid #003399; padding: 15px; border-radius: 5px; margin-bottom: 15px; color: #000 !important; }
+        .help-box { background-color: #fff3cd; border-left: 5px solid #ffc107; padding: 15px; border-radius: 5px; color: #000 !important; }
         
-        .info-box { background-color: #e8f4fd; border-left: 5px solid #003399; padding: 15px; border-radius: 5px; margin-bottom: 15px; }
-        .help-box { background-color: #fff3cd; border-left: 5px solid #ffc107; padding: 15px; border-radius: 5px; margin-bottom: 15px; }
-        .result-box { background-color: #003399; padding: 20px; border-radius: 10px; text-align: center; margin-top: 20px; }
-        .result-box h2 { color: #FFFFFF !important; margin: 0; }
-        .footer { margin-top: 50px; padding: 20px; border-top: 1px solid #ccc; text-align: center; }
-        .deco-sub { font-style: italic; margin-bottom: 15px; display: block; color: #666666 !important; font-size: 0.9em; }
+        /* Caja de Resultado PRO */
+        .result-box { 
+            background: linear-gradient(135deg, #003399 0%, #0055ff 100%); 
+            padding: 30px; 
+            border-radius: 15px; 
+            text-align: center; 
+            margin-top: 20px; 
+            color: white !important;
+            box-shadow: 0 10px 20px rgba(0, 51, 153, 0.3);
+        }
+        .result-box h2 { color: #FFFFFF !important; margin: 0; font-size: 2.5rem; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
         
-        /* Radio buttons labels */
-        div[role="radiogroup"] label { color: #000000 !important; }
+        .footer { margin-top: 60px; padding: 30px; border-top: 1px solid #ddd; text-align: center; color: #666; }
+        .deco-sub { color: #666 !important; font-style: italic; margin-bottom: 20px; display: block; font-size: 0.95rem; }
+        
+        /* Botones +/- */
+        button[tabindex="-1"] { background-color: #f8f9fa !important; color: #000 !important; border: 1px solid #ccc !important; }
+        
+        /* Textos generales */
+        p, label, h2, h3, h4, div, span { color: #000000 !important; }
+        h3 { color: #003399 !important; } /* Subtítulos azules */
 
     </style>
 """, unsafe_allow_html=True)
@@ -123,7 +165,7 @@ default_values = {
     'fr_oral': 'B2', 'fr_write': 'B1', 'en_lvl': '0',
     'vjo': '', 'q_stud_val': 'Non', 'q_fam_val': 'Non',
     'job_search_term': '',
-    # VARIABLES DE UBICACIÓN
+    # UBICACIÓN
     'current_loc': '', 'origin_country': '', 'dest_city': '-', 'arrival_date': date.today()
 }
 for key, value in default_values.items():
@@ -132,9 +174,8 @@ for key, value in default_values.items():
 def cycle_language():
     lang_map = {'fr': 'es', 'es': 'en', 'en': 'fr'}
     st.session_state.language = lang_map[st.session_state.language]
-    # Reset TEER al cambiar idioma
+    # Reset TEER y Location al cambiar idioma
     st.session_state.teer_sel = t[st.session_state.language]['teer_opts'][0]
-    # Reset Location
     st.session_state.current_loc = t[st.session_state.language]['loc_opts'][2]
 
 def next_step(): st.session_state.step += 1
@@ -147,29 +188,28 @@ def reset_calc():
 
 def trigger_calculation(): st.session_state.show_results = True
 
-# --- 4. TRADUCCIONES COMPLETAS (REVISADAS) ---
+# --- 4. TRADUCCIONES ---
 t = {
     'fr': {
         'btn_lang': "🌐 Changer la langue",
-        'brand': "Calculatrice PSTQ Québec ⚜️",
-        'subtitle': "Outil d'analyse pour la Résidence Permanente (TEER, Volets, Score).",
+        'brand': "Calculatrice PSTQ",
+        'subtitle': "Simulation de pointage pour l'immigration au Québec",
         'disclaimer_title': "⚠️ AVIS IMPORTANT",
-        'disclaimer_text': "Ce logiciel est un projet indépendant. Nous ne sommes PAS avocats ni consultants.",
-        'coffee': "☕ M'offrir un café",
+        'disclaimer_text': "Ce logiciel est un projet indépendant. Nous ne sommes PAS avocats ni consultants. Nous ne représentons PAS le MIFI.",
+        'coffee': "☕ Soutenir le projet",
         'courses': "📚 Cours de Français",
         'main_tabs': ["🧮 Calculatrice", "ℹ️ Guide"],
-        'next': "Suivant ➡", 'prev': "⬅ Retour", 'calc': "CALCULER MON SCORE",
+        'next': "Suivant ➡", 'prev': "⬅ Retour", 'calc': "VOIR MON SCORE",
         'yes_no': ["Non", "Oui"],
-        'step1': "Étape 1 : Profil & Famille",
-        'step2': "Étape 2 : Travail & TEER",
+        'step1': "Étape 1 : Profil",
+        'step2': "Étape 2 : Travail",
         'step3': "Étape 3 : Langues",
-        'step4': "Étape 4 : Québec & Offre",
+        'step4': "Étape 4 : Québec",
         'tab1_sub': "Le point de départ de votre projet d'immigration.",
         'tab2_sub': "Votre métier est au cœur du programme PSTQ.",
         'tab3_sub': "Le français est la clé du succès au Québec.",
         'tab4_sub': "Finalisez votre pointage avec les atouts locaux.",
         
-        # UBICACIÓN
         'loc_label': "Où êtes-vous actuellement ?",
         'loc_opts': ["Au Québec", "Canada (Autre province)", "À l'étranger"],
         'country_label': "Pays de résidence",
@@ -179,9 +219,9 @@ t = {
 
         'age': "Âge du candidat principal",
         'spouse': "Avez-vous un conjoint ?",
-        'kids12': "Enfants -12 ans", 'kids13': "Enfants +12 ans",
-        'sp_header': "Données du Conjoint",
-        'sp_age': "Âge du conjoint", 'sp_edu': "Éducation du conjoint",
+        'kids12': "Enfants (-12 ans)", 'kids13': "Enfants (13-21 ans)",
+        'sp_header': "Informations du Conjoint",
+        'sp_age': "Âge du conjoint", 'sp_edu': "Niveau d'études du conjoint",
         'job_title': "Quel est votre emploi actuel ?",
         'job_place': "Ex: Ingénieur, Soudeur (Appuyez sur Entrée)",
         'teer_label': "Catégorie TEER",
@@ -197,7 +237,7 @@ t = {
         'fr_oral': "Français Oral (Vous)", 'fr_write': "Français Écrit (Vous)", 'en': "Anglais",
         'sp_fr_title': "Français du Conjoint (Oral)",
         'sp_fr_label': "Niveau Oral",
-        'oev_info': "**ℹ️ OEV (Offre d'emploi validée) :** Signifie que l'employeur a obtenu une EIMT ou que l'offre est validée par le MIFI. Une simple lettre d'embauche ne suffit pas.",
+        'oev_info': "**ℹ️ OEV (Offre validée) :** Signifie que l'employeur a obtenu une EIMT ou que l'offre est validée par le MIFI.",
         'vjo_label': "Avez-vous une Offre Validée (OEV) ?",
         'vjo_opts': ["Non", "Oui, Grand Montréal", "Oui, Hors Montréal (Région)"],
         'dip_qc_label': "Diplôme du Québec ?",
@@ -219,43 +259,40 @@ t = {
     },
     'es': {
         'btn_lang': "🌐 Cambiar Idioma",
-        'brand': "Calculatrice PSTQ ⚜️",
-        'subtitle': "Análisis Residencia Permanente (Arrima).",
+        'brand': "Calculadora PSTQ",
+        'subtitle': "Simulación de puntaje para Residencia Permanente Quebec",
         'disclaimer_title': "⚠️ AVISO LEGAL",
         'disclaimer_text': "Proyecto independiente. NO abogados. Resultados estimados.",
-        'coffee': "☕ Invítame un café",
+        'coffee': "☕ Apoyar proyecto",
         'courses': "📚 Cursos de Francés",
         'main_tabs': ["🧮 Calculadora", "ℹ️ Guía"],
-        'next': "Siguiente ➡", 'prev': "⬅ Atrás", 'calc': "CALCULAR PUNTAJE",
+        'next': "Siguiente ➡", 'prev': "⬅ Atrás", 'calc': "VER MI PUNTAJE",
         'yes_no': ["No", "Sí"],
-        'step1': "Paso 1: Perfil y Familia",
-        'step2': "Paso 2: Trabajo y TEER",
+        'step1': "Paso 1: Perfil",
+        'step2': "Paso 2: Trabajo",
         'step3': "Paso 3: Idiomas",
-        'step4': "Paso 4: Quebec y Oferta",
-        'tab1_sub': "El punto de partida de tu proyecto de inmigración.",
-        'tab2_sub': "Tu oficio es el corazón del programa PSTQ.",
-        'tab3_sub': "El francés es la llave del éxito en Quebec.",
-        'tab4_sub': "Finaliza tu puntaje con los activos locales.",
-        
-        # UBICACIÓN
+        'step4': "Paso 4: Quebec",
+        'tab1_sub': "El punto de partida de tu proyecto migratorio.",
+        'tab2_sub': "Tu oficio define tu categoría en el PSTQ.",
+        'tab3_sub': "El francés es el factor más importante.",
+        'tab4_sub': "Finaliza tu puntaje con los factores locales.",
         'loc_label': "¿Dónde te encuentras hoy?",
         'loc_opts': ["En Quebec", "Canadá (Otra provincia)", "En el extranjero"],
         'country_label': "País de residencia",
         'dest_city_label': "Ciudad de destino en Quebec",
         'arrival_label': "Fecha estimada de llegada",
         'city_opts': ["-", "Montréal", "Québec (Ville)", "Laval", "Gatineau", "Sherbrooke", "Trois-Rivières", "Saguenay", "Otra"],
-
         'age': "Edad del candidato",
         'spouse': "¿Tienes pareja?",
-        'kids12': "Hijos -12 años", 'kids13': "Hijos +12 años",
-        'sp_header': "Datos de la Pareja",
+        'kids12': "Hijos (-12 años)", 'kids13': "Hijos (13-21 años)",
+        'sp_header': "Información de la Pareja",
         'sp_age': "Edad pareja", 'sp_edu': "Educación pareja",
         'job_title': "Trabajo actual",
         'job_place': "Ej: Ingeniero (Enter para buscar)...",
         'teer_label': "Categoría TEER",
         'teer_opts': [
             "TEER 0, 1: Universidad / Gerencia / Ingeniería",
-            "TEER 2: College / Técnico / Supervisores",
+            "TEER 2: Técnico / College / Supervisores",
             "TEER 3: Oficios / Administración / Intermedio",
             "TEER 4, 5: Operarios / Secundaria / Manual"
         ],
@@ -265,13 +302,13 @@ t = {
         'fr_oral': "Francés Oral (Tú)", 'fr_write': "Francés Escrito (Tú)", 'en': "Inglés",
         'sp_fr_title': "Francés de la Pareja (Oral)",
         'sp_fr_label': "Nivel Oral",
-        'oev_info': "**ℹ️ VJO (Oferta Validada):** Con LMIA o aprobada por MIFI. Una carta de trabajo simple no es VJO.",
+        'oev_info': "**ℹ️ VJO (Oferta Validada):** Con LMIA o aprobada por MIFI.",
         'vjo_label': "¿Tienes Oferta Validada (VJO)?",
         'vjo_opts': ["No", "Sí, Gran Montreal", "Sí, Fuera de Montreal"],
         'dip_qc_label': "¿Diploma de Quebec?",
         'dip_qc_help': "AEC, DEC, Bachelor, etc. obtenido en Quebec.",
         'fam_qc_label': "¿Familia en Quebec?",
-        'fam_qc_help': "Residente o Ciudadano (Cónyuge, Padres, Hijos, Hermanos, Abuelos).",
+        'fam_qc_help': "Residente o Ciudadano (Cónyuge, Padres, Hijos).",
         'arr_year': "Año llegada",
         'res_title': "Resultado", 'advice_good': "¡Excelente! Competitivo.", 'advice_low': "Mejora el francés.",
         'details': "Detalles", 'sp_points': "Puntos Pareja",
@@ -285,7 +322,7 @@ t = {
     },
     'en': {
         'btn_lang': "🌐 Change Language",
-        'brand': "Calculatrice PSTQ ⚜️",
+        'brand': "Calculatrice PSTQ",
         'subtitle': "Residency Analysis Tool.",
         'disclaimer_title': "⚠️ DISCLAIMER",
         'disclaimer_text': "Independent. NOT lawyers. Estimated results.",
@@ -294,23 +331,20 @@ t = {
         'main_tabs': ["🧮 Calculator", "ℹ️ Guide"],
         'next': "Next ➡", 'prev': "⬅ Back", 'calc': "CALCULATE SCORE",
         'yes_no': ["No", "Yes"],
-        'step1': "Step 1: Profile & Family",
-        'step2': "Step 2: Work & TEER",
+        'step1': "Step 1: Profile",
+        'step2': "Step 2: Work",
         'step3': "Step 3: Languages",
-        'step4': "Step 4: Quebec & Offer",
-        'tab1_sub': "The starting point of your immigration project.",
-        'tab2_sub': "Your trade is at the heart of the PSTQ program.",
+        'step4': "Step 4: Quebec",
+        'tab1_sub': "The starting point of your immigration journey.",
+        'tab2_sub': "Your trade is the core of the PSTQ program.",
         'tab3_sub': "French is the key to success in Quebec.",
         'tab4_sub': "Finalize your score with local assets.",
-        
-        # LOCATION
         'loc_label': "Where are you today?",
         'loc_opts': ["In Quebec", "Canada (Other prov.)", "Abroad"],
         'country_label': "Country of Residence",
         'dest_city_label': "Destination City in Quebec",
         'arrival_label': "Estimated Arrival Date",
         'city_opts': ["-", "Montréal", "Québec (Ville)", "Laval", "Gatineau", "Sherbrooke", "Other"],
-
         'age': "Age",
         'spouse': "Have a spouse?",
         'kids12': "Kids -12", 'kids13': "Kids +12",
@@ -331,11 +365,11 @@ t = {
         'fr_oral': "French Oral (You)", 'fr_write': "French Written (You)", 'en': "English",
         'sp_fr_title': "Spouse's French (Oral)",
         'sp_fr_label': "Oral Level",
-        'oev_info': "**ℹ️ VJO:** Validated Offer (LMIA/MIFI). A simple job letter is not enough.",
+        'oev_info': "**ℹ️ VJO:** Validated Offer (LMIA/MIFI).",
         'vjo_label': "Validated Job Offer?",
         'vjo_opts': ["No", "Yes, Greater Montreal", "Yes, Outside Montreal"],
-        'dip_qc_label': "Quebec Diploma?", 'dip_qc_help': "AEC, DEC, Bachelor, etc. from Quebec.",
-        'fam_qc_label': "Family in Quebec?", 'fam_qc_help': "PR or Citizen (Parent, child, sibling, spouse).",
+        'dip_qc_label': "Quebec Diploma?", 'dip_qc_help': "AEC, DEC, Bachelor, etc.",
+        'fam_qc_label': "Family in Quebec?", 'fam_qc_help': "PR or Citizen.",
         'arr_year': "Arrival Year", 
         'res_title': "Result", 'advice_good': "Excellent!", 'advice_low': "Improve French.",
         'details': "Details", 'sp_points': "Spouse Pts",
@@ -385,13 +419,24 @@ def find_job_details(keyword):
 # ==========================================
 # HEADER
 # ==========================================
-col_brand, col_lang = st.columns([3, 1])
-with col_brand:
-    st.markdown(f"## {lang['brand']}")
-    st.caption(lang['subtitle'])
-with col_lang:
-    st.markdown("###") 
-    st.button(lang['btn_lang'], on_click=cycle_language, type="secondary", key="top_lang_btn")
+# Header Premium con Banderas
+st.markdown(f"""
+<div class="pro-header">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Flag_of_Quebec.svg/128px-Flag_of_Quebec.svg.png" class="flag-icon">
+    <div>
+        <h1>{lang['brand']}</h1>
+        <p style="color:#e0e0e0; margin:0; font-size:0.9rem;">{lang['subtitle']}</p>
+    </div>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Flag_of_Quebec.svg/128px-Flag_of_Quebec.svg.png" class="flag-icon">
+</div>
+""", unsafe_allow_html=True)
+
+# Botón Idioma
+c_lang_spacer, c_lang_btn = st.columns([3, 1])
+with c_lang_btn:
+    st.button(lang['btn_lang'], on_click=cycle_language, type="secondary", key="top_lang_btn", use_container_width=True)
+
+st.markdown("###")
 
 # ==========================================
 # APP PRINCIPAL
@@ -409,7 +454,6 @@ with main_tab_calc:
         st.markdown(f"### 👤 {lang['step1']}")
         st.markdown(f"<span class='deco-sub'>{lang['tab1_sub']}</span>", unsafe_allow_html=True)
         
-        # PREGUNTAS DE UBICACIÓN
         st.markdown(f"**{lang['loc_label']}**")
         curr_loc = st.session_state.current_loc
         if curr_loc not in lang['loc_opts']: curr_loc = lang['loc_opts'][2]
@@ -517,30 +561,22 @@ with main_tab_calc:
         
         st.divider()
         
-        # DIPLOMA
         st.markdown(f"**{lang['dip_qc_label']}**")
         st.info(lang['dip_qc_help'])
+        
         curr_stud = st.session_state.q_stud_val
         if curr_stud not in lang['yes_no']: curr_stud = lang['yes_no'][0]
         st.session_state.q_stud_val = st.radio("DipQC", lang['yes_no'], index=lang['yes_no'].index(curr_stud), horizontal=True, label_visibility="collapsed", key="q_stud_in")
         
         st.divider()
         
-        # FAMILIA
         st.markdown(f"**{lang['fam_qc_label']}**")
         st.info(lang['fam_qc_help'])
+        
         curr_fam = st.session_state.q_fam_val
         if curr_fam not in lang['yes_no']: curr_fam = lang['yes_no'][0]
         st.session_state.q_fam_val = st.radio("FamQC", lang['yes_no'], index=lang['yes_no'].index(curr_fam), horizontal=True, label_visibility="collapsed", key="q_fam_in")
         
-        st.divider()
-        
-        c_city, c_year = st.columns(2)
-        with c_city:
-            st.selectbox(lang['city_label'], lang['city_opts'], key="city_input")
-        with c_year:
-            st.selectbox(lang['arr_year'], range(2025, 1990, -1), key="year_input")
-
         st.markdown("###")
         col_p, col_e, col_n = st.columns([1, 1, 2])
         with col_p:
