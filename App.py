@@ -7,117 +7,143 @@ st.set_page_config(
     layout="centered"
 )
 
-# --- 2. ESTILOS CSS (CORRECCIÓN DE TEXTOS INVISIBLES) ---
+# --- 2. ESTILOS CSS (PARCHE "NUCLEAR" PARA MENÚ DESPLEGABLE) ---
 st.markdown("""
     <style>
-        /* === 1. FONDO GLOBAL === */
-        [data-testid="stAppViewContainer"] {
+        /* === 0. FORZADO GLOBAL MODO CLARO === */
+        :root { color-scheme: light !important; }
+        html, body, [data-testid="stAppViewContainer"] {
             background-color: #f0f2f6 !important;
+            color: #000000 !important;
         }
+        
+        /* TEXTO GENERAL NEGRO */
+        .stApp, p, label, h1, h2, h3, h4, h5, h6, div, span, li {
+            color: #000000 !important;
+        }
+        
+        /* ENCABEZADO AZUL */
         header[data-testid="stHeader"] { background-color: #003399 !important; }
-        
-        /* === 2. FUERZA BRUTA PARA TEXTOS (LO QUE ESTABA FALLANDO) === */
-        
-        /* Forzar a NEGRO todos los textos básicos, párrafos y etiquetas */
-        .stMarkdown p, .stCaption, p, label, span, div {
-            color: #000000 !important;
-            text-shadow: none !important;
-        }
-        
-        /* Títulos H1, H2, H3 en AZUL */
-        h1, h2, h3, h1 span, h2 span, h3 span { 
-            color: #003399 !important; 
-        }
+        h1, h2, h3 { color: #003399 !important; }
 
-        /* Etiquetas específicas de los Inputs (Las preguntas) */
-        label[data-baseweb="checkbox"] span, 
-        label[data-baseweb="radio"] div,
-        div[data-baseweb="select"] div {
-            color: #000000 !important;
-        }
-        
-        /* === 3. INPUTS (CAJAS BLANCAS) === */
+        /* === 1. INPUTS Y SELECTORES (CAJA CERRADA) === */
         div[data-baseweb="select"] > div, 
         div[data-baseweb="input"] > div,
         div[data-baseweb="base-input"] {
             background-color: #FFFFFF !important;
             border: 1px solid #cccccc !important;
+            color: #000000 !important;
         }
+        /* Texto dentro del input */
         input {
             color: #000000 !important;
             -webkit-text-fill-color: #000000 !important;
             background-color: #FFFFFF !important;
+            opacity: 1 !important;
         }
-        /* Texto seleccionado dentro de la caja */
+        /* Texto dentro del selector cerrado */
         div[data-baseweb="select"] span {
             color: #000000 !important;
             -webkit-text-fill-color: #000000 !important;
         }
 
-        /* === 4. BOTONES === */
+        /* === 2. EL PARCHE DEFINITIVO PARA EL MENÚ DESPLEGABLE (INSTAGRAM FIX) === */
+        
+        /* El contenedor flotante (Popover) que Instagram intenta poner negro */
+        div[data-baseweb="popover"], 
+        div[data-baseweb="popover"] > div,
+        div[data-baseweb="popover"] > div > div {
+            background-color: #FFFFFF !important;
+        }
+
+        /* La lista de opciones (ul) */
+        ul[data-baseweb="menu"] {
+            background-color: #FFFFFF !important;
+        }
+        
+        /* Cada opción (li) */
+        li[data-baseweb="menu-item"] {
+            background-color: #FFFFFF !important;
+            color: #000000 !important;
+        }
+        
+        /* FORZAR COLOR NEGRO A CADA LETRA DENTRO DE LA OPCIÓN */
+        /* Esto evita que Instagram pinte las letras de blanco */
+        li[data-baseweb="menu-item"] div, 
+        li[data-baseweb="menu-item"] span,
+        li[data-baseweb="menu-item"] p {
+            color: #000000 !important;
+            -webkit-text-fill-color: #000000 !important;
+        }
+        
+        /* Al pasar el mouse o seleccionar (Hover) */
+        li[data-baseweb="menu-item"]:hover, li[aria-selected="true"] {
+            background-color: #e6f0ff !important;
+        }
+        /* Texto azul al seleccionar */
+        li[data-baseweb="menu-item"]:hover *, li[aria-selected="true"] * {
+            color: #003399 !important;
+            -webkit-text-fill-color: #003399 !important;
+        }
+
+        /* === 3. BOTONES === */
         div.stButton > button { width: 100%; border-radius: 8px; font-weight: bold; }
         
-        /* Botón Azul (Texto Blanco forzado) */
+        /* Primario (Azul) */
         div.stButton > button[kind="primary"] {
             background-color: #003399 !important;
+            color: #FFFFFF !important;
             border: none !important;
         }
-        div.stButton > button[kind="primary"] p,
-        div.stButton > button[kind="primary"] * { 
-            color: #FFFFFF !important; 
-        }
-        
-        /* Botón Blanco (Texto Azul forzado) */
+        div.stButton > button[kind="primary"] * { color: #FFFFFF !important; -webkit-text-fill-color: #FFFFFF !important; }
+
+        /* Secundario (Blanco) */
         div.stButton > button[kind="secondary"] {
             background-color: #FFFFFF !important;
+            color: #003399 !important;
             border: 2px solid #003399 !important;
         }
-        div.stButton > button[kind="secondary"] p,
-        div.stButton > button[kind="secondary"] * { 
-            color: #003399 !important; 
-        }
+        div.stButton > button[kind="secondary"] * { color: #003399 !important; -webkit-text-fill-color: #003399 !important; }
         
-        /* Enlaces (Buy me a coffee / Cursos) */
+        /* Botones de Enlace (Azules) */
         div.stLinkButton > a {
             background-color: #003399 !important;
             color: #FFFFFF !important;
             border: none !important;
         }
-        div.stLinkButton > a * { color: #FFFFFF !important; }
+        div.stLinkButton > a * { color: #FFFFFF !important; -webkit-text-fill-color: #FFFFFF !important; }
 
-        /* === 5. CAJAS INFORMATIVAS (Forzando texto negro interno) === */
-        .info-box { 
-            background-color: #e8f4fd; 
-            border-left: 5px solid #003399; 
-            padding: 15px; 
-            border-radius: 5px; 
-            margin-bottom: 15px; 
+        /* Botones +/- (Numéricos) */
+        button[tabindex="-1"] {
+            background-color: #e0e0e0 !important; 
+            color: #000000 !important;
+            border-color: #ccc !important;
         }
-        .info-box * { color: #000000 !important; }
-        
-        .help-box { 
-            background-color: #fff3cd; 
-            border-left: 5px solid #ffc107; 
-            padding: 15px; 
-            border-radius: 5px; 
+        button[tabindex="-1"] svg {
+            fill: #000000 !important;
         }
-        .help-box * { color: #000000 !important; }
 
-        /* === 6. PESTAÑAS (TABS) === */
-        button[data-baseweb="tab"] { background-color: transparent !important; }
-        button[data-baseweb="tab"] div, button[data-baseweb="tab"] p { color: #000000 !important; }
+        /* === 4. CONTENEDORES === */
+        [data-testid="stForm"] {
+            background-color: #FFFFFF !important;
+            padding: 2rem; 
+            border-radius: 15px;
+            border-top: 5px solid #003399;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
         
-        button[data-baseweb="tab"][aria-selected="true"] { background-color: #003399 !important; }
-        button[data-baseweb="tab"][aria-selected="true"] p { color: #FFFFFF !important; }
-
-        /* === 7. RESULTADO === */
+        .info-box { background-color: #e8f4fd; border-left: 5px solid #003399; padding: 15px; border-radius: 5px; color: #000 !important; margin-bottom: 15px;}
+        .help-box { background-color: #fff3cd; border-left: 5px solid #ffc107; padding: 15px; border-radius: 5px; color: #000 !important; }
+        .step-box { background-color: white; padding: 15px; border-radius: 10px; border: 1px solid #ddd; margin-bottom: 10px; color: #000 !important; }
         .result-box { background-color: #003399; padding: 20px; border-radius: 10px; text-align: center; margin-top: 20px; }
         .result-box h2 { color: #FFFFFF !important; margin: 0; }
         .footer { margin-top: 50px; padding: 20px; border-top: 1px solid #ccc; text-align: center; }
+        .deco-sub { font-style: italic; margin-bottom: 15px; display: block; color: #666666 !important; font-size: 0.9em; }
         
-        /* Botones +/- (Numéricos) */
-        button[tabindex="-1"] { background-color: #e0e0e0 !important; color: #000000 !important; }
-        button[tabindex="-1"] span { color: #000000 !important; }
+        /* Radio/Check */
+        label[data-baseweb="radio"], label[data-baseweb="checkbox"] { color: #000000 !important; }
+        div[data-baseweb="radio"] div, div[data-baseweb="checkbox"] div { background-color: #FFFFFF !important; border-color: #003399 !important; }
+        div[data-baseweb="radio"][aria-checked="true"] div div { background-color: #003399 !important; }
 
     </style>
 """, unsafe_allow_html=True)
@@ -191,7 +217,7 @@ t = {
         'fr_oral': "Français Oral (Vous)", 'fr_write': "Français Écrit (Vous)", 'en': "Anglais",
         'sp_fr_title': "Français du Conjoint (Oral)",
         'sp_fr_label': "Niveau Oral",
-        'oev_info': "**ℹ️ OEV (Offre validée) :** EIMT ou validée par le MIFI.",
+        'oev_info': "**ℹ️ OEV (Offre d'emploi validée) :** Signifie que l'employeur a obtenu une EIMT ou que l'offre est validée par le MIFI. Une simple lettre d'embauche ne suffit pas toujours.",
         'vjo_label': "Avez-vous une Offre Validée (OEV) ?",
         'vjo_opts': ["Non", "Oui, Grand Montréal", "Oui, Hors Montréal (Région)"],
         'dip_qc_label': "Diplôme du Québec ?",
@@ -275,6 +301,7 @@ t = {
         'btn_lang': "🌐 Change Language",
         'brand': "Calculatrice PSTQ ⚜️",
         'subtitle': "Residency Analysis Tool.",
+        'disclaimer_title': "⚠️ DISCLAIMER",
         'disclaimer_text': "Independent. NOT lawyers. Estimated results.",
         'coffee': "☕ Support",
         'courses': "📚 French Courses",
@@ -385,7 +412,7 @@ with main_tab_calc:
     # --- PASO 1: PERFIL ---
     if st.session_state.step == 1:
         st.markdown(f"### 👤 {lang['step1']}")
-        st.markdown(f"<div class='deco-sub'>{lang['tab1_sub']}</div>", unsafe_allow_html=True)
+        st.markdown(f"<span class='deco-sub'>{lang['tab1_sub']}</span>", unsafe_allow_html=True)
         
         c1, c2 = st.columns(2)
         with c1: 
@@ -411,7 +438,7 @@ with main_tab_calc:
     # --- PASO 2: TRABAJO ---
     elif st.session_state.step == 2:
         st.markdown(f"### 💼 {lang['step2']}")
-        st.markdown(f"<div class='deco-sub'>{lang['tab2_sub']}</div>", unsafe_allow_html=True)
+        st.markdown(f"<span class='deco-sub'>{lang['tab2_sub']}</span>", unsafe_allow_html=True)
         
         st.markdown(f"**{lang['job_title']}**")
         
@@ -446,7 +473,7 @@ with main_tab_calc:
     # --- PASO 3: IDIOMAS ---
     elif st.session_state.step == 3:
         st.markdown(f"### 🗣️ {lang['step3']}")
-        st.markdown(f"<div class='deco-sub'>{lang['tab3_sub']}</div>", unsafe_allow_html=True)
+        st.markdown(f"<span class='deco-sub'>{lang['tab3_sub']}</span>", unsafe_allow_html=True)
         st.markdown(f"<div class='info-box'>{lang['lang_info']}</div>", unsafe_allow_html=True)
         
         c1, c2 = st.columns(2)
@@ -457,18 +484,17 @@ with main_tab_calc:
         if st.session_state.spouse:
             st.divider()
             st.markdown(f"**{lang['sp_fr_title']}**")
-            st.markdown(f"<div class='info-box'>{lang['sp_fr_label']}</div>", unsafe_allow_html=True)
-            st.session_state.sp_fr = st.select_slider("Niveau", ["0", "A1", "A2", "B1", "B2", "C1", "C2"], value=st.session_state.sp_fr, key="spfr_input")
+            st.session_state.sp_fr = st.select_slider(lang['sp_fr_label'], options=["0", "A1", "A2", "B1", "B2", "C1", "C2"], value=st.session_state.sp_fr, key="spfr_input")
 
         st.markdown("###")
         col_p, col_e, col_n = st.columns([1, 2, 1])
         with col_p: st.button(lang['prev'], type="secondary", on_click=prev_step)
         with col_n: st.button(lang['next'], type="primary", on_click=next_step)
 
-    # --- PASO 4: QUEBEC (FINAL) ---
+    # --- PASO 4: QUEBEC ---
     elif st.session_state.step == 4:
         st.markdown(f"### ⚜️ {lang['step4']}")
-        st.markdown(f"<div class='deco-sub'>{lang['tab4_sub']}</div>", unsafe_allow_html=True)
+        st.markdown(f"<span class='deco-sub'>{lang['tab4_sub']}</span>", unsafe_allow_html=True)
         
         st.info(lang['oev_info'])
         
@@ -480,7 +506,7 @@ with main_tab_calc:
         st.divider()
         
         st.markdown(f"**{lang['dip_qc_label']}**")
-        st.caption(lang['dip_qc_help'])
+        st.info(lang['dip_qc_help'])
         
         curr_stud = st.session_state.q_stud_val
         if curr_stud not in lang['yes_no']: curr_stud = lang['yes_no'][0]
@@ -489,7 +515,7 @@ with main_tab_calc:
         st.divider()
         
         st.markdown(f"**{lang['fam_qc_label']}**")
-        st.caption(lang['fam_qc_help'])
+        st.info(lang['fam_qc_help'])
         
         curr_fam = st.session_state.q_fam_val
         if curr_fam not in lang['yes_no']: curr_fam = lang['yes_no'][0]
@@ -510,7 +536,7 @@ with main_tab_calc:
         with col_n:
             st.button(lang['calc'], type="primary", on_click=trigger_calculation)
 
-    # LÓGICA & RESULTADOS
+    # LÓGICA Y RESULTADOS
     if st.session_state.show_results:
         age = st.session_state.age
         edu = st.session_state.edu
