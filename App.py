@@ -8,10 +8,10 @@ st.set_page_config(
     layout="centered"
 )
 
-# --- 2. ESTILOS CSS (MODO "ANTI-DARK" EXTREMO) ---
+# --- 2. ESTILOS CSS (VUELTA A LO SEGURO + HEADER CORREGIDO) ---
 st.markdown("""
     <style>
-        /* === 0. FORZADO MAESTRO DE TEMA CLARO === */
+        /* === 0. REGLA DE ORO: FORZAR MODO CLARO === */
         :root {
             color-scheme: light only !important;
         }
@@ -19,15 +19,25 @@ st.markdown("""
             background-color: #f4f7f6 !important;
             color: #000000 !important;
         }
-        
-        /* Texto base negro */
-        .stApp, p, label, h2, h3, h4, h5, h6, div, span, li {
-            color: #000000 !important;
+
+        /* === 1. HEADER BLINDADO (TEXTO BLANCO) === */
+        /* Esta regla es nueva y específica para proteger el título */
+        .pro-header h1, .pro-header p, .pro-header div {
+            color: #FFFFFF !important;
+            -webkit-text-fill-color: #FFFFFF !important;
         }
-        h1 { color: #FFFFFF !important; } /* Título del header blanco */
         header[data-testid="stHeader"] { background-color: #003399 !important; }
 
-        /* === 1. INPUTS Y SELECTORES (CONTRA EL FONDO NEGRO) === */
+        /* === 2. TEXTOS GENERALES (NEGRO) === */
+        .stApp p, .stApp label, .stApp h2, .stApp h3, .stApp li, .stApp div {
+            color: #000000 !important;
+        }
+        /* Excepción para textos dentro del header y botones primarios */
+        .pro-header *, button[kind="primary"] * {
+            color: #FFFFFF !important;
+        }
+
+        /* === 3. INPUTS Y SELECTORES (SOLUCIÓN DE AYER) === */
         div[data-baseweb="select"] > div, 
         div[data-baseweb="input"] > div,
         div[data-baseweb="base-input"] {
@@ -35,71 +45,50 @@ st.markdown("""
             border: 1px solid #cccccc !important;
             color: #000000 !important;
         }
-        
-        /* Texto que escribe el usuario */
         input {
             color: #000000 !important;
-            -webkit-text-fill-color: #000000 !important; /* Truco iPhone */
+            -webkit-text-fill-color: #000000 !important;
             background-color: #FFFFFF !important;
             opacity: 1 !important;
-            caret-color: #000000 !important;
         }
-
-        /* Texto dentro del selector cerrado */
         div[data-baseweb="select"] span {
             color: #000000 !important;
             -webkit-text-fill-color: #000000 !important;
         }
-        
-        /* Iconos (flechitas) */
-        div[data-baseweb="select"] svg {
-            fill: #000000 !important;
-        }
 
-        /* === 2. EL ARREGLO DEL MENÚ DESPLEGABLE (INSTAGRAM FIX) === */
-        /* El contenedor de la lista */
-        ul[data-baseweb="menu"] {
-            background-color: #FFFFFF !important;
-            border: 1px solid #ccc !important;
-        }
-        
-        /* Cada opción de la lista */
-        li[data-baseweb="menu-item"] {
-            background-color: #FFFFFF !important;
-            color: #000000 !important;
-        }
-        
-        /* Texto dentro de las opciones (Forzado a negro) */
-        li[data-baseweb="menu-item"] * {
-            color: #000000 !important;
-            -webkit-text-fill-color: #000000 !important;
-        }
-        
-        /* Al pasar el mouse o seleccionar (Fondo Azul Claro) */
+        /* === 4. MENÚS DESPLEGABLES === */
+        ul[data-baseweb="menu"] { background-color: #FFFFFF !important; }
+        li[data-baseweb="menu-item"] { background-color: #FFFFFF !important; color: #000000 !important; }
+        li[data-baseweb="menu-item"] * { color: #000000 !important; }
         li[data-baseweb="menu-item"]:hover, li[aria-selected="true"] {
             background-color: #e6f0ff !important;
         }
-        /* Texto Azul al seleccionar */
-        li[data-baseweb="menu-item"]:hover *, li[aria-selected="true"] * {
-            color: #003399 !important;
-            -webkit-text-fill-color: #003399 !important;
-        }
 
-        /* === 3. BOTONES (AZULES Y BLANCOS) === */
+        /* === 5. BOTONES === */
         div.stButton > button { width: 100%; border-radius: 8px; font-weight: bold; height: 45px; }
         
-        /* A) Botón Primario (Siguiente/Calcular) -> AZUL */
+        /* Primario (Azul + Blanco) */
         div.stButton > button[kind="primary"] {
             background-color: #003399 !important;
-            color: #FFFFFF !important;
             border: none !important;
+            color: #FFFFFF !important;
         }
         div.stButton > button[kind="primary"] * { 
             color: #FFFFFF !important; 
-            -webkit-text-fill-color: #FFFFFF !important; 
+            -webkit-text-fill-color: #FFFFFF !important;
         }
 
-        /* B) Botones de Enlace (Coffee/Cursos) -> AZUL (RECUPERADO) */
+        /* Secundario (Blanco + Azul) */
+        div.stButton > button[kind="secondary"] {
+            background-color: #FFFFFF !important;
+            color: #003399 !important;
+            border: 2px solid #003399 !important;
+        }
+        div.stButton > button[kind="secondary"] * { 
+            color: #003399 !important; 
+        }
+        
+        /* Enlaces (Azul + Blanco) */
         div.stLinkButton > a {
             background-color: #003399 !important;
             color: #FFFFFF !important;
@@ -107,31 +96,13 @@ st.markdown("""
             text-align: center !important;
             font-weight: bold !important;
             text-decoration: none !important;
-            display: block !important;
-            border-radius: 8px !important;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2) !important;
         }
-        /* Texto dentro del enlace -> BLANCO */
-        div.stLinkButton > a * {
-            color: #FFFFFF !important;
+        div.stLinkButton > a * { 
+            color: #FFFFFF !important; 
             -webkit-text-fill-color: #FFFFFF !important;
         }
-        div.stLinkButton > a:hover {
-            background-color: #002266 !important;
-        }
 
-        /* C) Botón Secundario (Atrás/Idioma) -> BLANCO */
-        div.stButton > button[kind="secondary"] {
-            background-color: #FFFFFF !important;
-            color: #003399 !important;
-            border: 2px solid #003399 !important;
-        }
-        div.stButton > button[kind="secondary"] * { 
-            color: #003399 !important;
-            -webkit-text-fill-color: #003399 !important;
-        }
-
-        /* === 4. EXTRAS === */
+        /* === 6. EXTRAS === */
         [data-testid="stForm"] {
             background-color: #FFFFFF !important;
             padding: 2rem; 
@@ -141,34 +112,8 @@ st.markdown("""
         }
         
         .info-box { background-color: #e8f4fd; border-left: 5px solid #003399; padding: 15px; border-radius: 5px; margin-bottom: 15px; }
-        .help-box { background-color: #fff3cd; border-left: 5px solid #ffc107; padding: 15px; border-radius: 5px; }
-        
-        .result-box { 
-            background-color: #003399; 
-            padding: 20px; 
-            border-radius: 10px; 
-            text-align: center; 
-            margin-top: 20px; 
-        }
-        .result-box h2 { 
-            color: #FFFFFF !important; 
-            margin: 0; 
-            -webkit-text-fill-color: #FFFFFF !important;
-        }
-        
-        .footer { margin-top: 50px; padding: 20px; border-top: 1px solid #ccc; text-align: center; }
-        .deco-sub { font-style: italic; margin-bottom: 15px; display: block; color: #666666 !important; font-size: 0.9em; }
-        
-        /* Botones +/- (Numéricos) */
-        button[tabindex="-1"] { 
-            background-color: #e0e0e0 !important; 
-            color: #000000 !important; 
-            border: 1px solid #ccc !important; 
-        }
-        button[tabindex="-1"] span {
-             color: #000000 !important;
-             -webkit-text-fill-color: #000000 !important;
-        }
+        .result-box { background-color: #003399; padding: 20px; border-radius: 10px; text-align: center; margin-top: 20px; }
+        .result-box h2 { color: #FFFFFF !important; margin: 0; }
         
         /* Header Pro */
         .pro-header {
@@ -179,16 +124,21 @@ st.markdown("""
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
         .pro-header h1 {
-            color: #FFFFFF !important;
-            -webkit-text-fill-color: #FFFFFF !important;
+            color: #FFFFFF !important; /* Blanco forzado */
             margin: 0;
             text-align: center;
             font-size: 1.5rem;
             flex-grow: 1;
         }
         .flag-icon { height: 40px; border: 1px solid white; border-radius: 4px; }
+        .footer { margin-top: 50px; padding: 20px; border-top: 1px solid #ccc; text-align: center; }
+        .deco-sub { font-style: italic; margin-bottom: 15px; display: block; font-size: 0.9em; color: #666 !important; }
+        
+        /* Botones +/- */
+        button[tabindex="-1"] { background-color: #e0e0e0 !important; color: #000 !important; border: 1px solid #ccc !important; }
 
     </style>
 """, unsafe_allow_html=True)
@@ -211,7 +161,6 @@ for key, value in default_values.items():
 def cycle_language():
     lang_map = {'fr': 'es', 'es': 'en', 'en': 'fr'}
     st.session_state.language = lang_map[st.session_state.language]
-    # Reset TEER y Location al cambiar idioma
     st.session_state.teer_sel = t[st.session_state.language]['teer_opts'][0]
     st.session_state.current_loc = t[st.session_state.language]['loc_opts'][2]
 
@@ -299,19 +248,19 @@ t = {
     },
     'es': {
         'btn_lang': "🌐 Cambiar Idioma",
-        'brand': "Calculatrice PSTQ",
+        'brand': "Calculadora PSTQ",
         'subtitle': "Simulación de puntaje para Residencia Permanente Quebec",
         'disclaimer_title': "⚠️ AVISO LEGAL",
         'disclaimer_text': "Proyecto independiente. NO abogados. Resultados estimados.",
         'coffee': "☕ Apoyar proyecto",
         'courses': "📚 Cursos de Francés",
         'main_tabs': ["🧮 Calculadora", "ℹ️ Guía"],
-        'next': "Siguiente ➡", 'prev': "⬅ Atrás", 'calc': "VER MI PUNTAJE",
+        'next': "Siguiente ➡", 'prev': "⬅ Atrás", 'calc': "CALCULAR PUNTAJE",
         'yes_no': ["No", "Sí"],
-        'step1': "Paso 1: Perfil",
-        'step2': "Paso 2: Trabajo",
+        'step1': "Paso 1: Perfil y Familia",
+        'step2': "Paso 2: Trabajo y TEER",
         'step3': "Paso 3: Idiomas",
-        'step4': "Paso 4: Quebec",
+        'step4': "Paso 4: Quebec y Oferta",
         'tab1_sub': "El punto de partida de tu proyecto migratorio.",
         'tab2_sub': "Tu oficio define tu categoría en el PSTQ.",
         'tab3_sub': "El francés es el factor más importante.",
@@ -375,10 +324,10 @@ t = {
         'main_tabs': ["🧮 Calculator", "ℹ️ Guide"],
         'next': "Next ➡", 'prev': "⬅ Back", 'calc': "CALCULATE SCORE",
         'yes_no': ["No", "Yes"],
-        'step1': "Step 1: Profile",
-        'step2': "Step 2: Work",
+        'step1': "Step 1: Profile & Family",
+        'step2': "Step 2: Work & TEER",
         'step3': "Step 3: Languages",
-        'step4': "Step 4: Quebec",
+        'step4': "Step 4: Quebec & Offer",
         'tab1_sub': "The starting point of your immigration journey.",
         'tab2_sub': "Your trade is the core of the PSTQ program.",
         'tab3_sub': "French is the key to success in Quebec.",
@@ -564,7 +513,7 @@ with main_tab_calc:
         st.session_state.teer_sel = st.selectbox(lang['teer_label'], lang['teer_opts'], index=current_idx, key="teer_input")
         st.session_state.edu = st.selectbox("Education", ["PhD", "Master", "Bachelor", "College (3y)", "Diploma (1-2y)", "Secondary"], index=2, key="edu_input")
         
-        # EXPERIENCIA DETALLADA
+        # EXPERIENCIA DETALLADA (RESTAURADA)
         st.divider()
         st.markdown(f"**{lang['exp_title']}**")
         st.caption("Total max: 60 mois / 5 years")
