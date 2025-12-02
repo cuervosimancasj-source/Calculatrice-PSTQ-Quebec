@@ -7,10 +7,10 @@ st.set_page_config(
     layout="centered"
 )
 
-# --- 2. ESTILOS CSS (PARCHE FINAL MENÚ DESPLEGABLE) ---
+# --- 2. ESTILOS CSS (BLINDAJE TOTAL DE MENÚS DESPLEGABLES) ---
 st.markdown("""
     <style>
-        /* === 0. FORZADO GLOBAL === */
+        /* === 0. INSTRUCCIÓN MAESTRA === */
         :root { color-scheme: light !important; }
         html, body, [data-testid="stAppViewContainer"] {
             background-color: #f0f2f6 !important;
@@ -26,7 +26,7 @@ st.markdown("""
         header[data-testid="stHeader"] { background-color: #003399 !important; }
         h1, h2, h3 { color: #003399 !important; }
 
-        /* === 1. INPUTS Y CAJAS === */
+        /* === 1. INPUTS Y SELECTORES (CAJA CERRADA) === */
         div[data-baseweb="select"] > div, 
         div[data-baseweb="input"] > div,
         div[data-baseweb="base-input"] {
@@ -34,73 +34,75 @@ st.markdown("""
             border: 1px solid #cccccc !important;
             color: #000000 !important;
         }
+        /* Texto dentro del input */
         input {
             color: #000000 !important;
             -webkit-text-fill-color: #000000 !important;
             background-color: #FFFFFF !important;
             opacity: 1 !important;
         }
-        /* Texto seleccionado visible */
+        /* Texto dentro del selector cerrado */
         div[data-baseweb="select"] span {
             color: #000000 !important;
             -webkit-text-fill-color: #000000 !important;
         }
 
-        /* === 2. EL PARCHE MAESTRO PARA EL MENÚ DESPLEGABLE === */
-        /* Esto ataca específicamente a la lista que se abre y se ve negra */
+        /* === 2. EL PARCHE DEFINITIVO PARA EL MENÚ DESPLEGABLE === */
         
-        /* El contenedor de la lista */
+        /* El contenedor flotante que se abre (Popover) */
+        div[data-baseweb="popover"], div[data-baseweb="popover"] > div {
+            background-color: #FFFFFF !important;
+        }
+
+        /* La lista de opciones */
         ul[data-baseweb="menu"] {
             background-color: #FFFFFF !important;
         }
         
-        /* Cada opción de la lista */
+        /* Cada opción individual */
         li[data-baseweb="menu-item"] {
             background-color: #FFFFFF !important;
             color: #000000 !important;
         }
         
-        /* FORZAR COLOR NEGRO A CADA LETRA DENTRO DE LA OPCIÓN */
-        li[data-baseweb="menu-item"] div, 
-        li[data-baseweb="menu-item"] span,
-        li[data-baseweb="menu-item"] p {
+        /* TEXTO dentro de cada opción (El más importante) */
+        li[data-baseweb="menu-item"] * {
             color: #000000 !important;
             -webkit-text-fill-color: #000000 !important;
         }
         
-        /* Al pasar el mouse o seleccionar */
+        /* Cuando pasas el dedo o seleccionas (HOVER/SELECTED) */
         li[data-baseweb="menu-item"]:hover, li[aria-selected="true"] {
             background-color: #e6f0ff !important;
         }
-        /* Texto azul al seleccionar */
         li[data-baseweb="menu-item"]:hover *, li[aria-selected="true"] * {
-            color: #003399 !important;
+            color: #003399 !important; /* Texto Azul */
             -webkit-text-fill-color: #003399 !important;
+            background-color: transparent !important;
         }
 
         /* === 3. BOTONES === */
         div.stButton > button { width: 100%; border-radius: 8px; font-weight: bold; }
         
-        /* Primario (Azul) */
         div.stButton > button[kind="primary"] {
             background-color: #003399 !important;
             color: #FFFFFF !important;
             border: none !important;
         }
-        div.stButton > button[kind="primary"] * { color: #FFFFFF !important; }
+        div.stButton > button[kind="primary"] * { color: #FFFFFF !important; -webkit-text-fill-color: #FFFFFF !important; }
 
-        /* Secundario (Blanco) */
         div.stButton > button[kind="secondary"] {
             background-color: #FFFFFF !important;
             color: #003399 !important;
             border: 2px solid #003399 !important;
         }
-        div.stButton > button[kind="secondary"] * { color: #003399 !important; }
+        div.stButton > button[kind="secondary"] * { color: #003399 !important; -webkit-text-fill-color: #003399 !important; }
         
-        /* Botones +/- (Numéricos) */
+        /* Botones +/- de edad */
         button[tabindex="-1"] {
             background-color: #e0e0e0 !important; 
             color: #000000 !important;
+            border-color: #ccc !important;
         }
         button[tabindex="-1"] svg {
             fill: #000000 !important;
@@ -112,15 +114,17 @@ st.markdown("""
             padding: 2rem; 
             border-radius: 15px;
             border-top: 5px solid #003399;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
-        .info-box { background-color: #e8f4fd; border-left: 5px solid #003399; padding: 15px; border-radius: 5px; color: #000 !important; margin-bottom: 15px;}
-        .help-box { background-color: #fff3cd; border-left: 5px solid #ffc107; padding: 15px; border-radius: 5px; color: #000 !important; }
+        
+        .info-box { background-color: #e8f4fd; border-left: 5px solid #003399; padding: 15px; border-radius: 5px; margin-bottom: 15px; }
+        .help-box { background-color: #fff3cd; border-left: 5px solid #ffc107; padding: 15px; border-radius: 5px; }
         .result-box { background-color: #003399; padding: 20px; border-radius: 10px; text-align: center; margin-top: 20px; }
         .result-box h2 { color: #FFFFFF !important; margin: 0; }
         .footer { margin-top: 50px; padding: 20px; border-top: 1px solid #ccc; text-align: center; }
-        .deco-sub { font-style: italic; margin-bottom: 15px; display: block; color: #666666 !important; }
+        .deco-sub { font-style: italic; margin-bottom: 15px; display: block; color: #666666 !important; font-size: 0.9em; }
         
-        /* Radio / Checkbox */
+        /* Radio/Check */
         label[data-baseweb="radio"], label[data-baseweb="checkbox"] { color: #000000 !important; }
         div[data-baseweb="radio"] div, div[data-baseweb="checkbox"] div { background-color: #FFFFFF !important; border-color: #003399 !important; }
         div[data-baseweb="radio"][aria-checked="true"] div div { background-color: #003399 !important; }
@@ -133,8 +137,7 @@ default_values = {
     'language': 'fr', 'step': 1, 'show_results': False,
     'age': 30, 'spouse': False, 'k1': 0, 'k2': 0,
     'sp_age': 30, 'sp_edu': 'Secondary', 'sp_fr': '0',
-    'teer_sel': 'TEER 0, 1: Université / Gestion / Ingénierie',
-    'edu': 'Secondary', 'exp': 3,
+    'teer_sel': '', 'edu': 'Secondary', 'exp': 3,
     'fr_oral': 'B2', 'fr_write': 'B1', 'en_lvl': '0',
     'vjo': '', 'q_stud_val': 'Non', 'q_fam_val': 'Non',
     'job_search_term': ''
@@ -464,14 +467,14 @@ with main_tab_calc:
         if st.session_state.spouse:
             st.divider()
             st.markdown(f"**{lang['sp_fr_title']}**")
-            st.session_state.sp_fr = st.select_slider("Niveau", ["0", "A1", "A2", "B1", "B2", "C1", "C2"], value=st.session_state.sp_fr, key="spfr_input")
+            st.session_state.sp_fr = st.select_slider(lang['sp_fr_label'], options=["0", "A1", "A2", "B1", "B2", "C1", "C2"], value=st.session_state.sp_fr, key="spfr_input")
 
         st.markdown("###")
         col_p, col_e, col_n = st.columns([1, 2, 1])
         with col_p: st.button(lang['prev'], type="secondary", on_click=prev_step)
         with col_n: st.button(lang['next'], type="primary", on_click=next_step)
 
-    # --- PASO 4: QUEBEC ---
+    # --- PASO 4: QUEBEC (FINAL) ---
     elif st.session_state.step == 4:
         st.markdown(f"### ⚜️ {lang['step4']}")
         st.markdown(f"<span class='deco-sub'>{lang['tab4_sub']}</span>", unsafe_allow_html=True)
@@ -511,10 +514,12 @@ with main_tab_calc:
 
         st.markdown("###")
         col_p, col_e, col_n = st.columns([1, 1, 2])
-        with col_p: st.button(lang['prev'], type="secondary", on_click=prev_step)
-        with col_n: st.button(lang['calc'], type="primary", on_click=trigger_calculation)
+        with col_p:
+            st.button(lang['prev'], type="secondary", on_click=prev_step)
+        with col_n:
+            st.button(lang['calc'], type="primary", on_click=trigger_calculation)
 
-    # LÓGICA
+    # LÓGICA & RESULTADOS
     if st.session_state.show_results:
         age = st.session_state.age
         edu = st.session_state.edu
@@ -576,16 +581,29 @@ with main_tab_calc:
             
         score += (st.session_state.k1*4) + (st.session_state.k2*2)
 
-        st.markdown(f"""<div class="result-box"><h2>{lang['res_title']}: {int(score)} / 1350</h2></div>""", unsafe_allow_html=True)
+        st.markdown(f"""
+        <div class="result-box">
+            <h2>{lang['res_title']}: {int(score)} / 1350</h2>
+        </div>
+        """, unsafe_allow_html=True)
+        
         with st.expander(lang['details']):
             st.write(f"**Principal:** {int(score - score_sp - (st.session_state.k1*4 + st.session_state.k2*2))} pts")
-            if st.session_state.spouse: st.write(f"**{lang['sp_points']}:** {score_sp} pts")
+            if st.session_state.spouse:
+                st.write(f"**{lang['sp_points']}:** {score_sp} pts")
             st.write(f"**Enfants:** {(st.session_state.k1*4 + st.session_state.k2*2)} pts")
         
-        if score > 580: st.success(lang['advice_good']); st.balloons()
-        else: st.warning(lang['advice_low'])
-        if st.button("🔄 Recalculer"): reset_calc(); st.rerun()
+        if score > 580:
+            st.success(lang['advice_good'])
+            st.balloons()
+        else:
+            st.warning(lang['advice_low'])
+            
+        if st.button("🔄 Recalculer / Reiniciar"):
+            reset_calc()
+            st.rerun()
 
+# PESTAÑA 2: GUÍA
 with main_tab_guide:
     st.markdown(f"### 🗺️ {lang['guide_title']}")
     st.markdown("---")
@@ -597,12 +615,20 @@ with main_tab_guide:
     <div class='step-box'><h4>🍁 {lang['g_step5']}</h4><p>{lang['g_desc5']}</p></div>
     """, unsafe_allow_html=True)
 
+# ==========================================
+# FOOTER
+# ==========================================
 st.markdown("---")
 st.markdown("<div class='footer'>", unsafe_allow_html=True)
+
 fc1, fc2 = st.columns(2)
-with fc1: st.link_button(lang['coffee'], "https://www.buymeacoffee.com/CalculatricePSTQQuebec")
-with fc2: st.link_button(lang['courses'], "https://www.TU_ENLACE_DE_AFILIADO.com") 
+with fc1:
+    st.link_button(lang['coffee'], "https://www.buymeacoffee.com/CalculatricePSTQQuebec")
+with fc2:
+    st.link_button(lang['courses'], "https://www.TU_ENLACE_DE_AFILIADO.com") 
+
 st.markdown("###")
 st.error(f"**{lang['disclaimer_title']}**")
 st.markdown(lang['disclaimer_text'])
+
 st.markdown("</div>", unsafe_allow_html=True)
