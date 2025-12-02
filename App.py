@@ -8,26 +8,54 @@ st.set_page_config(
     layout="centered"
 )
 
-# --- 2. ESTILOS CSS (VERSIÓN 52 - BLINDAJE MENU FLOTANTE) ---
+# --- 2. ESTILOS CSS (BLINDAJE SELECTIVO V52) ---
 st.markdown("""
     <style>
-        /* === 0. FORZADO GLOBAL === */
-        :root { color-scheme: light only !important; }
+        /* === 0. FORZADO MODO CLARO (GLOBAL) === */
+        :root { color-scheme: light !important; }
         html, body, [data-testid="stAppViewContainer"] {
             background-color: #f4f7f6 !important;
             color: #000000 !important;
         }
         
-        /* Texto general negro */
-        .stApp, p, label, h1, h2, h3, h4, h5, h6, div, span, li {
+        /* === 1. TEXTO GENERAL A NEGRO (BASE) === */
+        .stApp, p, label, h2, h3, h4, h5, h6, li, span, div {
             color: #000000 !important;
         }
-        
-        /* Encabezado Azul */
-        header[data-testid="stHeader"] { background-color: #003399 !important; }
+        /* Títulos nativos de Streamlit en Azul */
         h1, h2, h3 { color: #003399 !important; }
 
-        /* === 1. INPUTS Y SELECTORES (CAJA CERRADA) === */
+        /* === 2. ENCABEZADO PRO (FORZAR BLANCO AQUÍ) === */
+        /* Esta sección anula la regla de texto negro solo para el header */
+        .pro-header {
+            background-color: #003399 !important;
+            padding: 15px 20px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        /* Forzar texto BLANCO a todo lo que esté dentro del header */
+        .pro-header h1, .pro-header p, .pro-header div, .pro-header span {
+            color: #FFFFFF !important;
+            -webkit-text-fill-color: #FFFFFF !important; /* Fix para iPhone */
+            margin: 0;
+        }
+        .pro-header h1 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            text-align: center;
+            flex-grow: 1;
+        }
+        .flag-icon { 
+            height: 40px; 
+            border: 1px solid white; 
+            border-radius: 4px; 
+        }
+
+        /* === 3. INPUTS Y SELECTORES (BLINDAJE NEGRO/BLANCO) === */
         div[data-baseweb="select"] > div, 
         div[data-baseweb="input"] > div,
         div[data-baseweb="base-input"] {
@@ -35,73 +63,63 @@ st.markdown("""
             border: 1px solid #cccccc !important;
             color: #000000 !important;
         }
+        /* Texto que escribe el usuario */
         input {
             color: #000000 !important;
             -webkit-text-fill-color: #000000 !important;
             background-color: #FFFFFF !important;
             opacity: 1 !important;
+            caret-color: #000000 !important;
         }
+        /* Texto en selectores */
         div[data-baseweb="select"] span {
             color: #000000 !important;
             -webkit-text-fill-color: #000000 !important;
         }
-        div[data-baseweb="select"] svg, div[data-baseweb="input"] svg {
-            fill: #000000 !important;
-        }
-
-        /* === 2. PARCHE NUCLEAR PARA MENÚ DESPLEGABLE (INSTAGRAM FIX) === */
         
-        /* Forzar el contenedor flotante a ser blanco */
-        div[data-baseweb="popover"], div[data-baseweb="popover"] > div {
-            background-color: #FFFFFF !important;
-        }
-
-        /* Forzar la lista a ser blanca */
-        ul[data-baseweb="menu"] {
-            background-color: #FFFFFF !important;
-        }
+        /* === 4. MENÚ DESPLEGABLE (POPOVER) === */
+        ul[data-baseweb="menu"] { background-color: #FFFFFF !important; }
+        li[data-baseweb="menu-item"] { background-color: #FFFFFF !important; color: #000000 !important; }
         
-        /* Forzar cada opción a ser blanca con texto negro */
-        li[data-baseweb="menu-item"] {
-            background-color: #FFFFFF !important;
-            color: #000000 !important;
-        }
-        
-        /* REGLA MAESTRA: CUALQUIER COSA DENTRO DE LA LISTA ES NEGRA */
-        li[data-baseweb="menu-item"] * {
+        /* Forzar texto negro en las opciones */
+        li[data-baseweb="menu-item"] div, li[data-baseweb="menu-item"] span {
             color: #000000 !important;
             -webkit-text-fill-color: #000000 !important;
         }
         
-        /* HOVER / SELECCIÓN (FONDO AZUL CLARO, TEXTO AZUL OSCURO) */
-        li[data-baseweb="menu-item"]:hover, li[aria-selected="true"] {
-            background-color: #e6f0ff !important;
-        }
-        li[data-baseweb="menu-item"]:hover *, li[aria-selected="true"] * {
+        /* Hover */
+        li[data-baseweb="menu-item"]:hover, li[aria-selected="true"] { background-color: #e6f0ff !important; }
+        li[data-baseweb="menu-item"]:hover *, li[aria-selected="true"] * { 
             color: #003399 !important;
             -webkit-text-fill-color: #003399 !important;
         }
 
-        /* === 3. BOTONES === */
-        div.stButton > button { width: 100%; border-radius: 8px; font-weight: bold; }
+        /* === 5. BOTONES === */
+        div.stButton > button { width: 100%; border-radius: 8px; font-weight: bold; height: 45px; }
         
-        /* Primario (Azul) */
+        /* Primario (Azul - Texto Blanco) */
         div.stButton > button[kind="primary"] {
             background-color: #003399 !important;
             color: #FFFFFF !important;
             border: none !important;
         }
-        div.stButton > button[kind="primary"] * { color: #FFFFFF !important; -webkit-text-fill-color: #FFFFFF !important; }
-        
-        /* Secundario (Blanco) */
+        div.stButton > button[kind="primary"] * { 
+            color: #FFFFFF !important; 
+            -webkit-text-fill-color: #FFFFFF !important;
+        }
+
+        /* Secundario (Blanco - Texto Azul) */
         div.stButton > button[kind="secondary"] {
             background-color: #FFFFFF !important;
             color: #003399 !important;
             border: 2px solid #003399 !important;
         }
-        div.stButton > button[kind="secondary"] * { color: #003399 !important; -webkit-text-fill-color: #003399 !important; }
-
-        /* Enlaces (Azul) - Mantenidos como pediste */
+        div.stButton > button[kind="secondary"] * { 
+            color: #003399 !important; 
+            -webkit-text-fill-color: #003399 !important;
+        }
+        
+        /* Enlaces (Azul - Texto Blanco) */
         div.stLinkButton > a {
             background-color: #003399 !important;
             color: #FFFFFF !important;
@@ -115,34 +133,26 @@ st.markdown("""
             -webkit-text-fill-color: #FFFFFF !important;
         }
 
-        /* === 4. EXTRAS === */
+        /* === 6. EXTRAS === */
         [data-testid="stForm"] {
-            background-color: #FFFFFF !important; padding: 2rem; border-radius: 15px;
-            border-top: 5px solid #003399; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            background-color: #FFFFFF !important;
+            padding: 2rem; 
+            border-radius: 15px;
+            border-top: 5px solid #003399;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
         .info-box { background-color: #e8f4fd; border-left: 5px solid #003399; padding: 15px; border-radius: 5px; margin-bottom: 15px; }
-        .result-box { background-color: #003399; padding: 20px; border-radius: 10px; text-align: center; margin-top: 20px; }
-        .result-box h2 { color: #FFFFFF !important; margin: 0; -webkit-text-fill-color: #FFFFFF !important;}
+        .info-box * { color: #000000 !important; }
+        
+        .result-box { background-color: #003399; padding: 25px; border-radius: 12px; text-align: center; margin-top: 20px; }
+        .result-box h2 { color: #FFFFFF !important; margin: 0; -webkit-text-fill-color: #FFFFFF !important; }
+        
         .footer { margin-top: 50px; padding: 20px; border-top: 1px solid #ccc; text-align: center; }
         .deco-sub { font-style: italic; margin-bottom: 15px; display: block; color: #666666 !important; font-size: 0.9em; }
         
         /* Botones +/- */
         button[tabindex="-1"] { background-color: #e0e0e0 !important; color: #000 !important; border: 1px solid #ccc !important; }
         button[tabindex="-1"] span { color: #000 !important; -webkit-text-fill-color: #000000 !important; }
-
-        /* Header Pro */
-        .pro-header {
-            background-color: #003399; padding: 15px 20px; border-radius: 12px;
-            display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;
-        }
-        .pro-header h1 {
-            color: #FFFFFF !important; margin: 0; text-align: center; font-size: 1.5rem; flex-grow: 1;
-            -webkit-text-fill-color: #FFFFFF !important;
-        }
-        .flag-icon { height: 40px; border: 1px solid white; border-radius: 4px; }
-        
-        /* Radio Labels */
-        div[role="radiogroup"] label { color: #000000 !important; }
 
     </style>
 """, unsafe_allow_html=True)
@@ -165,6 +175,7 @@ for key, value in default_values.items():
 def cycle_language():
     lang_map = {'fr': 'es', 'es': 'en', 'en': 'fr'}
     st.session_state.language = lang_map[st.session_state.language]
+    # Inicializar defaults si están vacíos
     st.session_state.teer_sel = t[st.session_state.language]['teer_opts'][0]
     st.session_state.current_loc = t[st.session_state.language]['loc_opts'][2]
 
@@ -185,7 +196,7 @@ t = {
         'brand': "Calculatrice PSTQ",
         'subtitle': "Outil d'analyse pour la Résidence Permanente (TEER, Volets, Score).",
         'disclaimer_title': "⚠️ AVIS IMPORTANT",
-        'disclaimer_text': "Ce logiciel est un projet indépendant. Nous ne sommes PAS avocats ni consultants. Nous ne représentons PAS le MIFI.",
+        'disclaimer_text': "Ce logiciel est un projet indépendant. Nous ne sommes PAS avocats ni consultants.",
         'coffee': "☕ M'offrir un café",
         'courses': "📚 Cours de Français",
         'main_tabs': ["🧮 Calculatrice", "ℹ️ Guide"],
@@ -199,12 +210,14 @@ t = {
         'tab2_sub': "Votre métier est au cœur du programme PSTQ.",
         'tab3_sub': "Le français est la clé du succès au Québec.",
         'tab4_sub': "Finalisez votre pointage avec les atouts locaux.",
+        
         'loc_label': "Où êtes-vous actuellement ?",
         'loc_opts': ["Au Québec", "Canada (Autre province)", "À l'étranger"],
         'country_label': "Pays de résidence",
         'dest_city_label': "Ville de destination au Québec",
         'arrival_label': "Date d'arrivée prévue",
         'city_opts': ["-", "Montréal", "Québec (Ville)", "Laval", "Gatineau", "Sherbrooke", "Trois-Rivières", "Saguenay", "Autre"],
+
         'age': "Âge du candidat principal",
         'spouse': "Avez-vous un conjoint ?",
         'kids12': "Enfants -12 ans", 'kids13': "Enfants +12 ans",
@@ -225,7 +238,7 @@ t = {
         'fr_oral': "Français Oral (Vous)", 'fr_write': "Français Écrit (Vous)", 'en': "Anglais",
         'sp_fr_title': "Français du Conjoint (Oral)",
         'sp_fr_label': "Niveau Oral",
-        'oev_info': "**ℹ️ OEV (Offre d'emploi validée) :** Signifie que l'employeur a obtenu une EIMT ou que l'offre est validée par le MIFI. Une simple lettre d'embauche ne suffit pas toujours.",
+        'oev_info': "**ℹ️ OEV (Offre d'emploi validée) :** Signifie que l'employeur a obtenu une EIMT ou que l'offre est validée par le MIFI.",
         'vjo_label': "Avez-vous une Offre Validée (OEV) ?",
         'vjo_opts': ["Non", "Oui, Grand Montréal", "Oui, Hors Montréal (Région)"],
         'dip_qc_label': "Diplôme du Québec ?",
@@ -252,8 +265,8 @@ t = {
     },
     'es': {
         'btn_lang': "🌐 Cambiar Idioma",
-        'brand': "Calculatrice PSTQ",
-        'subtitle': "Análisis Residencia Permanente (Arrima).",
+        'brand': "Calculadora PSTQ",
+        'subtitle': "Simulación de puntaje para Residencia Permanente Quebec",
         'disclaimer_title': "⚠️ AVISO LEGAL",
         'disclaimer_text': "Proyecto independiente. NO abogados. Resultados estimados.",
         'coffee': "☕ Apoyar proyecto",
@@ -266,9 +279,9 @@ t = {
         'step3': "Paso 3: Idiomas",
         'step4': "Paso 4: Quebec y Oferta",
         'tab1_sub': "El punto de partida de tu proyecto migratorio.",
-        'tab2_sub': "Tu oficio es el corazón del programa PSTQ.",
-        'tab3_sub': "El francés es la llave del éxito en Quebec.",
-        'tab4_sub': "Finaliza tu puntaje con los activos locales.",
+        'tab2_sub': "Tu oficio define tu categoría en el PSTQ.",
+        'tab3_sub': "El francés es el factor más importante.",
+        'tab4_sub': "Finaliza tu puntaje con los factores locales.",
         'loc_label': "¿Dónde te encuentras hoy?",
         'loc_opts': ["En Quebec", "Canadá (Otra provincia)", "En el extranjero"],
         'country_label': "País de residencia",
@@ -328,10 +341,10 @@ t = {
         'main_tabs': ["🧮 Calculator", "ℹ️ Guide"],
         'next': "Next ➡", 'prev': "⬅ Back", 'calc': "CALCULATE SCORE",
         'yes_no': ["No", "Yes"],
-        'step1': "Step 1: Profile & Family",
-        'step2': "Step 2: Work & TEER",
+        'step1': "Step 1: Profile",
+        'step2': "Step 2: Work",
         'step3': "Step 3: Languages",
-        'step4': "Step 4: Quebec & Offer",
+        'step4': "Step 4: Quebec",
         'tab1_sub': "The starting point of your immigration journey.",
         'tab2_sub': "Your trade is the core of the PSTQ program.",
         'tab3_sub': "French is the key to success in Quebec.",
@@ -582,7 +595,7 @@ with main_tab_calc:
         st.session_state.q_fam_val = st.radio("FamQC", lang['yes_no'], index=lang['yes_no'].index(curr_fam), horizontal=True, label_visibility="collapsed", key="q_fam_in")
         
         st.divider()
-        
+
         st.markdown("###")
         col_p, col_e, col_n = st.columns([1, 1, 2])
         with col_p:
@@ -595,6 +608,7 @@ with main_tab_calc:
         age = st.session_state.age
         edu = st.session_state.edu
         teer = st.session_state.teer_sel
+        
         # CÁLCULO EXPERIENCIA TOTAL
         exp_months = st.session_state.exp_qc + st.session_state.exp_ca + st.session_state.exp_foreign
         exp_calc = min(60, exp_months) # Tope 5 años
