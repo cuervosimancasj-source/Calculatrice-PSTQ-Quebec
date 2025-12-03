@@ -8,69 +8,108 @@ st.set_page_config(
     layout="centered"
 )
 
-# --- 2. ESTILOS CSS (SOLUCIÓN FECHA Y TEER) ---
+# --- 2. ESTILOS CSS (ESTRATEGIA: INPUTS OSCUROS / LETRAS BLANCAS) ---
 st.markdown("""
     <style>
-        /* === 0. FORZADO GLOBAL === */
-        :root { color-scheme: light !important; }
+        /* === 0. BASE DE LA PÁGINA (CLARA) === */
+        :root { color-scheme: light; }
         
-        html, body, [data-testid="stAppViewContainer"] {
+        [data-testid="stAppViewContainer"] {
             background-color: #f4f7f6 !important;
             color: #000000 !important;
         }
         
-        .stApp, p, label, h2, h3, h4, h5, h6, div, span, li {
+        /* Textos generales de la página en NEGRO */
+        .stApp, p, label, h2, h3, h4, h5, h6, li, div {
             color: #000000 !important;
         }
         
-        header[data-testid="stHeader"] { background-color: #003399 !important; }
+        /* Títulos H1 (Header) en BLANCO */
         h1 { color: #FFFFFF !important; }
-
-        /* === 1. ARREGLO CRÍTICO: CAJAS DE SELECCIÓN Y FECHA === */
         
-        /* El contenedor general de los inputs */
+        /* Header Azul */
+        header[data-testid="stHeader"] { background-color: #003399 !important; }
+
+        /* ============================================================ */
+        /* === 1. SOLUCIÓN: CAJAS OSCURAS CON LETRA BLANCA === */
+        /* ============================================================ */
+        
+        /* Fondo de los inputs (Select, Texto, Fecha) -> GRIS OSCURO */
         div[data-baseweb="select"] > div, 
         div[data-baseweb="input"] > div,
         div[data-baseweb="base-input"] {
-            background-color: #FFFFFF !important;
-            border: 1px solid #cccccc !important;
-            color: #000000 !important;
+            background-color: #262730 !important; /* Fondo Oscuro */
+            border: 1px solid #4da6ff !important; /* Borde Azul para resaltar */
+            color: #FFFFFF !important; /* Texto Blanco */
         }
 
-        /* EL TEXTO DENTRO DE LA CAJA (TEER, CIUDAD, ETC) */
-        div[data-baseweb="select"] div {
-            color: #000000 !important;
-            -webkit-text-fill-color: #000000 !important;
-        }
-
-        /* INPUT DE TEXTO Y FECHA */
+        /* Texto que escribe el usuario -> BLANCO */
         input {
-            background-color: #FFFFFF !important;
-            color: #000000 !important;
-            -webkit-text-fill-color: #000000 !important;
-            caret-color: #000000 !important;
-            opacity: 1 !important;
-            color-scheme: light !important; /* Obliga al calendario a ser blanco */
+            color: #FFFFFF !important;
+            -webkit-text-fill-color: #FFFFFF !important;
+            background-color: #262730 !important;
+            caret-color: #FFFFFF !important; /* Cursor blanco */
         }
         
-        /* EL ICONO DEL CALENDARIO (Para que no se vea blanco sobre blanco) */
-        ::-webkit-calendar-picker-indicator {
-            filter: invert(0) !important; /* Fuerza color oscuro */
+        /* Texto dentro de selectores (TEER) -> BLANCO */
+        div[data-baseweb="select"] span {
+            color: #FFFFFF !important;
+            -webkit-text-fill-color: #FFFFFF !important;
+        }
+        
+        /* Iconos (Calendario y Flechas) -> BLANCOS */
+        div[data-baseweb="select"] svg, 
+        div[data-baseweb="input"] svg {
+            fill: #FFFFFF !important;
+        }
+        
+        /* Placeholder (Texto de ejemplo) -> GRIS CLARO */
+        ::placeholder {
+            color: #bbbbbb !important;
+            -webkit-text-fill-color: #bbbbbb !important;
+            opacity: 1 !important;
         }
 
-        /* FLECHAS DE LOS SELECTORES */
-        div[data-baseweb="select"] svg {
-            fill: #000000 !important;
-            color: #000000 !important;
+        /* ============================================================ */
+        /* === 2. MENÚ DESPLEGABLE (LISTA) -> OSCURO + BLANCO === */
+        /* ============================================================ */
+        
+        /* El contenedor flotante */
+        div[data-baseweb="popover"], ul[data-baseweb="menu"] {
+            background-color: #262730 !important;
+        }
+        
+        /* Las opciones */
+        li[data-baseweb="menu-item"] {
+            background-color: #262730 !important;
+            color: #FFFFFF !important;
+            border-bottom: 1px solid #444 !important;
+        }
+        
+        /* Texto de las opciones */
+        li[data-baseweb="menu-item"] * {
+            color: #FFFFFF !important;
+            -webkit-text-fill-color: #FFFFFF !important;
+        }
+        
+        /* Hover / Selección -> AZUL */
+        li[data-baseweb="menu-item"]:hover, li[aria-selected="true"] {
+            background-color: #003399 !important;
+        }
+        li[data-baseweb="menu-item"]:hover *, li[aria-selected="true"] * {
+            color: #FFFFFF !important;
         }
 
-        /* === 2. MENÚ DESPLEGABLE (LISTA) === */
-        ul[data-baseweb="menu"] { background-color: #FFFFFF !important; }
-        li[data-baseweb="menu-item"] { background-color: #FFFFFF !important; color: #000000 !important; }
-        li[data-baseweb="menu-item"] * { color: #000000 !important; -webkit-text-fill-color: #000000 !important; }
-        li[data-baseweb="menu-item"]:hover, li[aria-selected="true"] { background-color: #e6f0ff !important; }
+        /* === 3. CALENDARIO DESPLEGABLE (OSCURO) === */
+        div[data-baseweb="calendar"] {
+            background-color: #262730 !important;
+            color: #FFFFFF !important;
+        }
+        div[data-baseweb="calendar"] button {
+            color: #FFFFFF !important;
+        }
 
-        /* === 3. BOTONES === */
+        /* === 4. BOTONES === */
         div.stButton > button { width: 100%; border-radius: 8px; font-weight: bold; height: 45px; }
         
         /* Primario (Azul) */
@@ -88,7 +127,7 @@ st.markdown("""
             border: 2px solid #003399 !important;
         }
         div.stButton > button[kind="secondary"] * { color: #003399 !important; -webkit-text-fill-color: #003399 !important; }
-        
+
         /* Enlaces (Azul) */
         div.stLinkButton > a {
             background-color: #003399 !important;
@@ -99,10 +138,14 @@ st.markdown("""
             text-decoration: none !important;
             display: block !important;
             border-radius: 8px !important;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
-        div.stLinkButton > a * { color: #FFFFFF !important; -webkit-text-fill-color: #FFFFFF !important; }
+        div.stLinkButton > a * { 
+            color: #FFFFFF !important; 
+            -webkit-text-fill-color: #FFFFFF !important;
+        }
 
-        /* === 4. EXTRAS === */
+        /* === 5. EXTRAS === */
         [data-testid="stForm"] {
             background-color: #FFFFFF !important;
             padding: 2rem; 
@@ -110,6 +153,18 @@ st.markdown("""
             border-top: 5px solid #003399;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
+        .info-box { background-color: #e8f4fd; border-left: 5px solid #003399; padding: 15px; border-radius: 5px; margin-bottom: 15px; }
+        .result-box { background-color: #003399; padding: 20px; border-radius: 10px; text-align: center; margin-top: 20px; }
+        .result-box h2 { color: #FFFFFF !important; margin: 0; -webkit-text-fill-color: #FFFFFF !important; }
+        .footer { margin-top: 50px; padding: 20px; border-top: 1px solid #ccc; text-align: center; }
+        .deco-sub { color: #666 !important; font-style: italic; margin-bottom: 15px; display: block; font-size: 0.9em; }
+        
+        /* Botones +/- (Numéricos) en Oscuro para que combinen */
+        button[tabindex="-1"] { background-color: #444 !important; color: #fff !important; border: 1px solid #666 !important; }
+        button[tabindex="-1"] span { color: #fff !important; -webkit-text-fill-color: #ffffff !important; }
+
+        /* Radio Labels */
+        div[role="radiogroup"] label { color: #000000 !important; }
         
         /* Header Pro */
         .pro-header {
@@ -130,21 +185,11 @@ st.markdown("""
             font-size: 1.5rem;
             flex-grow: 1;
         }
-        .pro-header p { color: #e0e0e0 !important; -webkit-text-fill-color: #e0e0e0 !important; }
+        .pro-header p {
+             color: #e0e0e0 !important;
+             -webkit-text-fill-color: #e0e0e0 !important;
+        }
         .flag-icon { height: 40px; border: 1px solid white; border-radius: 4px; }
-
-        .info-box { background-color: #e8f4fd; border-left: 5px solid #003399; padding: 15px; border-radius: 5px; margin-bottom: 15px; }
-        .result-box { background-color: #003399; padding: 20px; border-radius: 10px; text-align: center; margin-top: 20px; }
-        .result-box h2 { color: #FFFFFF !important; margin: 0; -webkit-text-fill-color: #FFFFFF !important; }
-        
-        .footer { margin-top: 50px; padding: 20px; border-top: 1px solid #ccc; text-align: center; }
-        .deco-sub { font-style: italic; margin-bottom: 15px; display: block; color: #666666 !important; font-size: 0.9em; }
-        
-        /* Botones +/- */
-        button[tabindex="-1"] { background-color: #e0e0e0 !important; color: #000 !important; border: 1px solid #ccc !important; }
-        button[tabindex="-1"] span { color: #000 !important; -webkit-text-fill-color: #000000 !important; }
-        
-        div[role="radiogroup"] label { color: #000000 !important; }
 
     </style>
 """, unsafe_allow_html=True)
@@ -201,12 +246,14 @@ t = {
         'tab2_sub': "Votre métier est au cœur du programme PSTQ.",
         'tab3_sub': "Le français est la clé du succès au Québec.",
         'tab4_sub': "Finalisez votre pointage avec les atouts locaux.",
+        
         'loc_label': "Où êtes-vous actuellement ?",
         'loc_opts': ["Au Québec", "Canada (Autre province)", "À l'étranger"],
         'country_label': "Pays de résidence",
         'dest_city_label': "Ville de destination au Québec",
         'arrival_label': "Date d'arrivée prévue",
         'city_opts': ["-", "Montréal", "Québec (Ville)", "Laval", "Gatineau", "Sherbrooke", "Trois-Rivières", "Saguenay", "Autre"],
+
         'age': "Âge du candidat principal",
         'spouse': "Avez-vous un conjoint ?",
         'kids12': "Enfants -12 ans", 'kids13': "Enfants +12 ans",
@@ -227,7 +274,7 @@ t = {
         'fr_oral': "Français Oral (Vous)", 'fr_write': "Français Écrit (Vous)", 'en': "Anglais",
         'sp_fr_title': "Français du Conjoint (Oral)",
         'sp_fr_label': "Niveau Oral",
-        'oev_info': "**ℹ️ OEV (Offre d'emploi validée) :** Signifie que l'employeur a obtenu une EIMT ou que l'offre est validée par le MIFI. Une simple lettre d'embauche ne suffit pas.",
+        'oev_info': "**ℹ️ OEV (Offre d'emploi validée) :** Signifie que l'employeur a obtenu une EIMT ou que l'offre est validée par le MIFI. Une simple lettre d'embauche ne suffit pas toujours.",
         'vjo_label': "Avez-vous une Offre Validée (OEV) ?",
         'vjo_opts': ["Non", "Oui, Grand Montréal", "Oui, Hors Montréal (Région)"],
         'dip_qc_label': "Diplôme du Québec ?",
@@ -244,8 +291,8 @@ t = {
         'g_step1': "1. Auto-évaluation", 'g_desc1': "Vos points forts.",
         'g_step2': "2. Français", 'g_desc2': "Visez B2 (7).",
         'g_step3': "3. Arrima", 'g_desc3': "Profil gratuit.",
-        'g_step4': "4. CSQ", 'g_desc4': "Certificat Sélection.",
-        'g_step5': "5. Fédéral", 'g_desc5': "Résidence Permanente.",
+        'g_step4': "4. CSQ", 'g_desc4': "Certificat de Sélection du Québec.",
+        'g_step5': "5. Fédéral", 'g_desc5': "Résidence Permanente Canada.",
         'noc_link_text': "🔎 Chercher sur le site officiel du Canada (CNP)",
         'exp_title': "Expérience de travail (5 dernières années)",
         'exp_qc_label': "Mois au Québec",
@@ -297,7 +344,7 @@ t = {
         'fr_oral': "Francés Oral (Tú)", 'fr_write': "Francés Escrito (Tú)", 'en': "Inglés",
         'sp_fr_title': "Francés de la Pareja (Oral)",
         'sp_fr_label': "Nivel Oral",
-        'oev_info': "**ℹ️ VJO (Oferta Validada):** Con LMIA o aprobada por MIFI.",
+        'oev_info': "**ℹ️ VJO (Oferta Validada):** Con LMIA o aprobada por MIFI. Una carta de trabajo simple no es VJO.",
         'vjo_label': "¿Tienes Oferta Validada (VJO)?",
         'vjo_opts': ["No", "Sí, Gran Montreal", "Sí, Fuera de Montreal"],
         'dip_qc_label': "¿Diploma de Quebec?",
@@ -381,7 +428,7 @@ t = {
         'noc_link_text': "🔎 Search on official Canada site (NOC)",
         'exp_title': "Work Experience (Last 5 years)",
         'exp_qc_label': "Months in Quebec",
-        'exp_ca_label': "Months in Canada (Other)",
+        'exp_ca_label': "Months in Canada",
         'exp_for_label': "Months Abroad"
     }
 }
@@ -460,7 +507,7 @@ with main_tab_calc:
         st.session_state.current_loc = st.radio("Loc", lang['loc_opts'], index=lang['loc_opts'].index(curr_loc), label_visibility="collapsed")
         
         if "bec" not in st.session_state.current_loc:
-             st.session_state.origin_country = st.text_input(lang['country_label'], value=st.session_state.origin_country, placeholder="Ex: Colombia...")
+             st.session_state.origin_country = st.text_input(lang['country_label'], value=st.session_state.origin_country, placeholder="Ex: Sénégal, Belgique...")
              c_dest, c_date = st.columns(2)
              with c_dest:
                  curr_city = st.session_state.dest_city
