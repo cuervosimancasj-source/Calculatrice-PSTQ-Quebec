@@ -8,83 +8,86 @@ st.set_page_config(
     layout="centered"
 )
 
-# --- 2. ESTILOS CSS (ESTRATEGIA "COLORES IMPUROS" PARA ENGAÑAR A INSTAGRAM) ---
+# --- 2. ESTILOS CSS (ESTRATEGIA "INPUTS OSCUROS" - ALTO CONTRASTE) ---
 st.markdown("""
     <style>
-        /* === 0. FORZADO GLOBAL === */
-        :root { color-scheme: light only !important; }
+        /* === 0. CONFIGURACIÓN GENERAL === */
+        :root { color-scheme: light dark; } /* Permitir ambos para los inputs nativos */
+        
+        /* Fondo de la página: GRIS CLARO (Profesional) */
         html, body, [data-testid="stAppViewContainer"] {
             background-color: #f4f7f6 !important;
-            color: #010101 !important; /* Casi negro */
         }
         
-        /* Texto general */
-        .stApp, p, label, h2, h3, h4, h5, h6, div, span, li {
-            color: #010101 !important;
+        /* Textos generales: NEGRO */
+        .stApp, p, label, h2, h3, h4, h5, h6, li, div {
+            color: #000000 !important;
         }
+        
+        /* Títulos H1 del header: BLANCO */
         h1 { color: #FFFFFF !important; }
-        header[data-testid="stHeader"] { background-color: #003399 !important; }
 
-        /* === 1. INPUTS Y SELECTORES === */
+        /* ============================================================ */
+        /* === 1. SOLUCIÓN DEFINITIVA: INPUTS OSCUROS + TEXTO BLANCO === */
+        /* ============================================================ */
+        
+        /* ESTO ARREGLA LA FECHA Y EL TEER */
+        /* Forzamos que las cajas sean OSCURAS con texto BLANCO */
+        
+        /* Contenedores de inputs */
         div[data-baseweb="select"] > div, 
         div[data-baseweb="input"] > div,
         div[data-baseweb="base-input"] {
-            background-color: #FFFFFE !important; /* Casi blanco */
-            border: 1px solid #cccccc !important;
-            color: #010101 !important;
+            background-color: #1F2937 !important; /* Gris Oscuro Elegante */
+            border: 1px solid #4da6ff !important; /* Borde Azul */
+            color: #FFFFFF !important;
         }
-        
+
+        /* Texto que escribe el usuario y FECHAS */
         input {
-            color: #010101 !important;
-            -webkit-text-fill-color: #010101 !important;
-            background-color: #FFFFFE !important;
+            color: #FFFFFF !important;
+            -webkit-text-fill-color: #FFFFFF !important;
+            background-color: #1F2937 !important;
             opacity: 1 !important;
-            caret-color: #000000 !important;
+            caret-color: #FFFFFF !important; /* Cursor blanco */
         }
         
+        /* Texto dentro de selectores (TEER) */
         div[data-baseweb="select"] span {
-            color: #010101 !important;
-            -webkit-text-fill-color: #010101 !important;
+            color: #FFFFFF !important;
+            -webkit-text-fill-color: #FFFFFF !important;
         }
         
-        div[data-baseweb="select"] svg { fill: #010101 !important; }
-
-        /* === 2. EL ARREGLO DEL MENÚ DESPLEGABLE (LISTA) === */
+        /* Iconos (Calendario, Flechas) -> BLANCOS */
+        div[data-baseweb="select"] svg, 
+        div[data-baseweb="input"] svg {
+            fill: #FFFFFF !important;
+        }
         
-        /* Contenedor flotante */
-        div[data-baseweb="popover"], div[data-baseweb="popover"] > div {
-            background-color: #FFFFFE !important;
+        /* Placeholder (Texto de ejemplo) */
+        ::placeholder {
+            color: #aaaaaa !important;
+            -webkit-text-fill-color: #aaaaaa !important;
         }
 
-        /* La lista (ul) */
+        /* === 2. MENÚ DESPLEGABLE (LISTA DE OPCIONES) === */
         ul[data-baseweb="menu"] {
-            background-color: #FFFFFE !important;
+            background-color: #1F2937 !important; /* Fondo Oscuro */
         }
-        
-        /* La opción (li) */
         li[data-baseweb="menu-item"] {
-            background-color: #FFFFFE !important;
-            color: #010101 !important;
-            border-bottom: 1px solid #f0f0f0 !important;
+            background-color: #1F2937 !important;
+            color: #FFFFFF !important;
         }
-        
-        /* CRÍTICO: El texto DENTRO de la opción */
-        li[data-baseweb="menu-item"] div {
-            color: #010101 !important;
-            -webkit-text-fill-color: #010101 !important;
+        li[data-baseweb="menu-item"] * {
+            color: #FFFFFF !important;
         }
-        
         /* Hover / Selección */
         li[data-baseweb="menu-item"]:hover, li[aria-selected="true"] {
-            background-color: #e6f0ff !important;
-        }
-        li[data-baseweb="menu-item"]:hover div, li[aria-selected="true"] div {
-            color: #003399 !important;
-            -webkit-text-fill-color: #003399 !important;
+            background-color: #003399 !important; /* Azul al seleccionar */
         }
 
         /* === 3. BOTONES === */
-        div.stButton > button { width: 100%; border-radius: 8px; font-weight: bold; }
+        div.stButton > button { width: 100%; border-radius: 8px; font-weight: bold; height: 45px; }
         
         /* Primario (Azul) */
         div.stButton > button[kind="primary"] {
@@ -96,7 +99,7 @@ st.markdown("""
             color: #FFFFFF !important; 
             -webkit-text-fill-color: #FFFFFF !important;
         }
-        
+
         /* Secundario (Blanco) */
         div.stButton > button[kind="secondary"] {
             background-color: #FFFFFF !important;
@@ -105,47 +108,40 @@ st.markdown("""
         }
         div.stButton > button[kind="secondary"] * { 
             color: #003399 !important; 
-            -webkit-text-fill-color: #003399 !important;
         }
-        
+
         /* Enlaces (Azul) */
         div.stLinkButton > a {
             background-color: #003399 !important;
             color: #FFFFFF !important;
             border: none !important;
+            border-radius: 8px !important;
             text-align: center !important;
             font-weight: bold !important;
             text-decoration: none !important;
-            display: block !important;
-            border-radius: 8px !important;
         }
         div.stLinkButton > a * { 
-            color: #FFFFFF !important; 
+            color: #FFFFFF !important;
             -webkit-text-fill-color: #FFFFFF !important;
         }
 
-        /* === 4. EXTRAS === */
+        /* === 4. TARJETAS Y CONTENEDORES === */
         [data-testid="stForm"] {
             background-color: #FFFFFF !important;
             padding: 2rem; 
             border-radius: 15px;
             border-top: 5px solid #003399;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
         }
-        .info-box { background-color: #e8f4fd; border-left: 5px solid #003399; padding: 15px; border-radius: 5px; margin-bottom: 15px; }
-        .help-box { background-color: #fff3cd; border-left: 5px solid #ffc107; padding: 15px; border-radius: 5px; margin-bottom: 15px; }
         
-        .result-box { background-color: #003399; padding: 20px; border-radius: 10px; text-align: center; margin-top: 20px; }
-        .result-box h2 { color: #FFFFFF !important; margin: 0; -webkit-text-fill-color: #FFFFFF !important; }
-        
+        .info-box { background-color: #e8f4fd; border-left: 5px solid #003399; padding: 15px; border-radius: 5px; margin-bottom: 15px; color: #000 !important; }
+        .result-box { background-color: #003399; padding: 25px; border-radius: 12px; text-align: center; margin-top: 20px; }
+        .result-box h2 { color: #FFFFFF !important; margin: 0; }
         .footer { margin-top: 50px; padding: 20px; border-top: 1px solid #ccc; text-align: center; }
-        .deco-sub { font-style: italic; margin-bottom: 15px; display: block; color: #666666 !important; font-size: 0.9em; }
+        .deco-sub { color: #666 !important; font-style: italic; margin-bottom: 15px; display: block; font-size: 0.9em; }
         
-        /* Botones +/- */
-        button[tabindex="-1"] { background-color: #e0e0e0 !important; color: #000 !important; border: 1px solid #ccc !important; }
-        button[tabindex="-1"] span { color: #000 !important; -webkit-text-fill-color: #000000 !important; }
-
         /* Header Pro */
+        header[data-testid="stHeader"] { background-color: #003399 !important; }
         .pro-header {
             background-color: #003399;
             padding: 15px 20px;
@@ -170,8 +166,13 @@ st.markdown("""
         }
         .flag-icon { height: 40px; border: 1px solid white; border-radius: 4px; }
         
-        /* Radio labels */
-        div[role="radiogroup"] label { color: #000000 !important; }
+        /* Botones +/- Numéricos (Oscuros para combinar) */
+        button[tabindex="-1"] { 
+            background-color: #1F2937 !important; 
+            color: #FFFFFF !important; 
+            border: 1px solid #4da6ff !important; 
+        }
+        button[tabindex="-1"] span { color: #FFFFFF !important; }
 
     </style>
 """, unsafe_allow_html=True)
@@ -194,6 +195,7 @@ for key, value in default_values.items():
 def cycle_language():
     lang_map = {'fr': 'es', 'es': 'en', 'en': 'fr'}
     st.session_state.language = lang_map[st.session_state.language]
+    # Reset TEER y Location al cambiar idioma
     st.session_state.teer_sel = t[st.session_state.language]['teer_opts'][0]
     st.session_state.current_loc = t[st.session_state.language]['loc_opts'][2]
 
@@ -207,11 +209,11 @@ def reset_calc():
 
 def trigger_calculation(): st.session_state.show_results = True
 
-# --- 4. TRADUCCIONES (TEER DETALLADOS Y TEXTOS) ---
+# --- 4. TRADUCCIONES ---
 t = {
     'fr': {
         'btn_lang': "🌐 Changer la langue",
-        'brand': "Calculatrice PSTQ Québec ⚜️",
+        'brand': "Calculatrice PSTQ",
         'subtitle': "Outil d'analyse pour la Résidence Permanente (TEER, Volets, Score).",
         'disclaimer_title': "⚠️ AVIS IMPORTANT",
         'disclaimer_text': "Ce logiciel est un projet indépendant. Nous ne sommes PAS avocats ni consultants. Nous ne représentons PAS le MIFI.",
@@ -254,7 +256,7 @@ t = {
         'fr_oral': "Français Oral (Vous)", 'fr_write': "Français Écrit (Vous)", 'en': "Anglais",
         'sp_fr_title': "Français du Conjoint (Oral)",
         'sp_fr_label': "Niveau Oral",
-        'oev_info': "**ℹ️ OEV (Offre validée) :** Signifie que l'employeur a obtenu une EIMT ou que l'offre est validée par le MIFI. Une simple lettre d'embauche ne suffit pas.",
+        'oev_info': "**ℹ️ OEV (Offre d'emploi validée) :** Signifie que l'employeur a obtenu une EIMT ou que l'offre est validée par le MIFI. Une simple lettre d'embauche ne suffit pas.",
         'vjo_label': "Avez-vous une Offre Validée (OEV) ?",
         'vjo_opts': ["Non", "Oui, Grand Montréal", "Oui, Hors Montréal (Région)"],
         'dip_qc_label': "Diplôme du Québec ?",
@@ -281,23 +283,23 @@ t = {
     },
     'es': {
         'btn_lang': "🌐 Cambiar Idioma",
-        'brand': "Calculatrice PSTQ ⚜️",
-        'subtitle': "Análisis Residencia Permanente (Arrima).",
+        'brand': "Calculadora PSTQ",
+        'subtitle': "Simulación de puntaje para Residencia Permanente Quebec",
         'disclaimer_title': "⚠️ AVISO LEGAL",
         'disclaimer_text': "Proyecto independiente. NO abogados. Resultados estimados.",
-        'coffee': "☕ Invítame un café",
+        'coffee': "☕ Apoyar proyecto",
         'courses': "📚 Cursos de Francés",
         'main_tabs': ["🧮 Calculadora", "ℹ️ Guía"],
-        'next': "Siguiente ➡", 'prev': "⬅ Atrás", 'calc': "CALCULAR PUNTAJE",
+        'next': "Siguiente ➡", 'prev': "⬅ Atrás", 'calc': "VER MI PUNTAJE",
         'yes_no': ["No", "Sí"],
         'step1': "Paso 1: Perfil y Familia",
         'step2': "Paso 2: Trabajo y TEER",
         'step3': "Paso 3: Idiomas",
         'step4': "Paso 4: Quebec y Oferta",
-        'tab1_sub': "El punto de partida de tu proyecto de inmigración.",
-        'tab2_sub': "Tu oficio es el corazón del programa PSTQ.",
-        'tab3_sub': "El francés es la llave del éxito en Quebec.",
-        'tab4_sub': "Finaliza tu puntaje con los activos locales.",
+        'tab1_sub': "El punto de partida de tu proyecto migratorio.",
+        'tab2_sub': "Tu oficio define tu categoría en el PSTQ.",
+        'tab3_sub': "El francés es el factor más importante.",
+        'tab4_sub': "Finaliza tu puntaje con los factores locales.",
         'loc_label': "¿Dónde te encuentras hoy?",
         'loc_opts': ["En Quebec", "Canadá (Otra provincia)", "En el extranjero"],
         'country_label': "País de residencia",
@@ -348,7 +350,7 @@ t = {
     },
     'en': {
         'btn_lang': "🌐 Change Language",
-        'brand': "Calculatrice PSTQ ⚜️",
+        'brand': "Calculatrice PSTQ",
         'subtitle': "Residency Analysis Tool.",
         'disclaimer_title': "⚠️ DISCLAIMER",
         'disclaimer_text': "Independent. NOT lawyers. Estimated results.",
@@ -508,7 +510,7 @@ with main_tab_calc:
         
         if st.session_state.spouse:
             st.divider()
-            st.markdown(f"**{lang['sp_header']}**")
+            st.markdown(f"**{lang.get('sp_header', 'Datos Pareja')}**")
             c_sp1, c_sp2 = st.columns(2)
             with c_sp1: st.session_state.sp_age = st.number_input(lang['sp_age'], 18, 65, st.session_state.sp_age, key="sp_age_in")
             with c_sp2: st.session_state.sp_edu = st.selectbox(lang['sp_edu'], ["PhD", "Master", "Bachelor", "Technical", "Secondary"], index=2, key="sp_edu_in")
@@ -546,7 +548,7 @@ with main_tab_calc:
         st.session_state.teer_sel = st.selectbox(lang['teer_label'], lang['teer_opts'], index=current_idx, key="teer_input")
         st.session_state.edu = st.selectbox("Education", ["PhD", "Master", "Bachelor", "College (3y)", "Diploma (1-2y)", "Secondary"], index=2, key="edu_input")
         
-        # EXPERIENCIA DETALLADA (RESTAURADA)
+        # EXPERIENCIA DETALLADA
         st.divider()
         st.markdown(f"**{lang['exp_title']}**")
         st.caption("Total max: 60 mois / 5 years")
