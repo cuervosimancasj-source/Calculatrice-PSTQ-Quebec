@@ -8,101 +8,85 @@ st.set_page_config(
     layout="centered"
 )
 
-# --- 2. ESTILOS CSS (BLINDAJE TOTAL HÍBRIDO) ---
+# --- 2. ESTILOS CSS (ESTRATEGIA "COLORES IMPUROS" PARA ENGAÑAR A INSTAGRAM) ---
 st.markdown("""
     <style>
-        /* === 0. FORZADO SUPREMO DE MODO CLARO === */
-        :root {
-            color-scheme: light only !important;
-        }
-        
-        /* Forzar fondo de la app a Gris Claro */
-        html, body, [data-testid="stAppViewContainer"], .stApp {
+        /* === 0. FORZADO GLOBAL === */
+        :root { color-scheme: light only !important; }
+        html, body, [data-testid="stAppViewContainer"] {
             background-color: #f4f7f6 !important;
-            color: #000000 !important;
+            color: #010101 !important; /* Casi negro */
         }
         
-        /* Forzar texto negro en párrafos, etiquetas y títulos base */
-        p, label, h2, h3, h4, h5, h6, li, span, div {
-            color: #000000 !important;
+        /* Texto general */
+        .stApp, p, label, h2, h3, h4, h5, h6, div, span, li {
+            color: #010101 !important;
         }
-        
-        /* EXCEPCIÓN: El título H1 del sistema (por si acaso) */
-        h1 { color: #003399 !important; }
-
-        /* === 1. ENCABEZADO AZUL (PROTEGIDO) === */
-        /* Ocultar barra nativa */
+        h1 { color: #FFFFFF !important; }
         header[data-testid="stHeader"] { background-color: #003399 !important; }
-        
-        /* Nuestro Header Pro */
-        .pro-header {
-            background-color: #003399 !important;
-            padding: 15px 20px;
-            border-radius: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-        }
-        /* Forzar texto blanco DENTRO del header (vence la regla de texto negro) */
-        .pro-header * {
-            color: #FFFFFF !important;
-            -webkit-text-fill-color: #FFFFFF !important;
-        }
-        .pro-header h1 { font-size: 1.5rem; margin: 0; flex-grow: 1; text-align: center; font-weight: 800; }
-        .pro-header p { font-size: 0.9rem; margin: 0; text-align: center; }
-        .flag-icon { height: 40px; border: 1px solid white; border-radius: 4px; }
 
-        /* === 2. INPUTS Y SELECTORES (ANTI-INSTAGRAM) === */
-        /* Fondo Blanco para las cajas */
+        /* === 1. INPUTS Y SELECTORES === */
         div[data-baseweb="select"] > div, 
         div[data-baseweb="input"] > div,
         div[data-baseweb="base-input"] {
-            background-color: #FFFFFF !important;
+            background-color: #FFFFFE !important; /* Casi blanco */
             border: 1px solid #cccccc !important;
-            color: #000000 !important;
+            color: #010101 !important;
         }
         
-        /* TEXTO NEGRO OBLIGATORIO (Webkit fill) */
         input {
-            color: #000000 !important;
-            -webkit-text-fill-color: #000000 !important;
-            background-color: #FFFFFF !important;
+            color: #010101 !important;
+            -webkit-text-fill-color: #010101 !important;
+            background-color: #FFFFFE !important;
             opacity: 1 !important;
             caret-color: #000000 !important;
         }
         
-        /* Texto seleccionado */
         div[data-baseweb="select"] span {
-            color: #000000 !important;
-            -webkit-text-fill-color: #000000 !important;
+            color: #010101 !important;
+            -webkit-text-fill-color: #010101 !important;
         }
         
-        /* Iconos negros */
-        div[data-baseweb="select"] svg, div[data-baseweb="input"] svg {
-            fill: #000000 !important;
+        div[data-baseweb="select"] svg { fill: #010101 !important; }
+
+        /* === 2. EL ARREGLO DEL MENÚ DESPLEGABLE (LISTA) === */
+        
+        /* Contenedor flotante */
+        div[data-baseweb="popover"], div[data-baseweb="popover"] > div {
+            background-color: #FFFFFE !important;
         }
 
-        /* === 3. MENÚ DESPLEGABLE (LISTA FLOTANTE) === */
-        ul[data-baseweb="menu"] { background-color: #FFFFFF !important; }
-        li[data-baseweb="menu-item"] { background-color: #FFFFFF !important; color: #000000 !important; }
-        
-        /* Texto de opciones */
-        li[data-baseweb="menu-item"] * {
-            color: #000000 !important;
-            -webkit-text-fill-color: #000000 !important;
+        /* La lista (ul) */
+        ul[data-baseweb="menu"] {
+            background-color: #FFFFFE !important;
         }
         
-        /* Hover */
+        /* La opción (li) */
+        li[data-baseweb="menu-item"] {
+            background-color: #FFFFFE !important;
+            color: #010101 !important;
+            border-bottom: 1px solid #f0f0f0 !important;
+        }
+        
+        /* CRÍTICO: El texto DENTRO de la opción */
+        li[data-baseweb="menu-item"] div {
+            color: #010101 !important;
+            -webkit-text-fill-color: #010101 !important;
+        }
+        
+        /* Hover / Selección */
         li[data-baseweb="menu-item"]:hover, li[aria-selected="true"] {
             background-color: #e6f0ff !important;
         }
+        li[data-baseweb="menu-item"]:hover div, li[aria-selected="true"] div {
+            color: #003399 !important;
+            -webkit-text-fill-color: #003399 !important;
+        }
 
-        /* === 4. BOTONES === */
+        /* === 3. BOTONES === */
         div.stButton > button { width: 100%; border-radius: 8px; font-weight: bold; }
         
-        /* Primario (Azul) - Texto Blanco Forzado */
+        /* Primario (Azul) */
         div.stButton > button[kind="primary"] {
             background-color: #003399 !important;
             color: #FFFFFF !important;
@@ -112,8 +96,8 @@ st.markdown("""
             color: #FFFFFF !important; 
             -webkit-text-fill-color: #FFFFFF !important;
         }
-
-        /* Secundario (Blanco) - Texto Azul Forzado */
+        
+        /* Secundario (Blanco) */
         div.stButton > button[kind="secondary"] {
             background-color: #FFFFFF !important;
             color: #003399 !important;
@@ -124,14 +108,15 @@ st.markdown("""
             -webkit-text-fill-color: #003399 !important;
         }
         
-        /* Enlaces (Azul) - Texto Blanco Forzado */
+        /* Enlaces (Azul) */
         div.stLinkButton > a {
             background-color: #003399 !important;
             color: #FFFFFF !important;
             border: none !important;
-            font-weight: bold !important;
             text-align: center !important;
+            font-weight: bold !important;
             text-decoration: none !important;
+            display: block !important;
             border-radius: 8px !important;
         }
         div.stLinkButton > a * { 
@@ -139,7 +124,7 @@ st.markdown("""
             -webkit-text-fill-color: #FFFFFF !important;
         }
 
-        /* === 5. CONTENEDORES === */
+        /* === 4. EXTRAS === */
         [data-testid="stForm"] {
             background-color: #FFFFFF !important;
             padding: 2rem; 
@@ -147,22 +132,45 @@ st.markdown("""
             border-top: 5px solid #003399;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
-        
         .info-box { background-color: #e8f4fd; border-left: 5px solid #003399; padding: 15px; border-radius: 5px; margin-bottom: 15px; }
         .help-box { background-color: #fff3cd; border-left: 5px solid #ffc107; padding: 15px; border-radius: 5px; margin-bottom: 15px; }
         
         .result-box { background-color: #003399; padding: 20px; border-radius: 10px; text-align: center; margin-top: 20px; }
-        .result-box h2 { color: #FFFFFF !important; -webkit-text-fill-color: #FFFFFF !important; margin: 0; }
+        .result-box h2 { color: #FFFFFF !important; margin: 0; -webkit-text-fill-color: #FFFFFF !important; }
         
-        /* Footer */
         .footer { margin-top: 50px; padding: 20px; border-top: 1px solid #ccc; text-align: center; }
-        .deco-sub { color: #666666 !important; font-style: italic; margin-bottom: 15px; display: block; font-size: 0.9em; }
+        .deco-sub { font-style: italic; margin-bottom: 15px; display: block; color: #666666 !important; font-size: 0.9em; }
         
         /* Botones +/- */
-        button[tabindex="-1"] { background-color: #e0e0e0 !important; color: #000000 !important; border: 1px solid #ccc !important; }
-        button[tabindex="-1"] span { color: #000000 !important; -webkit-text-fill-color: #000000 !important; }
+        button[tabindex="-1"] { background-color: #e0e0e0 !important; color: #000 !important; border: 1px solid #ccc !important; }
+        button[tabindex="-1"] span { color: #000 !important; -webkit-text-fill-color: #000000 !important; }
+
+        /* Header Pro */
+        .pro-header {
+            background-color: #003399;
+            padding: 15px 20px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        .pro-header h1 {
+            color: #FFFFFF !important;
+            -webkit-text-fill-color: #FFFFFF !important;
+            margin: 0;
+            text-align: center;
+            font-size: 1.5rem;
+            flex-grow: 1;
+        }
+        .pro-header p {
+             color: #e0e0e0 !important;
+             -webkit-text-fill-color: #e0e0e0 !important;
+        }
+        .flag-icon { height: 40px; border: 1px solid white; border-radius: 4px; }
         
-        /* Radio Labels */
+        /* Radio labels */
         div[role="radiogroup"] label { color: #000000 !important; }
 
     </style>
@@ -199,11 +207,11 @@ def reset_calc():
 
 def trigger_calculation(): st.session_state.show_results = True
 
-# --- 4. TRADUCCIONES ---
+# --- 4. TRADUCCIONES (TEER DETALLADOS Y TEXTOS) ---
 t = {
     'fr': {
         'btn_lang': "🌐 Changer la langue",
-        'brand': "Calculatrice PSTQ",
+        'brand': "Calculatrice PSTQ Québec ⚜️",
         'subtitle': "Outil d'analyse pour la Résidence Permanente (TEER, Volets, Score).",
         'disclaimer_title': "⚠️ AVIS IMPORTANT",
         'disclaimer_text': "Ce logiciel est un projet indépendant. Nous ne sommes PAS avocats ni consultants. Nous ne représentons PAS le MIFI.",
@@ -246,7 +254,7 @@ t = {
         'fr_oral': "Français Oral (Vous)", 'fr_write': "Français Écrit (Vous)", 'en': "Anglais",
         'sp_fr_title': "Français du Conjoint (Oral)",
         'sp_fr_label': "Niveau Oral",
-        'oev_info': "**ℹ️ OEV (Offre d'emploi validée) :** Signifie que l'employeur a obtenu une EIMT ou que l'offre est validée par le MIFI. Une simple lettre d'embauche ne suffit pas toujours.",
+        'oev_info': "**ℹ️ OEV (Offre validée) :** Signifie que l'employeur a obtenu une EIMT ou que l'offre est validée par le MIFI. Une simple lettre d'embauche ne suffit pas.",
         'vjo_label': "Avez-vous une Offre Validée (OEV) ?",
         'vjo_opts': ["Non", "Oui, Grand Montréal", "Oui, Hors Montréal (Région)"],
         'dip_qc_label': "Diplôme du Québec ?",
@@ -263,8 +271,8 @@ t = {
         'g_step1': "1. Auto-évaluation", 'g_desc1': "Vos points forts.",
         'g_step2': "2. Français", 'g_desc2': "Visez B2 (7).",
         'g_step3': "3. Arrima", 'g_desc3': "Profil gratuit.",
-        'g_step4': "4. CSQ", 'g_desc4': "Certificat Sélection.",
-        'g_step5': "5. Fédéral", 'g_desc5': "Résidence Permanente.",
+        'g_step4': "4. CSQ", 'g_desc4': "Certificat de Sélection du Québec.",
+        'g_step5': "5. Fédéral", 'g_desc5': "Résidence Permanente Canada.",
         'noc_link_text': "🔎 Chercher sur le site officiel du Canada (CNP)",
         'exp_title': "Expérience de travail (5 dernières années)",
         'exp_qc_label': "Mois au Québec",
@@ -273,11 +281,11 @@ t = {
     },
     'es': {
         'btn_lang': "🌐 Cambiar Idioma",
-        'brand': "Calculadora PSTQ",
-        'subtitle': "Simulación de puntaje para Residencia Permanente Quebec",
+        'brand': "Calculatrice PSTQ ⚜️",
+        'subtitle': "Análisis Residencia Permanente (Arrima).",
         'disclaimer_title': "⚠️ AVISO LEGAL",
         'disclaimer_text': "Proyecto independiente. NO abogados. Resultados estimados.",
-        'coffee': "☕ Apoyar proyecto",
+        'coffee': "☕ Invítame un café",
         'courses': "📚 Cursos de Francés",
         'main_tabs': ["🧮 Calculadora", "ℹ️ Guía"],
         'next': "Siguiente ➡", 'prev': "⬅ Atrás", 'calc': "CALCULAR PUNTAJE",
@@ -286,10 +294,10 @@ t = {
         'step2': "Paso 2: Trabajo y TEER",
         'step3': "Paso 3: Idiomas",
         'step4': "Paso 4: Quebec y Oferta",
-        'tab1_sub': "El punto de partida de tu proyecto migratorio.",
-        'tab2_sub': "Tu oficio define tu categoría en el PSTQ.",
-        'tab3_sub': "El francés es el factor más importante.",
-        'tab4_sub': "Finaliza tu puntaje con los factores locales.",
+        'tab1_sub': "El punto de partida de tu proyecto de inmigración.",
+        'tab2_sub': "Tu oficio es el corazón del programa PSTQ.",
+        'tab3_sub': "El francés es la llave del éxito en Quebec.",
+        'tab4_sub': "Finaliza tu puntaje con los activos locales.",
         'loc_label': "¿Dónde te encuentras hoy?",
         'loc_opts': ["En Quebec", "Canadá (Otra provincia)", "En el extranjero"],
         'country_label': "País de residencia",
@@ -316,7 +324,7 @@ t = {
         'fr_oral': "Francés Oral (Tú)", 'fr_write': "Francés Escrito (Tú)", 'en': "Inglés",
         'sp_fr_title': "Francés de la Pareja (Oral)",
         'sp_fr_label': "Nivel Oral",
-        'oev_info': "**ℹ️ VJO (Oferta Validada):** Con LMIA o aprobada por MIFI.",
+        'oev_info': "**ℹ️ VJO (Oferta Validada):** Con LMIA o aprobada por MIFI. Una carta de trabajo simple no es VJO.",
         'vjo_label': "¿Tienes Oferta Validada (VJO)?",
         'vjo_opts': ["No", "Sí, Gran Montreal", "Sí, Fuera de Montreal"],
         'dip_qc_label': "¿Diploma de Quebec?",
@@ -340,7 +348,7 @@ t = {
     },
     'en': {
         'btn_lang': "🌐 Change Language",
-        'brand': "Calculatrice PSTQ",
+        'brand': "Calculatrice PSTQ ⚜️",
         'subtitle': "Residency Analysis Tool.",
         'disclaimer_title': "⚠️ DISCLAIMER",
         'disclaimer_text': "Independent. NOT lawyers. Estimated results.",
@@ -349,10 +357,10 @@ t = {
         'main_tabs': ["🧮 Calculator", "ℹ️ Guide"],
         'next': "Next ➡", 'prev': "⬅ Back", 'calc': "CALCULATE SCORE",
         'yes_no': ["No", "Yes"],
-        'step1': "Step 1: Profile",
-        'step2': "Step 2: Work",
+        'step1': "Step 1: Profile & Family",
+        'step2': "Step 2: Work & TEER",
         'step3': "Step 3: Languages",
-        'step4': "Step 4: Quebec",
+        'step4': "Step 4: Quebec & Offer",
         'tab1_sub': "The starting point of your immigration journey.",
         'tab2_sub': "Your trade is the core of the PSTQ program.",
         'tab3_sub': "French is the key to success in Quebec.",
@@ -500,7 +508,7 @@ with main_tab_calc:
         
         if st.session_state.spouse:
             st.divider()
-            st.markdown(f"**{lang.get('sp_header', 'Datos Pareja')}**")
+            st.markdown(f"**{lang['sp_header']}**")
             c_sp1, c_sp2 = st.columns(2)
             with c_sp1: st.session_state.sp_age = st.number_input(lang['sp_age'], 18, 65, st.session_state.sp_age, key="sp_age_in")
             with c_sp2: st.session_state.sp_edu = st.selectbox(lang['sp_edu'], ["PhD", "Master", "Bachelor", "Technical", "Secondary"], index=2, key="sp_edu_in")
@@ -538,7 +546,7 @@ with main_tab_calc:
         st.session_state.teer_sel = st.selectbox(lang['teer_label'], lang['teer_opts'], index=current_idx, key="teer_input")
         st.session_state.edu = st.selectbox("Education", ["PhD", "Master", "Bachelor", "College (3y)", "Diploma (1-2y)", "Secondary"], index=2, key="edu_input")
         
-        # EXPERIENCIA DETALLADA
+        # EXPERIENCIA DETALLADA (RESTAURADA)
         st.divider()
         st.markdown(f"**{lang['exp_title']}**")
         st.caption("Total max: 60 mois / 5 years")
