@@ -8,81 +8,103 @@ st.set_page_config(
     layout="centered"
 )
 
-# --- 2. ESTILOS CSS (BLINDAJE DE TEXTOS INVISIBLES) ---
+# --- 2. ESTILOS CSS (BLINDAJE ANTI-INSTAGRAM FINAL) ---
 st.markdown("""
     <style>
-        /* === 0. FORZADO GLOBAL MODO CLARO === */
+        /* === 0. FORZADO GLOBAL === */
         :root { color-scheme: light only !important; }
+        
         html, body, [data-testid="stAppViewContainer"] {
-            background-color: #f4f7f6 !important;
+            background-color: #f4f7f6 !important; /* Gris muy suave */
             color: #000000 !important;
         }
         
-        /* === 1. REGLA NUCLEAR PARA TEXTOS (AQUÍ ESTÁ LA SOLUCIÓN) === */
-        /* Forzamos negro y relleno negro para vencer a Instagram */
-        .stApp p, .stApp label, .stApp h2, .stApp h3, .stApp h4, .stApp h5, .stApp h6, .stApp li, .stApp div, .stApp span, .stApp strong {
+        /* Forzar texto negro general */
+        .stApp, p, label, h2, h3, h4, h5, h6, div, span, li {
             color: #000000 !important;
-            -webkit-text-fill-color: #000000 !important; /* El truco clave */
         }
         
-        /* Excepción: Títulos grandes en Azul */
-        h1 { color: #003399 !important; -webkit-text-fill-color: #003399 !important; }
+        /* Excepción: Encabezado Azul */
+        header[data-testid="stHeader"] { background-color: #003399 !important; }
+        h1 { color: #FFFFFF !important; }
 
-        /* Excepción: Encabezado (Header) debe ser Blanco */
-        .pro-header * {
-            color: #FFFFFF !important;
-            -webkit-text-fill-color: #FFFFFF !important;
-        }
-
-        /* Excepción: Botones Primarios (Texto Blanco) */
-        div.stButton > button[kind="primary"] * {
-            color: #FFFFFF !important;
-            -webkit-text-fill-color: #FFFFFF !important;
-        }
+        /* === 1. INPUTS, FECHAS Y SELECTORES (SOLUCIÓN DEFINITIVA) === */
         
-        /* Excepción: Enlaces (Texto Blanco) */
-        div.stLinkButton > a * {
-            color: #FFFFFF !important;
-            -webkit-text-fill-color: #FFFFFF !important;
-        }
-
-        /* === 2. INPUTS Y SELECTORES (CAJAS BLANCAS) === */
+        /* Contenedores de inputs */
         div[data-baseweb="select"] > div, 
         div[data-baseweb="input"] > div,
         div[data-baseweb="base-input"] {
             background-color: #FFFFFF !important;
             border: 1px solid #cccccc !important;
+            color: #000000 !important;
         }
+        
+        /* INPUTS DE TEXTO Y FECHA */
         input {
+            color: #000000 !important;
+            -webkit-text-fill-color: #000000 !important;
             background-color: #FFFFFF !important;
             opacity: 1 !important;
+            caret-color: #000000 !important;
+            color-scheme: light !important; /* Truco para el calendario */
+        }
+
+        /* TEXTO DENTRO DE SELECTORES */
+        div[data-baseweb="select"] span {
+            color: #000000 !important;
+            -webkit-text-fill-color: #000000 !important;
         }
         
-        /* === 3. MENÚ DESPLEGABLE === */
-        ul[data-baseweb="menu"] { background-color: #FFFFFF !important; }
-        li[data-baseweb="menu-item"] { background-color: #FFFFFF !important; }
-        li[data-baseweb="menu-item"]:hover, li[aria-selected="true"] { background-color: #e6f0ff !important; }
+        /* ICONOS (Flechitas y Calendario) */
+        div[data-baseweb="select"] svg, div[data-baseweb="input"] svg {
+            fill: #000000 !important;
+        }
 
-        /* === 4. BOTONES === */
+        /* === 2. MENÚ DESPLEGABLE (LISTAS) === */
+        ul[data-baseweb="menu"] {
+            background-color: #FFFFFF !important;
+        }
+        li[data-baseweb="menu-item"] {
+            background-color: #FFFFFF !important;
+            color: #000000 !important;
+        }
+        li[data-baseweb="menu-item"] * {
+            color: #000000 !important;
+        }
+        /* Hover / Selección */
+        li[data-baseweb="menu-item"]:hover, li[aria-selected="true"] {
+            background-color: #e6f0ff !important;
+        }
+
+        /* === 3. BOTONES === */
         div.stButton > button { width: 100%; border-radius: 8px; font-weight: bold; height: 45px; }
         
+        /* Primario (Azul) */
         div.stButton > button[kind="primary"] {
             background-color: #003399 !important;
+            color: #FFFFFF !important;
             border: none !important;
         }
-        
+        div.stButton > button[kind="primary"] * { 
+            color: #FFFFFF !important; 
+            -webkit-text-fill-color: #FFFFFF !important;
+        }
+
+        /* Secundario (Blanco) */
         div.stButton > button[kind="secondary"] {
             background-color: #FFFFFF !important;
+            color: #003399 !important;
             border: 2px solid #003399 !important;
         }
-        /* Texto del botón secundario en azul */
-        div.stButton > button[kind="secondary"] * {
-            color: #003399 !important;
+        div.stButton > button[kind="secondary"] * { 
+            color: #003399 !important; 
             -webkit-text-fill-color: #003399 !important;
         }
         
+        /* Enlaces (Azul) - Recuperado */
         div.stLinkButton > a {
             background-color: #003399 !important;
+            color: #FFFFFF !important;
             border: none !important;
             text-align: center !important;
             font-weight: bold !important;
@@ -90,8 +112,12 @@ st.markdown("""
             display: block !important;
             border-radius: 8px !important;
         }
+        div.stLinkButton > a * { 
+            color: #FFFFFF !important; 
+            -webkit-text-fill-color: #FFFFFF !important;
+        }
 
-        /* === 5. EXTRAS === */
+        /* === 4. EXTRAS === */
         [data-testid="stForm"] {
             background-color: #FFFFFF !important;
             padding: 2rem; 
@@ -100,24 +126,23 @@ st.markdown("""
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
         
-        /* Arreglo para st.info (Cuadros azules de ayuda) */
+        /* Cajas informativas (st.info) */
         div.stAlert {
             background-color: #e8f4fd !important;
             border: 1px solid #003399 !important;
-        }
-        /* Forzar texto negro dentro de la alerta */
-        div.stAlert p, div.stAlert div {
             color: #000000 !important;
-            -webkit-text-fill-color: #000000 !important;
         }
+        div.stAlert p { color: #000000 !important; }
         
         .result-box { background-color: #003399; padding: 20px; border-radius: 10px; text-align: center; margin-top: 20px; }
         .result-box h2 { color: #FFFFFF !important; margin: 0; -webkit-text-fill-color: #FFFFFF !important; }
         
         .footer { margin-top: 50px; padding: 20px; border-top: 1px solid #ccc; text-align: center; }
+        .deco-sub { font-style: italic; margin-bottom: 15px; display: block; color: #666666 !important; font-size: 0.9em; }
         
         /* Botones +/- */
-        button[tabindex="-1"] { background-color: #e0e0e0 !important; border: 1px solid #ccc !important; }
+        button[tabindex="-1"] { background-color: #e0e0e0 !important; color: #000 !important; border: 1px solid #ccc !important; }
+        button[tabindex="-1"] span { color: #000 !important; -webkit-text-fill-color: #000000 !important; }
         
         /* Header Pro */
         .pro-header {
@@ -130,8 +155,22 @@ st.markdown("""
             margin-bottom: 20px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
-        .pro-header h1 { font-size: 1.5rem; font-weight: 800; text-align: center; flex-grow: 1; }
+        .pro-header h1 {
+            color: #FFFFFF !important;
+            -webkit-text-fill-color: #FFFFFF !important;
+            margin: 0;
+            text-align: center;
+            font-size: 1.5rem;
+            flex-grow: 1;
+        }
+        .pro-header p {
+             color: #e0e0e0 !important;
+             -webkit-text-fill-color: #e0e0e0 !important;
+        }
         .flag-icon { height: 40px; border: 1px solid white; border-radius: 4px; }
+        
+        /* Radio labels */
+        div[role="radiogroup"] label { color: #000000 !important; }
 
     </style>
 """, unsafe_allow_html=True)
@@ -141,7 +180,8 @@ default_values = {
     'language': 'fr', 'step': 1, 'show_results': False,
     'age': 30, 'spouse': False, 'k1': 0, 'k2': 0,
     'sp_age': 30, 'sp_edu': 'Secondary', 'sp_fr': '0',
-    'teer_sel': '', 'edu': 'Secondary', 
+    'teer_sel': 'TEER 0, 1: Université / Gestion / Ingénierie',
+    'edu': 'Secondary', 
     'exp_qc': 0, 'exp_ca': 0, 'exp_foreign': 36,
     'fr_oral': 'B2', 'fr_write': 'B1', 'en_lvl': '0',
     'vjo': '', 'q_stud_val': 'Non', 'q_fam_val': 'Non',
@@ -154,6 +194,7 @@ for key, value in default_values.items():
 def cycle_language():
     lang_map = {'fr': 'es', 'es': 'en', 'en': 'fr'}
     st.session_state.language = lang_map[st.session_state.language]
+    # Reset TEER y Location
     st.session_state.teer_sel = t[st.session_state.language]['teer_opts'][0]
     st.session_state.current_loc = t[st.session_state.language]['loc_opts'][2]
 
@@ -171,7 +212,7 @@ def trigger_calculation(): st.session_state.show_results = True
 t = {
     'fr': {
         'btn_lang': "🌐 Changer la langue",
-        'brand': "Calculatrice PSTQ",
+        'brand': "Calculatrice PSTQ Québec ⚜️",
         'subtitle': "Outil d'analyse pour la Résidence Permanente (TEER, Volets, Score).",
         'disclaimer_title': "⚠️ AVIS IMPORTANT",
         'disclaimer_text': "Ce logiciel est un projet indépendant. Nous ne sommes PAS avocats ni consultants. Nous ne représentons PAS le MIFI.",
@@ -214,7 +255,7 @@ t = {
         'fr_oral': "Français Oral (Vous)", 'fr_write': "Français Écrit (Vous)", 'en': "Anglais",
         'sp_fr_title': "Français du Conjoint (Oral)",
         'sp_fr_label': "Niveau Oral",
-        'oev_info': "**ℹ️ OEV (Offre validée) :** Signifie que l'employeur a obtenu une EIMT ou que l'offre est validée par le MIFI. Une simple lettre d'embauche ne suffit pas.",
+        'oev_info': "**ℹ️ OEV (Offre d'emploi validée) :** Signifie que l'employeur a obtenu une EIMT ou que l'offre est validée par le MIFI. Une simple lettre d'embauche ne suffit pas toujours.",
         'vjo_label': "Avez-vous une Offre Validée (OEV) ?",
         'vjo_opts': ["Non", "Oui, Grand Montréal", "Oui, Hors Montréal (Région)"],
         'dip_qc_label': "Diplôme du Québec ?",
@@ -232,7 +273,7 @@ t = {
         'g_step2': "2. Français", 'g_desc2': "Visez B2 (7).",
         'g_step3': "3. Arrima", 'g_desc3': "Profil gratuit.",
         'g_step4': "4. CSQ", 'g_desc4': "Certificat Sélection.",
-        'g_step5': "5. Fédéral", 'g_desc5': "Résidence Permanente.",
+        'g_step5': "5. Fédéral", 'g_desc5': "Résidence Permanente Canada.",
         'noc_link_text': "🔎 Chercher sur le site officiel du Canada (CNP)",
         'exp_title': "Expérience de travail (5 dernières années)",
         'exp_qc_label': "Mois au Québec",
@@ -241,14 +282,14 @@ t = {
     },
     'es': {
         'btn_lang': "🌐 Cambiar Idioma",
-        'brand': "Calculadora PSTQ",
-        'subtitle': "Simulación de puntaje para Residencia Permanente Quebec",
+        'brand': "Calculatrice PSTQ ⚜️",
+        'subtitle': "Análisis Residencia Permanente (Arrima).",
         'disclaimer_title': "⚠️ AVISO LEGAL",
         'disclaimer_text': "Proyecto independiente. NO abogados. Resultados estimados.",
         'coffee': "☕ Apoyar proyecto",
         'courses': "📚 Cursos de Francés",
         'main_tabs': ["🧮 Calculadora", "ℹ️ Guía"],
-        'next': "Siguiente ➡", 'prev': "⬅ Atrás", 'calc': "VER MI PUNTAJE",
+        'next': "Siguiente ➡", 'prev': "⬅ Atrás", 'calc': "CALCULAR PUNTAJE",
         'yes_no': ["No", "Sí"],
         'step1': "Paso 1: Perfil y Familia",
         'step2': "Paso 2: Trabajo y TEER",
@@ -308,7 +349,7 @@ t = {
     },
     'en': {
         'btn_lang': "🌐 Change Language",
-        'brand': "Calculatrice PSTQ",
+        'brand': "Calculatrice PSTQ ⚜️",
         'subtitle': "Residency Analysis Tool.",
         'disclaimer_title': "⚠️ DISCLAIMER",
         'disclaimer_text': "Independent. NOT lawyers. Estimated results.",
@@ -317,10 +358,10 @@ t = {
         'main_tabs': ["🧮 Calculator", "ℹ️ Guide"],
         'next': "Next ➡", 'prev': "⬅ Back", 'calc': "CALCULATE SCORE",
         'yes_no': ["No", "Yes"],
-        'step1': "Step 1: Profile",
-        'step2': "Step 2: Work",
+        'step1': "Step 1: Profile & Family",
+        'step2': "Step 2: Work & TEER",
         'step3': "Step 3: Languages",
-        'step4': "Step 4: Quebec",
+        'step4': "Step 4: Quebec & Offer",
         'tab1_sub': "The starting point of your immigration journey.",
         'tab2_sub': "Your trade is the core of the PSTQ program.",
         'tab3_sub': "French is the key to success in Quebec.",
@@ -611,7 +652,8 @@ with main_tab_calc:
         elif "TEER 2" in teer: score += 40
         elif "TEER 3" in teer: score += 20
         
-        score += min(80, int(exp_calc * 1.33))
+        # Puntos Experiencia
+        score += int(exp_calc * 1.33)
         
         pts_map = {"0":0, "A1":0, "A2":10, "B1":20, "B2":50, "C1":70, "C2":80}
         score += pts_map.get(fr_o,0) * 1.2 + pts_map.get(fr_w,0) * 0.8
