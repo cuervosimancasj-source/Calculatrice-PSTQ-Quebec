@@ -8,89 +8,74 @@ st.set_page_config(
     layout="centered"
 )
 
-# --- 2. ESTILOS CSS (SOLUCIÓN FINAL FECHA Y CATEGORÍA) ---
+# --- 2. ESTILOS CSS (ESTRATEGIA: MENÚS AZULES PARA EVITAR INVERSIÓN) ---
 st.markdown("""
     <style>
-        /* === 0. MODO CLARO FORZADO === */
-        :root { color-scheme: light !important; }
-        
+        /* === 0. BASE === */
+        :root { color-scheme: light only !important; }
         html, body, [data-testid="stAppViewContainer"] {
             background-color: #f4f7f6 !important;
             color: #000000 !important;
         }
-        
-        /* Texto base negro */
-        .stApp, p, label, h2, h3, h4, h5, h6, div, span, li {
+        .stApp, p, label, h2, h3, h4, h5, h6, span, div, li {
             color: #000000 !important;
         }
-        
-        /* Header Azul */
-        header[data-testid="stHeader"] { background-color: #003399 !important; }
         h1 { color: #FFFFFF !important; }
+        header[data-testid="stHeader"] { background-color: #003399 !important; }
 
-        /* === 1. ARREGLO CRÍTICO: FECHA Y SELECTORES === */
-        
-        /* Fondo blanco para las cajas */
+        /* === 1. INPUTS (CAJAS CERRADAS) === */
+        /* Usamos un casi-blanco para evitar inversión automática */
         div[data-baseweb="select"] > div, 
         div[data-baseweb="input"] > div,
         div[data-baseweb="base-input"] {
-            background-color: #FFFFFF !important;
+            background-color: #FAFAFA !important; 
             border: 1px solid #cccccc !important;
             color: #000000 !important;
         }
-
-        /* TEXTO NEGRO FORZADO (Incluye la fecha) */
         input {
             color: #000000 !important;
             -webkit-text-fill-color: #000000 !important;
-            background-color: #FFFFFF !important;
+            background-color: #FAFAFA !important;
             opacity: 1 !important;
             caret-color: #000000 !important;
-            color-scheme: light !important; /* Obliga al calendario a ser claro */
         }
-        
-        /* Texto dentro del selector (TEER) */
-        div[data-baseweb="select"] span, div[data-baseweb="select"] div {
+        /* Texto seleccionado (Caja cerrada) */
+        div[data-baseweb="select"] span {
             color: #000000 !important;
             -webkit-text-fill-color: #000000 !important;
         }
-
-        /* Iconos negros */
+        /* Flechas e Iconos */
         div[data-baseweb="select"] svg, div[data-baseweb="input"] svg {
             fill: #000000 !important;
         }
 
-        /* === 2. MENÚ DESPLEGABLE (LISTA BLANCA) === */
+        /* === 2. MENÚ DESPLEGABLE (LA SOLUCIÓN AZUL) === */
+        /* Al abrir la lista, el fondo será AZUL OSCURO. Instagram respeta esto. */
         
-        /* Contenedor flotante */
-        div[data-baseweb="popover"], div[data-baseweb="popover"] > div {
-            background-color: #FFFFFF !important;
-        }
-
-        /* La lista */
+        /* Contenedor de la lista */
         ul[data-baseweb="menu"] {
-            background-color: #FFFFFF !important;
+            background-color: #003399 !important; /* Azul Quebec */
         }
         
-        /* Las opciones */
+        /* Opciones de la lista */
         li[data-baseweb="menu-item"] {
-            background-color: #FFFFFF !important;
-            color: #000000 !important;
+            background-color: #003399 !important;
+            color: #FFFFFF !important; /* Texto Blanco */
+            border-bottom: 1px solid #0044cc !important; /* Línea separadora sutil */
         }
         
-        /* Texto de las opciones */
+        /* Texto dentro de las opciones */
         li[data-baseweb="menu-item"] * {
-            color: #000000 !important;
-            -webkit-text-fill-color: #000000 !important;
+            color: #FFFFFF !important;
+            -webkit-text-fill-color: #FFFFFF !important;
         }
         
-        /* Hover Azul */
+        /* Hover / Selección (Un azul un poco más claro) */
         li[data-baseweb="menu-item"]:hover, li[aria-selected="true"] {
-            background-color: #e6f0ff !important;
+            background-color: #0044cc !important;
         }
         li[data-baseweb="menu-item"]:hover *, li[aria-selected="true"] * {
-            color: #003399 !important;
-            -webkit-text-fill-color: #003399 !important;
+            color: #FFFFFF !important;
         }
 
         /* === 3. BOTONES === */
@@ -102,23 +87,17 @@ st.markdown("""
             color: #FFFFFF !important;
             border: none !important;
         }
-        div.stButton > button[kind="primary"] * { 
-            color: #FFFFFF !important; 
-            -webkit-text-fill-color: #FFFFFF !important; 
-        }
-
+        div.stButton > button[kind="primary"] * { color: #FFFFFF !important; -webkit-text-fill-color: #FFFFFF !important; }
+        
         /* Secundario (Blanco) */
         div.stButton > button[kind="secondary"] {
             background-color: #FFFFFF !important;
             color: #003399 !important;
             border: 2px solid #003399 !important;
         }
-        div.stButton > button[kind="secondary"] * { 
-            color: #003399 !important; 
-            -webkit-text-fill-color: #003399 !important; 
-        }
-        
-        /* Enlaces (Azules) */
+        div.stButton > button[kind="secondary"] * { color: #003399 !important; -webkit-text-fill-color: #003399 !important; }
+
+        /* Enlaces (Azul) */
         div.stLinkButton > a {
             background-color: #003399 !important;
             color: #FFFFFF !important;
@@ -129,10 +108,7 @@ st.markdown("""
             display: block !important;
             border-radius: 8px !important;
         }
-        div.stLinkButton > a * {
-            color: #FFFFFF !important;
-            -webkit-text-fill-color: #FFFFFF !important;
-        }
+        div.stLinkButton > a * { color: #FFFFFF !important; -webkit-text-fill-color: #FFFFFF !important; }
 
         /* === 4. EXTRAS === */
         [data-testid="stForm"] {
@@ -143,11 +119,9 @@ st.markdown("""
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
         .info-box { background-color: #e8f4fd; border-left: 5px solid #003399; padding: 15px; border-radius: 5px; margin-bottom: 15px; }
-        .help-box { background-color: #fff3cd; border-left: 5px solid #ffc107; padding: 15px; border-radius: 5px; }
-        
+        .help-box { background-color: #fff3cd; border-left: 5px solid #ffc107; padding: 15px; border-radius: 5px; margin-bottom: 15px; }
         .result-box { background-color: #003399; padding: 20px; border-radius: 10px; text-align: center; margin-top: 20px; }
         .result-box h2 { color: #FFFFFF !important; margin: 0; -webkit-text-fill-color: #FFFFFF !important; }
-        
         .footer { margin-top: 50px; padding: 20px; border-top: 1px solid #ccc; text-align: center; }
         .deco-sub { font-style: italic; margin-bottom: 15px; display: block; color: #666666 !important; font-size: 0.9em; }
         
@@ -298,7 +272,7 @@ t = {
         'coffee': "☕ Apoyar proyecto",
         'courses': "📚 Cursos de Francés",
         'main_tabs': ["🧮 Calculadora", "ℹ️ Guía"],
-        'next': "Siguiente ➡", 'prev': "⬅ Atrás", 'calc': "VER MI PUNTAJE",
+        'next': "Siguiente ➡", 'prev': "⬅ Atrás", 'calc': "CALCULAR PUNTAJE",
         'yes_no': ["No", "Sí"],
         'step1': "Paso 1: Perfil y Familia",
         'step2': "Paso 2: Trabajo y TEER",
@@ -334,7 +308,7 @@ t = {
         'fr_oral': "Francés Oral (Tú)", 'fr_write': "Francés Escrito (Tú)", 'en': "Inglés",
         'sp_fr_title': "Francés de la Pareja (Oral)",
         'sp_fr_label': "Nivel Oral",
-        'oev_info': "**ℹ️ VJO (Oferta Validada):** Con LMIA o aprobada por MIFI.",
+        'oev_info': "**ℹ️ VJO (Oferta Validada):** Con LMIA o aprobada por MIFI. Una carta de trabajo simple no es VJO.",
         'vjo_label': "¿Tienes Oferta Validada (VJO)?",
         'vjo_opts': ["No", "Sí, Gran Montreal", "Sí, Fuera de Montreal"],
         'dip_qc_label': "¿Diploma de Quebec?",
@@ -556,7 +530,7 @@ with main_tab_calc:
         st.session_state.teer_sel = st.selectbox(lang['teer_label'], lang['teer_opts'], index=current_idx, key="teer_input")
         st.session_state.edu = st.selectbox("Education", ["PhD", "Master", "Bachelor", "College (3y)", "Diploma (1-2y)", "Secondary"], index=2, key="edu_input")
         
-        # EXPERIENCIA DETALLADA (RESTAURADA)
+        # EXPERIENCIA DETALLADA
         st.divider()
         st.markdown(f"**{lang['exp_title']}**")
         st.caption("Total max: 60 mois / 5 years")
@@ -606,6 +580,7 @@ with main_tab_calc:
         
         st.markdown(f"**{lang['dip_qc_label']}**")
         st.info(lang['dip_qc_help'])
+        
         curr_stud = st.session_state.q_stud_val
         if curr_stud not in lang['yes_no']: curr_stud = lang['yes_no'][0]
         st.session_state.q_stud_val = st.radio("DipQC", lang['yes_no'], index=lang['yes_no'].index(curr_stud), horizontal=True, label_visibility="collapsed", key="q_stud_in")
@@ -614,6 +589,7 @@ with main_tab_calc:
         
         st.markdown(f"**{lang['fam_qc_label']}**")
         st.info(lang['fam_qc_help'])
+        
         curr_fam = st.session_state.q_fam_val
         if curr_fam not in lang['yes_no']: curr_fam = lang['yes_no'][0]
         st.session_state.q_fam_val = st.radio("FamQC", lang['yes_no'], index=lang['yes_no'].index(curr_fam), horizontal=True, label_visibility="collapsed", key="q_fam_in")
