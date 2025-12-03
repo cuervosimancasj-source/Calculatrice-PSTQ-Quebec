@@ -8,7 +8,7 @@ st.set_page_config(
     layout="centered"
 )
 
-# --- 2. ESTILOS CSS (FINAL PULIDO) ---
+# --- 2. ESTILOS CSS (DISEÑO FINAL PULIDO) ---
 st.markdown("""
     <style>
         /* === 0. BASE MODO CLARO === */
@@ -199,11 +199,13 @@ default_values = {
     'exp_qc': 0, 'exp_ca': 0, 'exp_foreign': 36,
     'fr_oral': 'B2', 'fr_write': 'B1', 'en_lvl': '0',
     'vjo': '', 'q_stud_val': 'Non', 'q_fam_val': 'Non',
-    'job_search_term': '', 'current_loc': '', 'origin_country': '', 'arrival_text': '',
+    'job_search_term': '', 'current_loc': '', 'origin_country': '', 
+    'arrival_text': '',
     'teer_idx': 0, 'edu_idx': 2, 'city_idx': 0, 'sp_edu_idx': 2, 'vjo_idx': 0, 'q_stud_idx': 0, 'q_fam_idx': 0
 }
 for key, value in default_values.items():
-    if key not in st.session_state: st.session_state[key] = value
+    if key not in st.session_state:
+        st.session_state[key] = value
 
 def cycle_language():
     lang_map = {'fr': 'es', 'es': 'en', 'en': 'fr'}
@@ -219,12 +221,12 @@ def reset_calc():
 
 def trigger_calculation(): st.session_state.show_results = True
 
-# --- 5. TRADUCCIONES (COMPLETAS Y LARGAS) ---
+# --- 5. TRADUCCIONES (COMPLETAS Y SIN ERRORES) ---
 t = {
     'fr': {
         'btn_lang': "🌐 Changer la langue",
-        'brand': "Calculatrice PSTQ Québec ⚜️",
-        'subtitle': "Outil d'analyse pour la Résidence Permanente (TEER, Volets, Score).",
+        'brand': "Calculatrice PSTQ",
+        'subtitle': "Outil d'analyse pour la Résidence Permanente.",
         'disclaimer_title': "⚠️ AVIS IMPORTANT",
         'disclaimer_text': "Nous ne sommes pas avocats ni consultants en immigration et nous ne faisons pas partie du gouvernement (MIFI). Nous sommes un projet indépendant à but informatif.",
         'coffee': "☕ M'offrir un café",
@@ -285,11 +287,11 @@ t = {
         'vjo_label': "Avez-vous une Offre Validée (OEV) ?",
         'vjo_opts': ["Non", "Oui, Grand Montréal", "Oui, Hors Montréal (Région)"],
         
-        'dip_qc_info': "ℹ️ **Diplôme du Québec :** Avez-vous obtenu un diplôme (AEC, DEP, DEC, Baccalauréat, Maîtrise, Doctorat) d'un établissement d'enseignement au Québec ?",
         'dip_qc_label': "Diplôme du Québec ?",
+        'dip_qc_help': "Avez-vous obtenu un diplôme (AEC, DEP, DEC, Baccalauréat, Maîtrise, Doctorat) d'un établissement d'enseignement au Québec ?",
         
-        'fam_qc_info': "ℹ️ **Famille au Québec :** Avez-vous de la famille proche (Parent, enfant, conjoint, frère/sœur, grand-parent) qui est Résident Permanent ou Citoyen Canadien ?",
         'fam_qc_label': "Famille au Québec ?",
+        'fam_qc_help': "Avez-vous de la famille proche (Parent, enfant, conjoint, frère/sœur, grand-parent) qui est Résident Permanent ou Citoyen Canadien ?",
 
         'res_title': "Résultat Estimé",
         'advice_good': "Excellent ! Votre profil est très compétitif.",
@@ -339,7 +341,7 @@ t = {
         'sp_age': "Edad pareja", 'sp_edu': "Educación pareja",
         'sp_edu_opts': ["PhD (Doctorado)", "Maestría", "Bachelor (Univ)", "Técnico (DEC)", "Secundaria/DEP"],
 
-        'job_title': "Trabajo actual", 'job_place': "Ej: Ingeniero (Presiona Enter)...",
+        'job_title': "Trabajo actual", 'job_place': "Ej: Ingeniero (Enter para buscar)...",
         'teer_label': "Categoría TEER (Nivel)",
         'teer_opts': [
             "TEER 0, 1: Universidad / Gerencia / Ingeniería (Alta)",
@@ -349,7 +351,7 @@ t = {
         ],
         'edu_label': "Nivel de Estudios",
         'edu_opts': ["PhD (Doctorado)", "Maestría", "Bachelor (Univ)", "College (3 años)", "Diploma (1-2 años)", "Secundaria"],
-        'teer_manual_help': "Si no encuentras tu trabajo, usa el selector:",
+        'teer_manual_help': "Si no encuentras, elige abajo:",
         'exp_label': "Años de experiencia",
         'exp_title': "Experiencia Laboral (Últimos 5 años)",
         'exp_qc_label': "Meses en Quebec", 'exp_ca_label': "Meses en Canadá (Fuera QC)", 'exp_for_label': "Meses en el Extranjero",
@@ -362,11 +364,11 @@ t = {
         'vjo_label': "¿Tienes Oferta Validada (VJO)?",
         'vjo_opts': ["No", "Sí, Gran Montreal", "Sí, Fuera de Montreal (Región)"],
         
-        'dip_qc_info': "ℹ️ **Diploma de Quebec:** ¿Tienes un título (AEC, DEP, DEC, Bachelor, etc.) obtenido en una institución de Quebec?",
         'dip_qc_label': "¿Diploma de Quebec?",
+        'dip_qc_help': "¿Tienes un título (AEC, DEP, DEC, Bachelor, etc.) obtenido en una institución de Quebec?",
         
-        'fam_qc_info': "ℹ️ **Familia en Quebec:** ¿Tienes familiares directos (Padres, hijos, cónyuge, hermanos) que sean Residentes o Ciudadanos?",
         'fam_qc_label': "¿Familia en Quebec?",
+        'fam_qc_help': "¿Tienes familiares directos (Padres, hijos, cónyuge, hermanos) que sean Residentes o Ciudadanos?",
         
         'res_title': "Resultado Estimado", 'advice_good': "¡Excelente! Competitivo.", 'advice_low': "Mejora el francés.",
         'details': "Detalles del puntaje", 'sp_points': "Puntos Pareja",
@@ -381,11 +383,12 @@ t = {
     },
     'en': {
         'btn_lang': "🌐 Change Language",
-        'brand': "Calculatrice PSTQ Québec ⚜️",
+        'brand': "Calculatrice PSTQ ⚜️",
         'subtitle': "Residency Analysis Tool.",
         'disclaimer_title': "⚠️ IMPORTANT DISCLAIMER",
         'disclaimer_text': "We are not lawyers or immigration consultants and we are not part of the government. We are an independent project.",
-        'coffee': "☕ Support", 'courses': "📚 French Courses",
+        'coffee': "☕ Support",
+        'courses': "📚 French Courses",
         'main_tabs': ["🧮 Calculator", "ℹ️ Guide"],
         'next': "Next ➡", 'prev': "⬅ Back", 'calc': "CALCULATE SCORE",
         'btn_prev_c': "⬅ Prev", 'btn_next_c': "Next ➡",
@@ -401,14 +404,17 @@ t = {
         'loc_label': "Where are you today?",
         'loc_opts': ["In Quebec", "Canada (Other prov.)", "Abroad"],
         'country_label': "Country of Residence",
-        'arrival_label': "Estimated Arrival Date (YYYY-MM-DD)",
-        'city_label': "Destination City",
+        'dest_city_label': "Destination City in Quebec",
+        'arrival_label': "Estimated Arrival Date",
         'city_opts': ["Montréal", "Québec (Ville)", "Laval", "Gatineau", "Sherbrooke", "Other"],
-        'age': "Age", 'spouse': "Have a spouse?",
+        'age': "Age",
+        'spouse': "Have a spouse?",
         'kids12': "Kids -12", 'kids13': "Kids +12",
-        'sp_header': "Spouse Data", 'sp_age': "Spouse Age", 'sp_edu': "Spouse Edu",
+        'sp_header': "Spouse Data",
+        'sp_age': "Spouse Age", 'sp_edu': "Spouse Edu",
         'sp_edu_opts': ["PhD", "Master", "Bachelor", "Technical", "Secondary"],
-        'job_title': "Current Job", 'job_place': "Ex: Engineer (Press Enter)...",
+        'job_title': "Current Job",
+        'job_place': "Ex: Engineer (Press Enter)...",
         'teer_label': "TEER Category",
         'teer_opts': [
             "TEER 0, 1: University / Management / Engineering",
@@ -425,15 +431,18 @@ t = {
         'lang_info': "**Reqs:** Volet 1 = Lvl 7 | Spouse = Lvl 4",
         'fr_oral': "French Oral (You)", 'fr_write': "French Written (You)", 'en': "English",
         'sp_fr_title': "Spouse's French (Oral)",
-        'oev_info': "ℹ️ **VJO:** Validated Offer (LMIA/MIFI). A simple job letter is not enough.",
+        'oev_info': "**ℹ️ VJO:** Validated Offer (LMIA/MIFI). A simple job letter is not enough.",
         'vjo_label': "Validated Job Offer?",
         'vjo_opts': ["No", "Yes, Greater Montreal", "Yes, Outside Montreal"],
-        'dip_qc_label': "Quebec Diploma?", 'dip_qc_info': "ℹ️ **Diploma:** AEC, DEC, etc. from Quebec.",
-        'fam_qc_label': "Family in Quebec?", 'fam_qc_info': "ℹ️ **Family:** PR or Citizen (Parent, child, sibling).",
+        'dip_qc_label': "Quebec Diploma?",
+        'dip_qc_help': "Did you obtain a degree (AEC, DEC, Bachelor, etc.) in Quebec?",
+        'fam_qc_label': "Family in Quebec?",
+        'fam_qc_help': "Do you have immediate family (PR or Citizen) living in Quebec?",
         'res_title': "Result", 'advice_good': "Excellent!", 'advice_low': "Improve French.",
-        'details': "Details", 'sp_points': "Spouse Pts", 'guide_title': "Roadmap",
+        'details': "Details", 'sp_points': "Spouse Pts",
+        'guide_title': "Roadmap",
         'g_step1': "1. Self-Assess", 'g_desc1': "Know strengths.",
-        'g_step2': "2. French", 'g_desc2': "Aim B2.",
+        'g_step2': "2. French", 'g_desc2': "Aim B2 (7).",
         'g_step3': "3. Arrima", 'g_desc3': "Free profile.",
         'g_step4': "4. CSQ", 'g_desc4': "Cert.",
         'g_step5': "5. Federal", 'g_desc5': "PR.",
@@ -480,9 +489,9 @@ def find_job_details(keyword):
 st.markdown(f"""
 <div class="pro-header">
     <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Flag_of_Quebec.svg/128px-Flag_of_Quebec.svg.png" class="flag-icon">
-    <div class="pro-header-content">
+    <div>
         <h1>{lang['brand']}</h1>
-        <p>{lang['subtitle']}</p>
+        <p style="color:#e0e0e0; margin:0; font-size:0.9rem;">{lang['subtitle']}</p>
     </div>
     <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Flag_of_Quebec.svg/128px-Flag_of_Quebec.svg.png" class="flag-icon">
 </div>
@@ -621,13 +630,13 @@ with main_tab_calc:
         
         # DIPLOMA
         st.divider()
-        st.info(lang.get('dip_qc_info', lang['dip_qc_help']))
+        st.info(lang.get('dip_qc_help', 'Info'))
         sel_stud = render_carousel(lang['dip_qc_label'], lang['yes_no'], 'q_stud', lang['btn_prev_c'], lang['btn_next_c'])
         st.session_state.q_stud_val = sel_stud
         
         # FAMILIA
         st.divider()
-        st.info(lang.get('fam_qc_info', lang['fam_qc_help']))
+        st.info(lang.get('fam_qc_help', 'Info'))
         sel_fam = render_carousel(lang['fam_qc_label'], lang['yes_no'], 'q_fam', lang['btn_prev_c'], lang['btn_next_c'])
         st.session_state.q_fam_val = sel_fam
 
@@ -650,7 +659,7 @@ with main_tab_calc:
             
         if st.button("🔄 Recalculer"): reset_calc(); st.rerun()
 
-    # BOTONES MONETIZACIÓN (JUSTO DEBAJO)
+    # BOTONES DE MONETIZACIÓN (JUSTO DEBAJO)
     st.markdown("<br>", unsafe_allow_html=True)
     c_mon1, c_mon2 = st.columns(2)
     with c_mon1:
