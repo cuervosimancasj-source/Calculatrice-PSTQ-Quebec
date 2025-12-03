@@ -8,29 +8,27 @@ st.set_page_config(
     layout="centered"
 )
 
-# --- 2. ESTILOS CSS (BLINDAJE ANTI-INSTAGRAM FINAL) ---
+# --- 2. ESTILOS CSS (SOLUCIÓN FECHA Y TEER) ---
 st.markdown("""
     <style>
         /* === 0. FORZADO GLOBAL === */
-        :root { color-scheme: light only !important; }
+        :root { color-scheme: light !important; }
         
         html, body, [data-testid="stAppViewContainer"] {
-            background-color: #f4f7f6 !important; /* Gris muy suave */
+            background-color: #f4f7f6 !important;
             color: #000000 !important;
         }
         
-        /* Forzar texto negro general */
         .stApp, p, label, h2, h3, h4, h5, h6, div, span, li {
             color: #000000 !important;
         }
         
-        /* Excepción: Encabezado Azul */
         header[data-testid="stHeader"] { background-color: #003399 !important; }
         h1 { color: #FFFFFF !important; }
 
-        /* === 1. INPUTS, FECHAS Y SELECTORES (SOLUCIÓN DEFINITIVA) === */
+        /* === 1. ARREGLO CRÍTICO: CAJAS DE SELECCIÓN Y FECHA === */
         
-        /* Contenedores de inputs */
+        /* El contenedor general de los inputs */
         div[data-baseweb="select"] > div, 
         div[data-baseweb="input"] > div,
         div[data-baseweb="base-input"] {
@@ -38,43 +36,39 @@ st.markdown("""
             border: 1px solid #cccccc !important;
             color: #000000 !important;
         }
-        
-        /* INPUTS DE TEXTO Y FECHA */
+
+        /* EL TEXTO DENTRO DE LA CAJA (TEER, CIUDAD, ETC) */
+        div[data-baseweb="select"] div {
+            color: #000000 !important;
+            -webkit-text-fill-color: #000000 !important;
+        }
+
+        /* INPUT DE TEXTO Y FECHA */
         input {
-            color: #000000 !important;
-            -webkit-text-fill-color: #000000 !important;
             background-color: #FFFFFF !important;
-            opacity: 1 !important;
-            caret-color: #000000 !important;
-            color-scheme: light !important; /* Truco para el calendario */
-        }
-
-        /* TEXTO DENTRO DE SELECTORES */
-        div[data-baseweb="select"] span {
             color: #000000 !important;
             -webkit-text-fill-color: #000000 !important;
+            caret-color: #000000 !important;
+            opacity: 1 !important;
+            color-scheme: light !important; /* Obliga al calendario a ser blanco */
         }
         
-        /* ICONOS (Flechitas y Calendario) */
-        div[data-baseweb="select"] svg, div[data-baseweb="input"] svg {
-            fill: #000000 !important;
+        /* EL ICONO DEL CALENDARIO (Para que no se vea blanco sobre blanco) */
+        ::-webkit-calendar-picker-indicator {
+            filter: invert(0) !important; /* Fuerza color oscuro */
         }
 
-        /* === 2. MENÚ DESPLEGABLE (LISTAS) === */
-        ul[data-baseweb="menu"] {
-            background-color: #FFFFFF !important;
-        }
-        li[data-baseweb="menu-item"] {
-            background-color: #FFFFFF !important;
+        /* FLECHAS DE LOS SELECTORES */
+        div[data-baseweb="select"] svg {
+            fill: #000000 !important;
             color: #000000 !important;
         }
-        li[data-baseweb="menu-item"] * {
-            color: #000000 !important;
-        }
-        /* Hover / Selección */
-        li[data-baseweb="menu-item"]:hover, li[aria-selected="true"] {
-            background-color: #e6f0ff !important;
-        }
+
+        /* === 2. MENÚ DESPLEGABLE (LISTA) === */
+        ul[data-baseweb="menu"] { background-color: #FFFFFF !important; }
+        li[data-baseweb="menu-item"] { background-color: #FFFFFF !important; color: #000000 !important; }
+        li[data-baseweb="menu-item"] * { color: #000000 !important; -webkit-text-fill-color: #000000 !important; }
+        li[data-baseweb="menu-item"]:hover, li[aria-selected="true"] { background-color: #e6f0ff !important; }
 
         /* === 3. BOTONES === */
         div.stButton > button { width: 100%; border-radius: 8px; font-weight: bold; height: 45px; }
@@ -85,23 +79,17 @@ st.markdown("""
             color: #FFFFFF !important;
             border: none !important;
         }
-        div.stButton > button[kind="primary"] * { 
-            color: #FFFFFF !important; 
-            -webkit-text-fill-color: #FFFFFF !important;
-        }
-
+        div.stButton > button[kind="primary"] * { color: #FFFFFF !important; -webkit-text-fill-color: #FFFFFF !important; }
+        
         /* Secundario (Blanco) */
         div.stButton > button[kind="secondary"] {
             background-color: #FFFFFF !important;
             color: #003399 !important;
             border: 2px solid #003399 !important;
         }
-        div.stButton > button[kind="secondary"] * { 
-            color: #003399 !important; 
-            -webkit-text-fill-color: #003399 !important;
-        }
+        div.stButton > button[kind="secondary"] * { color: #003399 !important; -webkit-text-fill-color: #003399 !important; }
         
-        /* Enlaces (Azul) - Recuperado */
+        /* Enlaces (Azul) */
         div.stLinkButton > a {
             background-color: #003399 !important;
             color: #FFFFFF !important;
@@ -112,10 +100,7 @@ st.markdown("""
             display: block !important;
             border-radius: 8px !important;
         }
-        div.stLinkButton > a * { 
-            color: #FFFFFF !important; 
-            -webkit-text-fill-color: #FFFFFF !important;
-        }
+        div.stLinkButton > a * { color: #FFFFFF !important; -webkit-text-fill-color: #FFFFFF !important; }
 
         /* === 4. EXTRAS === */
         [data-testid="stForm"] {
@@ -125,24 +110,6 @@ st.markdown("""
             border-top: 5px solid #003399;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
-        
-        /* Cajas informativas (st.info) */
-        div.stAlert {
-            background-color: #e8f4fd !important;
-            border: 1px solid #003399 !important;
-            color: #000000 !important;
-        }
-        div.stAlert p { color: #000000 !important; }
-        
-        .result-box { background-color: #003399; padding: 20px; border-radius: 10px; text-align: center; margin-top: 20px; }
-        .result-box h2 { color: #FFFFFF !important; margin: 0; -webkit-text-fill-color: #FFFFFF !important; }
-        
-        .footer { margin-top: 50px; padding: 20px; border-top: 1px solid #ccc; text-align: center; }
-        .deco-sub { font-style: italic; margin-bottom: 15px; display: block; color: #666666 !important; font-size: 0.9em; }
-        
-        /* Botones +/- */
-        button[tabindex="-1"] { background-color: #e0e0e0 !important; color: #000 !important; border: 1px solid #ccc !important; }
-        button[tabindex="-1"] span { color: #000 !important; -webkit-text-fill-color: #000000 !important; }
         
         /* Header Pro */
         .pro-header {
@@ -163,13 +130,20 @@ st.markdown("""
             font-size: 1.5rem;
             flex-grow: 1;
         }
-        .pro-header p {
-             color: #e0e0e0 !important;
-             -webkit-text-fill-color: #e0e0e0 !important;
-        }
+        .pro-header p { color: #e0e0e0 !important; -webkit-text-fill-color: #e0e0e0 !important; }
         .flag-icon { height: 40px; border: 1px solid white; border-radius: 4px; }
+
+        .info-box { background-color: #e8f4fd; border-left: 5px solid #003399; padding: 15px; border-radius: 5px; margin-bottom: 15px; }
+        .result-box { background-color: #003399; padding: 20px; border-radius: 10px; text-align: center; margin-top: 20px; }
+        .result-box h2 { color: #FFFFFF !important; margin: 0; -webkit-text-fill-color: #FFFFFF !important; }
         
-        /* Radio labels */
+        .footer { margin-top: 50px; padding: 20px; border-top: 1px solid #ccc; text-align: center; }
+        .deco-sub { font-style: italic; margin-bottom: 15px; display: block; color: #666666 !important; font-size: 0.9em; }
+        
+        /* Botones +/- */
+        button[tabindex="-1"] { background-color: #e0e0e0 !important; color: #000 !important; border: 1px solid #ccc !important; }
+        button[tabindex="-1"] span { color: #000 !important; -webkit-text-fill-color: #000000 !important; }
+        
         div[role="radiogroup"] label { color: #000000 !important; }
 
     </style>
@@ -180,8 +154,7 @@ default_values = {
     'language': 'fr', 'step': 1, 'show_results': False,
     'age': 30, 'spouse': False, 'k1': 0, 'k2': 0,
     'sp_age': 30, 'sp_edu': 'Secondary', 'sp_fr': '0',
-    'teer_sel': 'TEER 0, 1: Université / Gestion / Ingénierie',
-    'edu': 'Secondary', 
+    'teer_sel': '', 'edu': 'Secondary', 
     'exp_qc': 0, 'exp_ca': 0, 'exp_foreign': 36,
     'fr_oral': 'B2', 'fr_write': 'B1', 'en_lvl': '0',
     'vjo': '', 'q_stud_val': 'Non', 'q_fam_val': 'Non',
@@ -194,7 +167,6 @@ for key, value in default_values.items():
 def cycle_language():
     lang_map = {'fr': 'es', 'es': 'en', 'en': 'fr'}
     st.session_state.language = lang_map[st.session_state.language]
-    # Reset TEER y Location
     st.session_state.teer_sel = t[st.session_state.language]['teer_opts'][0]
     st.session_state.current_loc = t[st.session_state.language]['loc_opts'][2]
 
@@ -255,7 +227,7 @@ t = {
         'fr_oral': "Français Oral (Vous)", 'fr_write': "Français Écrit (Vous)", 'en': "Anglais",
         'sp_fr_title': "Français du Conjoint (Oral)",
         'sp_fr_label': "Niveau Oral",
-        'oev_info': "**ℹ️ OEV (Offre d'emploi validée) :** Signifie que l'employeur a obtenu une EIMT ou que l'offre est validée par le MIFI. Une simple lettre d'embauche ne suffit pas toujours.",
+        'oev_info': "**ℹ️ OEV (Offre d'emploi validée) :** Signifie que l'employeur a obtenu une EIMT ou que l'offre est validée par le MIFI. Une simple lettre d'embauche ne suffit pas.",
         'vjo_label': "Avez-vous une Offre Validée (OEV) ?",
         'vjo_opts': ["Non", "Oui, Grand Montréal", "Oui, Hors Montréal (Région)"],
         'dip_qc_label': "Diplôme du Québec ?",
@@ -273,7 +245,7 @@ t = {
         'g_step2': "2. Français", 'g_desc2': "Visez B2 (7).",
         'g_step3': "3. Arrima", 'g_desc3': "Profil gratuit.",
         'g_step4': "4. CSQ", 'g_desc4': "Certificat Sélection.",
-        'g_step5': "5. Fédéral", 'g_desc5': "Résidence Permanente Canada.",
+        'g_step5': "5. Fédéral", 'g_desc5': "Résidence Permanente.",
         'noc_link_text': "🔎 Chercher sur le site officiel du Canada (CNP)",
         'exp_title': "Expérience de travail (5 dernières années)",
         'exp_qc_label': "Mois au Québec",
@@ -282,14 +254,14 @@ t = {
     },
     'es': {
         'btn_lang': "🌐 Cambiar Idioma",
-        'brand': "Calculatrice PSTQ ⚜️",
-        'subtitle': "Análisis Residencia Permanente (Arrima).",
+        'brand': "Calculadora PSTQ",
+        'subtitle': "Simulación de puntaje para Residencia Permanente Quebec",
         'disclaimer_title': "⚠️ AVISO LEGAL",
         'disclaimer_text': "Proyecto independiente. NO abogados. Resultados estimados.",
         'coffee': "☕ Apoyar proyecto",
         'courses': "📚 Cursos de Francés",
         'main_tabs': ["🧮 Calculadora", "ℹ️ Guía"],
-        'next': "Siguiente ➡", 'prev': "⬅ Atrás", 'calc': "CALCULAR PUNTAJE",
+        'next': "Siguiente ➡", 'prev': "⬅ Atrás", 'calc': "VER MI PUNTAJE",
         'yes_no': ["No", "Sí"],
         'step1': "Paso 1: Perfil y Familia",
         'step2': "Paso 2: Trabajo y TEER",
@@ -325,7 +297,7 @@ t = {
         'fr_oral': "Francés Oral (Tú)", 'fr_write': "Francés Escrito (Tú)", 'en': "Inglés",
         'sp_fr_title': "Francés de la Pareja (Oral)",
         'sp_fr_label': "Nivel Oral",
-        'oev_info': "**ℹ️ VJO (Oferta Validada):** Con LMIA o aprobada por MIFI. Una carta de trabajo simple no es VJO.",
+        'oev_info': "**ℹ️ VJO (Oferta Validada):** Con LMIA o aprobada por MIFI.",
         'vjo_label': "¿Tienes Oferta Validada (VJO)?",
         'vjo_opts': ["No", "Sí, Gran Montreal", "Sí, Fuera de Montreal"],
         'dip_qc_label': "¿Diploma de Quebec?",
@@ -349,7 +321,7 @@ t = {
     },
     'en': {
         'btn_lang': "🌐 Change Language",
-        'brand': "Calculatrice PSTQ ⚜️",
+        'brand': "Calculatrice PSTQ",
         'subtitle': "Residency Analysis Tool.",
         'disclaimer_title': "⚠️ DISCLAIMER",
         'disclaimer_text': "Independent. NOT lawyers. Estimated results.",
@@ -358,10 +330,10 @@ t = {
         'main_tabs': ["🧮 Calculator", "ℹ️ Guide"],
         'next': "Next ➡", 'prev': "⬅ Back", 'calc': "CALCULATE SCORE",
         'yes_no': ["No", "Yes"],
-        'step1': "Step 1: Profile & Family",
-        'step2': "Step 2: Work & TEER",
+        'step1': "Step 1: Profile",
+        'step2': "Step 2: Work",
         'step3': "Step 3: Languages",
-        'step4': "Step 4: Quebec & Offer",
+        'step4': "Step 4: Quebec",
         'tab1_sub': "The starting point of your immigration journey.",
         'tab2_sub': "Your trade is the core of the PSTQ program.",
         'tab3_sub': "French is the key to success in Quebec.",
