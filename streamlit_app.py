@@ -27,7 +27,7 @@ GA_CODE = """
 
 def inject_ga():
     # Inyecta el código HTML/JavaScript en la página
-    st.markdown(GA_CODE, unsafe_allow_html=True)
+    components.html(GA_CODE, height=0, width=0)
 
 # ➡️ LLAMADA A LA FUNCIÓN (Se ejecuta antes de los estilos)
 
