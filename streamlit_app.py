@@ -20,8 +20,8 @@ GA_CODE = """
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
 
-  // ⚠️ REEMPLAZA G-XXXXXXXXXX con tu ID real de GA4
-  gtag('config', 'G-XXXXXXXXXX'); 
+  // ⚠️ REEMPLAZA G-T0CE5LQHVF con tu ID real de GA4
+  gtag('config', 'G-T0CE5LQHVF'); 
 </script>
 """
 
