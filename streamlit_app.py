@@ -14,14 +14,14 @@ st.set_page_config(
 # -----------------------------------------------------
 
 GA_CODE = """
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-T0CE5LQHVF"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YGX9B3XW84"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
 
   // ⚠️ REEMPLAZA G-T0CE5LQHVF con tu ID real de GA4
-  gtag('config', 'G-T0CE5LQHVF'); 
+  gtag('config', 'G-YGX9B3XW84'); 
 </script>
 """
 
