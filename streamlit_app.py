@@ -1,11 +1,40 @@
 import streamlit as st
 
-# --- 1. CONFIGURACIÓN DE PÁGINA ---
+# -----------------------------------------------------
+# 1. CONFIGURACIÓN DE PÁGINA (Debe ser lo primero después de las importaciones)
+# -----------------------------------------------------
 st.set_page_config(
     page_title="Calculatrice PSTQ Québec",
     page_icon="⚜️",
     layout="centered"
 )
+
+# -----------------------------------------------------
+# 2. INSERCIÓN DE GOOGLE ANALYTICS (NUEVO BLOQUE)
+# -----------------------------------------------------
+
+GA_CODE = """
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  // ⚠️ REEMPLAZA G-XXXXXXXXXX con tu ID real
+  gtag('config', 'G-XXXXXXXXXX'); 
+</script>
+"""
+
+def inject_ga():
+    # Inyecta el código HTML/JavaScript en la página
+    st.markdown(GA_CODE, unsafe_allow_html=True)
+
+# ➡️ LLAMADA A LA FUNCIÓN (Se ejecuta antes de los estilos y el contenido)
+inject_ga()
+
+# -----------------------------------------------------
+# 3. ESTILOS CSS Y LÓGICA DE LA APLICACIÓN
+# -----------------------------------------------------
 
 # --- 2. ESTILOS CSS (BLINDAJE ANTI-INSTAGRAM Y DISEÑO FINAL) ---
 st.markdown("""
@@ -483,17 +512,17 @@ with main_tabs[0]:
         st.session_state.current_loc = sel_loc
         
         if "bec" not in sel_loc:
-             st.text_input(lang['country_label'], value=st.session_state.origin_country, placeholder="Ex: Belgique, Sénégal...")
-             
-             st.divider()
-             # CARRUSEL CIUDAD
-             sel_city = render_carousel(lang['city_label'], lang['city_opts'], 'city')
-             st.session_state.dest_city = sel_city
-             
-             # FECHA TEXTO
-             st.divider()
-             st.markdown(f"**{lang['arrival_label']}**")
-             st.session_state.arrival_text = st.text_input("Date", value=st.session_state.get('arrival_text', ''), placeholder="YYYY-MM-DD", label_visibility="collapsed")
+            st.text_input(lang['country_label'], value=st.session_state.origin_country, placeholder="Ex: Belgique, Sénégal...")
+            
+            st.divider()
+            # CARRUSEL CIUDAD
+            sel_city = render_carousel(lang['city_label'], lang['city_opts'], 'city')
+            st.session_state.dest_city = sel_city
+            
+            # FECHA TEXTO
+            st.divider()
+            st.markdown(f"**{lang['arrival_label']}**")
+            st.session_state.arrival_text = st.text_input("Date", value=st.session_state.get('arrival_text', ''), placeholder="YYYY-MM-DD", label_visibility="collapsed")
         
         st.divider()
         c1, c2 = st.columns(2)
