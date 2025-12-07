@@ -694,15 +694,11 @@ with main_tabs[1]:
     st.markdown(f"### 🗺️ {lang['guide_title']}")
     st.markdown("---")
     st.markdown(f"<div class='info-box'><h4>📊 {lang['g_step1']}</h4><p>{lang['g_desc1']}</p></div>", unsafe_allow_html=True)
-    st.markdown(f"<div class='info-box'><h4>🗣️ {lang['g_step2']}</h4><p>{lang['g_desc2']}</p></div>", unsafe_allow_html=True)
+    st.markdown(f"<div class='info-box'><h4>🎥 {lang['g_step2']}</h4><p>{lang['g_desc2']}</p></div>", unsafe_allow_html=True)
     st.markdown(f"<div class='info-box'><h4>📂 {lang['g_step3']}</h4><p>{lang['g_desc3']}</p></div>", unsafe_allow_html=True)
 
-# --- ZONA DE PRUEBAS / BOTÓN CUSTOM ---
-# Este botón está al final de la página, fuera de las pestañas
-st.divider()
-if st.button("🛠️ Custom"):
-    st.success("¡El botón funciona! Aquí irá tu contenido personalizado.")
-
+# --- FOOTER / DISCLAIMER ---
+# Al quitar la sangría (espacios) aquí, esto sale en TODA la página
 st.markdown("---")
 st.markdown("<div class='footer'>", unsafe_allow_html=True)
 st.error(f"**{lang['disclaimer_title']}**")
