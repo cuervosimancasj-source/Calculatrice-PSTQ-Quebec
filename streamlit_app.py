@@ -1,7 +1,7 @@
 import streamlit as st
 
 # -----------------------------------------------------
-# 1. CONFIGURACIÓN DE PÁGINA (Debe ser lo primero después de las importaciones)
+# 1. CONFIGURACIÓN DE PÁGINA (Debe ser lo primero)
 # -----------------------------------------------------
 st.set_page_config(
     page_title="Calculatrice PSTQ Québec",
@@ -10,7 +10,7 @@ st.set_page_config(
 )
 
 # -----------------------------------------------------
-# 2. INSERCIÓN DE GOOGLE ANALYTICS (NUEVO BLOQUE)
+# 2. INSERCIÓN DE GOOGLE ANALYTICS
 # -----------------------------------------------------
 
 GA_CODE = """
@@ -20,7 +20,7 @@ GA_CODE = """
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
 
-  // ⚠️ REEMPLAZA G-XXXXXXXXXX con tu ID real
+  // ⚠️ REEMPLAZA G-XXXXXXXXXX con tu ID real de GA4
   gtag('config', 'G-XXXXXXXXXX'); 
 </script>
 """
@@ -29,11 +29,11 @@ def inject_ga():
     # Inyecta el código HTML/JavaScript en la página
     st.markdown(GA_CODE, unsafe_allow_html=True)
 
-# ➡️ LLAMADA A LA FUNCIÓN (Se ejecuta antes de los estilos y el contenido)
+# ➡️ LLAMADA A LA FUNCIÓN (Se ejecuta antes de los estilos)
 inject_ga()
 
 # -----------------------------------------------------
-# 3. ESTILOS CSS Y LÓGICA DE LA APLICACIÓN
+# 3. ESTILOS CSS
 # -----------------------------------------------------
 
 # --- 2. ESTILOS CSS (BLINDAJE ANTI-INSTAGRAM Y DISEÑO FINAL) ---
@@ -227,7 +227,7 @@ def reset_calc():
 
 def trigger_calculation(): st.session_state.show_results = True
 
-# --- 5. TRADUCCIONES (DICCIONARIO REVISADO Y COMPLETO) ---
+# --- 5. TRADUCCIONES (DICCIONARIO REVISADO Y COMPLETO CON DETALLES) ---
 t = {
     'fr': {
         'btn_lang': "🌐 Changer la langue",
@@ -279,13 +279,13 @@ t = {
         'fr_oral': "Français Oral (Vous)", 'fr_write': "Français Écrit (Vous)", 'en': "Anglais",
         'sp_fr_title': "Français du Conjoint (Oral)",
         'sp_fr_label': "Niveau Oral",
-        'oev_info': "**ℹ️ OEV (Offre validée) :** Signifie que l'employeur a obtenu une EIMT ou que l'offre est validée par le MIFI.",
+        'oev_info': "**ℹ️ Offre d'emploi validée (OEV) :** C'est une offre de travail à temps plein (30h+) d'un employeur Québécois dont le poste a été **validé par le gouvernement du Québec (MIFI)**. Cette validation donne des points très significatifs.",
         'vjo_label': "Avez-vous une Offre Validée (OEV) ?",
         'vjo_opts': ["Non", "Oui, Grand Montréal", "Oui, Région"],
         'dip_qc_label': "Diplôme du Québec ?", 
-        'dip_qc_help': "ℹ️ **Diplôme :** Avez-vous un diplôme (AEC, DEC, Bac...) obtenu au Québec ?",
+        'dip_qc_help': "ℹ️ **Diplôme du Québec :** Avez-vous obtenu un diplôme (AEC, DEC, Baccalauréat, Maîtrise, etc.) au Québec **dans les 5 dernières années** ? Vous devez avoir résidé au Québec pendant au moins la moitié de votre programme d'études.",
         'fam_qc_label': "Famille au Québec ?", 
-        'fam_qc_help': "ℹ️ **Famille :** Avez-vous un parent, enfant, conjoint, frère/sœur Résident ou Citoyen ?",
+        'fam_qc_help': "ℹ️ **Famille :** Avez-vous un parent (père/mère), enfant, conjoint, frère ou sœur qui est **Résident Permanent ou Citoyen Canadien** et qui réside au Québec ? Les grands-parents, oncles/tantes ou cousins ne comptent pas pour ce programme.",
         'res_title': "Résultat Estimé", 'advice_good': "Excellent ! Profil compétitif.", 
         'advice_low': "Score faible. Conseils :",
         'details': "Détails du score", 'sp_points': "Points Conjoint",
@@ -350,13 +350,13 @@ t = {
         'fr_oral': "Francés Oral (Tú)", 'fr_write': "Francés Escrito (Tú)", 'en': "Inglés",
         'sp_fr_title': "Francés de la Pareja (Oral)",
         'sp_fr_label': "Nivel Oral",
-        'oev_info': "**ℹ️ VJO (Oferta Validada):** Con LMIA o aprobada por MIFI.",
+        'oev_info': "**ℹ️ Oferta de empleo validada (VJO):** Es una oferta de trabajo a tiempo completo (30h+) de un empleador Quebequense cuyo puesto ha sido **validado por el gobierno de Quebec (MIFI)**. Esta validación otorga puntos muy significativos.",
         'vjo_label': "¿Tienes Oferta Validada (VJO)?",
         'vjo_opts': ["No", "Sí, Gran Montreal", "Sí, Fuera de Montreal"],
         'dip_qc_label': "¿Diploma de Quebec?",
-        'dip_qc_help': "ℹ️ **Diploma:** ¿Tienes un título (AEC, DEC, Bachelor, etc.) obtenido en Quebec?",
+        'dip_qc_help': "ℹ️ **Diploma de Quebec:** ¿Has obtenido un diploma (AEC, DEC, Licenciatura, Maestría, etc.) en Quebec **en los últimos 5 años**? Debes haber residido en Quebec al menos la mitad de la duración de tu programa de estudios.",
         'fam_qc_label': "¿Familia en Quebec?",
-        'fam_qc_help': "ℹ️ **Familia:** ¿Tienes familiares directos (Padres, hijos, cónyuge, hermanos) Residentes o Ciudadanos?",
+        'fam_qc_help': "ℹ️ **Familia:** ¿Tienes un pariente (padre/madre), hijo, cónyuge, hermano o hermana que es **Residente Permanente o Ciudadano Canadiense** y que reside en Quebec? Los abuelos, tíos/tías o primos no cuentan para este programa.",
         'res_title': "Resultado Estimado", 'advice_good': "¡Excelente! Competitivo.", 'advice_low': "Puntaje bajo. Consejos:",
         'details': "Detalles del puntaje", 'sp_points': "Puntos Pareja",
         'guide_title': "Tu Hoja de Ruta",
@@ -417,13 +417,13 @@ t = {
         'fr_oral': "French Oral (You)", 'fr_write': "French Written (You)", 'en': "English",
         'sp_fr_title': "Spouse's French (Oral)",
         'sp_fr_label': "Oral Level",
-        'oev_info': "**ℹ️ VJO:** Validated Offer.",
+        'oev_info': "**ℹ️ Validated Job Offer (VJO):** This is a full-time (30h+) job offer from a Quebec employer where the position has been **validated by the Quebec government (MIFI)**. This validation awards very significant points.",
         'vjo_label': "Validated Offer?",
         'vjo_opts': ["No", "Yes, Greater Montreal", "Yes, Outside Montreal"],
         'dip_qc_label': "Quebec Diploma?", 
-        'dip_qc_help': "ℹ️ **Diploma:** AEC, DEC, etc.",
+        'dip_qc_help': "ℹ️ **Quebec Diploma:** Did you obtain a diploma (AEC, DEC, Bachelor, Master, etc.) in Quebec **in the last 5 years**? You must have resided in Quebec for at least half the duration of your study program.",
         'fam_qc_label': "Family in Quebec?", 
-        'fam_qc_help': "ℹ️ **Family:** PR or Citizen.",
+        'fam_qc_help': "ℹ️ **Family:** Do you have a direct relative (parent, child, spouse, brother, or sister) who is a **Permanent Resident or Canadian Citizen** and resides in Quebec? Grandparents, uncles/aunts, or cousins do not count for this program.",
         'res_title': "Result", 'advice_good': "Excellent!", 
         'advice_low': "Score is low. Tips:",
         'details': "Details", 'sp_points': "Spouse Pts",
