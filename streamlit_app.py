@@ -1,4 +1,4 @@
-    import streamlit as st
+import streamlit as st
 
 # --- 1. CONFIGURACIÓN DE PÁGINA ---
 st.set_page_config(
