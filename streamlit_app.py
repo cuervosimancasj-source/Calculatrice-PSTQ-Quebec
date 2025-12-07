@@ -30,7 +30,6 @@ def inject_ga():
     st.markdown(GA_CODE, unsafe_allow_html=True)
 
 # ➡️ LLAMADA A LA FUNCIÓN (Se ejecuta antes de los estilos)
-inject_ga()
 
 # -----------------------------------------------------
 # 3. ESTILOS CSS
@@ -725,6 +724,8 @@ with main_tabs[1]:
     st.markdown(f"<div class='info-box'><h4>📊 {lang['g_step1']}</h4><p>{lang['g_desc1']}</p></div>", unsafe_allow_html=True)
     st.markdown(f"<div class='info-box'><h4>🎥 {lang['g_step2']}</h4><p>{lang['g_desc2']}</p></div>", unsafe_allow_html=True)
     st.markdown(f"<div class='info-box'><h4>📂 {lang['g_step3']}</h4><p>{lang['g_desc3']}</p></div>", unsafe_allow_html=True)
+
+inject_ga()
 
 # --- FOOTER / DISCLAIMER ---
 # Al quitar la sangría (espacios) aquí, esto sale en TODA la página
