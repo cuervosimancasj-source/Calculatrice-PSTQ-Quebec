@@ -14,7 +14,7 @@ st.set_page_config(
 # -----------------------------------------------------
 
 GA_CODE = """
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-T0CESLQHVF"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
