@@ -14,7 +14,6 @@ st.set_page_config(
 # -----------------------------------------------------
 
 GA_CODE = """
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-186438336789204" crossorigin="anonymous"></script>
 """
 
 def inject_ga():
