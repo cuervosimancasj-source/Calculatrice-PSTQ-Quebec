@@ -16,9 +16,6 @@ st.set_page_config(
 GA_CODE = """
 """
 
-def inject_ga():
-    # Inyecta el código HTML/JavaScript en la página
-    components.html(GA_CODE, height=0, width=0)
 
 # ➡️ LLAMADA A LA FUNCIÓN (Se ejecuta antes de los estilos)
 
@@ -716,7 +713,6 @@ with main_tabs[1]:
     st.markdown(f"<div class='info-box'><h4>🎥 {lang['g_step2']}</h4><p>{lang['g_desc2']}</p></div>", unsafe_allow_html=True)
     st.markdown(f"<div class='info-box'><h4>📂 {lang['g_step3']}</h4><p>{lang['g_desc3']}</p></div>", unsafe_allow_html=True)
 
-inject_ga()
 
 # --- FOOTER / DISCLAIMER ---
 # Al quitar la sangría (espacios) aquí, esto sale en TODA la página
